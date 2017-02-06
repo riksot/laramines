@@ -12,9 +12,8 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('test');
 });
 
-Route::get('/login', function () {
-    return view('login');
-});
+Route::get('/pak', 'Pak@selectfaculty');
+
