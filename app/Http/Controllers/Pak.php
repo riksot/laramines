@@ -7,6 +7,9 @@ use App\Plan;
 use Illuminate\Http\Request;
 use DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Input;
+
+//use Symfony\Component\Console\Input\Input;
 
 
 class Pak extends Controller
@@ -27,5 +30,16 @@ class Pak extends Controller
         $plans = Plan::all();
         //return response()->json(array('plans'=> $plans), 200);
         return view('tables.plans',['plans' => $plans]);
+    }
+
+    public function jqueryResponse(){
+
+        $fakult = Input::get('fakult');
+        $plans =  Plan::where('RPRNF','=',$fakult)->get();
+
+        return view('tables.plans',['plans' => $plans]);
+
+//        return \Response::json($plans);
+
     }
 }

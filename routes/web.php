@@ -17,7 +17,6 @@ Route::get('/', function () {
 
 Route::get('/pak', 'Pak@selectFaculty');
 
-
 // Route::get('/test', 'Pak@selectPlans');
 
 Route::get('/test', function () {
@@ -32,3 +31,5 @@ Route::get('/test', function () {
 //});
 
 Route::get('/getRequest', 'Pak@testJquery'); // Обработка jquery в контроллере pak
+
+Route::get('/ajax-plans', 'Pak@jqueryResponse');
