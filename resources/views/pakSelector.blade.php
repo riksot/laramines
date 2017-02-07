@@ -7,7 +7,7 @@
         <section class="content-header">
             <h1>
                 ПАК
-                <small>Информация</small>
+                <small>Выбор учебного плана</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="/">Главная</a></li>
@@ -18,17 +18,17 @@
         <!-- Main content -->
         <section class="content">
 
-
             <div class="box box-info">
+
                 <div class="box-header with-border">
-                    <h3 class="box-title">Выбор учебного плана</h3>
+                    <h3 class="box-title">Факультет</h3>
                 </div>
                 <div class="box-body">
                     <div class="form-group">
 
                         <select class="form-control">
 
-                            <option>Факультет</option>
+                            <option></option>
 
                             @foreach ($faculty as $fac)
                                 <option>{{ $fac->FAKN }}</option>

@@ -15,5 +15,20 @@ Route::get('/', function () {
     return view('test');
 });
 
-Route::get('/pak', 'Pak@selectfaculty');
+Route::get('/pak', 'Pak@selectFaculty');
 
+
+// Route::get('/test', 'Pak@selectPlans');
+
+Route::get('/test', function () {
+    return view('test');
+});
+
+//Route::get('/getRequest',function(){
+//    if(Request::ajax()){
+//        return 'getRequest has loaded completely';
+//
+//    }
+//});
+
+Route::get('/getRequest', 'Pak@testJquery'); // Обработка jquery в контроллере pak
