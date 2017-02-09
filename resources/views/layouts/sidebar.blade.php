@@ -10,7 +10,7 @@
             </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li class="active"><a href="/pak"><i class="fa fa-circle-o"></i> ПАК v1</a></li>
+                    <li><a href="/paklist"><i class="fa fa-circle-o"></i> Заполнение</a></li>
                     {{--<li><a href="/pak"><i class="fa fa-circle-o"></i> ПАК v2</a></li>--}}
                 </ul>
             </li>
@@ -23,10 +23,12 @@
             </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="#"><i class="fa fa-circle-o"></i> Первый</a></li>
+                    <li><a href="/pak"><i class="fa fa-circle-o"></i> Выбор</a></li>
+{{--
                     <li><a href="#"><i class="fa fa-circle-o"></i> Второй</a></li>
                     <li><a href="#"><i class="fa fa-circle-o"></i> Третий</a></li>
                     <li><a href="#"><i class="fa fa-circle-o"></i> Четвертый</a></li>
+--}}
                 </ul>
             </li>
 

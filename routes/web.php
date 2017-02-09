@@ -17,6 +17,9 @@ Route::get('/', function () {
 
 Route::get('/pak', 'Pak@selectFaculty');
 
+Route::get('/paklist', 'Pak@selectPak');
+
+
 // Route::get('/test', 'Pak@selectPlans');
 
 Route::get('/test', function () {

@@ -29,13 +29,17 @@
 
                 @foreach ($plans as $plan)
 
-                    <tr class="ng-hide" >
+                    <tr class="ng-hide" id="{{$plan->RPRID}}">
                         <td>{{$plan->RPRNK}}</td>
                         <td></td>
                         <td></td>
                         <td>{{$plan->RPRG}}</td>
                         <td>{{$plan->RPRKS}}</td>
                         <td>{{$plan->RPRNS}}</td>
+                        <td class="input-group-btn">
+                            <a href="/editplan/?id={{$plan->RPRID}}" class="btn btn-xs"><i class="fa fa-edit"></i></a>
+                            <a href="/printplan/?id={{$plan->RPRID}}" class="btn btn-xs"><i class="fa fa-print"></i></a>
+                        </td>
                     </tr>
 
                 @endforeach
@@ -44,8 +48,11 @@
             </table>
         </div>
     </div>
-
-
+    <script type="text/javascript"> // Вывод id строки
+            $('tr.ng-hide').click(function () {
+                console.log($(this).attr('id'));
+            });
+    </script>
 </div>
 
 
