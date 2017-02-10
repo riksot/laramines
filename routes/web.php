@@ -15,9 +15,9 @@ Route::get('/', function () {
     return view('test');
 });
 
-Route::get('/pak', 'Pak@selectFaculty');
+Route::get('/pak', 'Pak@selectFaculty')->name('pak');
 
-Route::get('/paklist', 'Pak@selectPak');
+Route::get('/paklist', 'Pak@selectPak')->name('paklist');
 
 
 // Route::get('/test', 'Pak@selectPlans');
