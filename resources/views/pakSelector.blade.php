@@ -26,7 +26,7 @@
                 <div class="box-body">
                     <div class="form-group">
 
-                        <select class="form-control" name="fakults" id="fakults" title="facultet-selector">
+                        <select class="form-control select2 " name="fakults" id="fakults" title="facultet-selector">
 
                             <option></option>
 

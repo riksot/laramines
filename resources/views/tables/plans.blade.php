@@ -37,9 +37,12 @@
                         <td>{{$plan->RPRKS}}</td>
                         <td>{{$plan->RPRNS}}</td>
                         <td class="input-group-btn">
-                            <a href="/editplan/?id={{$plan->RPRID}}" class="btn btn-xs"><i class="fa fa-edit"></i></a>
-                            <a href="/printplan/?id={{$plan->RPRID}}" class="btn btn-xs"><i class="fa fa-print"></i></a>
-                        </td>
+
+                            <a href="/selectplan/?id={{$plan->RPRID}}" class="btn btn-xs"><i class="glyphicon glyphicon-triangle-right"></i></a>
+                            {{--<a href="/printplan/?id={{$plan->RPRID}}" class="btn btn-xs"><i class="fa fa-print"></i></a>
+
+                                                        <button type="button" class="btn btn-info btn-flat"><a href="/editplan/?id={{$plan->RPRID}}" class="btn btn-xs"><i class="fa fa-edit"></i></a></button>
+                            --}}                        </td>
                     </tr>
 
                 @endforeach

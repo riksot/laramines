@@ -109,11 +109,11 @@
                                     </tr>
                                     <tr>
                                         <td>Итого зачетных единиц по учебному плану СамГТУ</td>
-                                        <td>ХХХХ </td>
+                                        <td><b>ХХХХ</b></td>
                                     </tr>
                                     <tr>
-                                        <td>Перезачтено,зачетных единиц</td>
-                                        <td>ХХХХ</td>
+                                        <td>Перезачтено, зачетных единиц</td>
+                                        <td><b>ХХХХ</b></td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -121,23 +121,35 @@
                                 <label>Подписи</label>
                                 <table class="table table-condensed">
                                     <tbody>
+                                        <tr>
+                                            <td>Декан заочного факультета</td>
+                                            <td>Л.М.Инаходова </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Доцент кафедры</td>
+                                            <td>И.И.Иванов </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Заведующий кафедрой</td>
+                                            <td>И.И.Иванов</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Составитель протокола</td>
+                                            <td>И.И.Иванов</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <label>Утверждаю</label>
+                                <table class="table table-condensed">
+                                    <tbody>
                                     <tr>
-                                        <td>Декан заочного факультета</td>
-                                        <td>Инаходова Л.М.</td>
+                                        <td>Проректор по ВЗО</td>
+                                        <td>Г.В.Бичуров </td>
                                     </tr>
                                     <tr>
-                                        <td>Доцент кафедры</td>
-                                        <td>Иванов И.И.</td>
+                                        <td>Дата</td>
+                                        <td><input class="form-control" type="text" ></td>
                                     </tr>
-                                    <tr>
-                                        <td>Заведующий кафедрой</td>
-                                        <td>Иванов И.И.</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Составитель протокола</td>
-                                        <td>Иванов И.И.</td>
-                                    </tr>
-
                                     </tbody>
                                 </table>
                             </div>
@@ -145,6 +157,9 @@
 
                         </div>
                         <!-- /.box-body -->
+                        <div class="box-footer">
+                            <button type="submit" class="btn btn-primary pull-right">Сохранить</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -152,85 +167,89 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="box box-warning">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">Дисциплины</h3>
-                    </div>
-                    <div class="box-body">
-                        <table class="table-condensed table-bordered table-hover">
-                    <thead>
-                    <tr style="text-align: center;">
-                        <td rowspan="3">Индекс</td>
-                        <td rowspan="3">Наименование дисциплин учебного плана СамГТУ</td>
-                        <td colspan="8">ИЗУЧЕНО И ПЕРЕЗАЧТЕНО</td>
-                        <td rowspan="3">Результат аттестации <br/>(зачтено/ незачтено/ оценка)</td>
-                        <td colspan="2" rowspan="2">Всего подлежит изучению</td>
-                    </tr>
-                    <tr style="text-align: center;">
-                        <td colspan="6">Формы контроля</td>
-                        <td width="50px;" rowspan="2">ЗЕТ</td>
-                        <td width="50px;" rowspan="2">Часов</td>
-                    </tr>
-                    <tr style="text-align: center;">
-                        <td width="80px;">Экзамены</td>
-                        <td width="80px;">Зачеты</td>
-                        <td width="80px;">Зачеты с оценкой</td>
-                        <td width="80px;">Курсовые проекты</td>
-                        <td width="80px;">Курсовые работы</td>
-                        <td width="80px;">Контрольные</td>
-                        <td width="50px;">ЗЕТ</td>
-                        <td width="50px;">Часов</td>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @for($i=1; $i < 10; $i++)
-                        <tr class="ng-hide">
-                            <td>
-                                {{$i}}
-                            </td>
-                            <td>
-                                Наименование дисциплин учебного плана СамГТУ
-                            </td>
-                            <td>
-                               3
-                            </td>
-                            <td>
-                               4
-                            </td>
-                            <td>
-                                5
-                            </td>
-                            <td>
-                                6
-                            </td>
-                            <td>
-                                7
-                            </td>
-                            <td>
-                                8
-                            </td>
-                            <td>
-                                9
-                            </td>
-                            <td>
-                                10
-                            </td>
-                            <td>
-                                11
-                            </td>
-                            <td>
-                                12
-                            </td>
-                            <td>
-                                13
-                            </td>
-                        </tr>
-                    @endfor
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Дисциплины</h3>
+                        </div>
+                        <div class="box-body">
+                            <table class="table-condensed table-bordered table-hover">
+                                <thead>
+                                <tr style="text-align: center;">
+                                    <td rowspan="3">Индекс</td>
+                                    <td rowspan="3">Наименование дисциплин учебного плана СамГТУ</td>
+                                    <td colspan="8">ИЗУЧЕНО И ПЕРЕЗАЧТЕНО</td>
+                                    <td rowspan="3">Результат аттестации <br/>(зачтено/ незачтено/ оценка)</td>
+                                    <td colspan="2" rowspan="2">Всего подлежит изучению</td>
+                                </tr>
+                                <tr style="text-align: center;">
+                                    <td colspan="6">Формы контроля</td>
+                                    <td width="50px;" rowspan="2">ЗЕТ</td>
+                                    <td width="50px;" rowspan="2">Часов</td>
+                                </tr>
+                                <tr style="text-align: center;">
+                                    <td width="80px;">Экзамены</td>
+                                    <td width="80px;">Зачеты</td>
+                                    <td width="80px;">Зачеты с оценкой</td>
+                                    <td width="80px;">Курсовые проекты</td>
+                                    <td width="80px;">Курсовые работы</td>
+                                    <td width="80px;">Контрольные</td>
+                                    <td width="50px;">ЗЕТ</td>
+                                    <td width="50px;">Часов</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @for($i=1; $i < 10; $i++)
+                                    <tr class="ng-hide">
+                                        <td>
+                                            {{$i}}
+                                        </td>
+                                        <td>
+                                            Наименование дисциплин учебного плана СамГТУ
+                                        </td>
+                                        <td>
+                                           3
+                                        </td>
+                                        <td>
+                                           4
+                                        </td>
+                                        <td>
+                                            5
+                                        </td>
+                                        <td>
+                                            6
+                                        </td>
+                                        <td>
+                                            7
+                                        </td>
+                                        <td>
+                                            8
+                                        </td>
+                                        <td>
+                                            9
+                                        </td>
+                                        <td>
+                                            10
+                                        </td>
+                                        <td>
+                                            11
+                                        </td>
+                                        <td>
+                                            12
+                                        </td>
+                                        <td>
+                                            13
+                                        </td>
+                                    </tr>
+                                @endfor
 
-                    </tbody>
-                </table>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="box-footer">
+                            <button type="submit" class="btn btn-primary pull-right">Пересчитать</button>
+                        </div>
                     </div>
                 </div>
-                </div>
+
             </div>
 
         </section>
