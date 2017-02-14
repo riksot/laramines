@@ -25,119 +25,345 @@
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <table class="table table-hover" width="100%" cellspacing="0" id="example">
+                            <table class="table table-hover" width="100%" cellspacing="0" id="table-plans">
                                 <thead>
                                 <tr>
-                                    <th>Name</th>
-                                    <th>Position</th>
-                                    <th>Office</th>
-                                    <th>Age</th>
-                                    <th>Start date</th>
-                                    <th>Salary</th>
+                                    <th style="width: 50px">Кафедра</th>
+                                    <th style="width: 120px">Заведующий</th>
+                                    <th>Форма</th>
+                                    <th style="width: 20px">Год</th>
+                                    <th>Номер</th>
+                                    <th>Наименование учебной программы</th>
+                                    <th></th>
                                 </tr>
                                 </thead>
-                                <tfoot>
-                                <tr class="ng-hide" >
-                                    <th>Name</th>
-                                    <th>Position</th>
-                                    <th>Office</th>
-                                    <th>Age</th>
-                                    <th>Start date</th>
-                                    <th>Salary</th>
-                                </tr>
-                                </tfoot>
+
                                 <tbody>
-                                <tr class="ng-hide">
-                                    <td>Tiger Nixon</td>
-                                    <td>System Architect</td>
-                                    <td>Edinburgh</td>
-                                    <td>61</td>
-                                    <td>2011/04/25</td>
-                                    <td>$320,800</td>
-                                </tr>
-                                <tr class="ng-hide">
-                                    <td>Garrett Winters</td>
-                                    <td>Accountant</td>
-                                    <td>Tokyo</td>
-                                    <td>63</td>
-                                    <td>2011/07/25</td>
-                                    <td>$170,750</td>
-                                </tr>
-                                <tr class="ng-hide">
-                                    <td>Ashton Cox</td>
-                                    <td>Junior Technical Author</td>
-                                    <td>San Francisco</td>
-                                    <td>66</td>
-                                    <td>2009/01/12</td>
-                                    <td>$86,000</td>
-                                </tr>
-                                <tr class="ng-hide">
-                                    <td>Cedric Kelly</td>
-                                    <td>Senior Javascript Developer</td>
-                                    <td>Edinburgh</td>
-                                    <td>22</td>
-                                    <td>2012/03/29</td>
-                                    <td>$433,060</td>
-                                </tr>
-                                <tr class="ng-hide">
-                                    <td>Airi Satou</td>
-                                    <td>Accountant</td>
-                                    <td>Tokyo</td>
-                                    <td>33</td>
-                                    <td>2008/11/28</td>
-                                    <td>$162,700</td>
-                                </tr>
-                                <tr class="ng-hide">
-                                    <td>Brielle Williamson</td>
-                                    <td>Integration Specialist</td>
-                                    <td>New York</td>
-                                    <td>61</td>
-                                    <td>2012/12/02</td>
-                                    <td>$372,000</td>
-                                </tr>
-                                <tr class="ng-hide">
-                                    <td>Herrod Chandler</td>
-                                    <td>Sales Assistant</td>
-                                    <td>San Francisco</td>
-                                    <td>59</td>
-                                    <td>2012/08/06</td>
-                                    <td>$137,500</td>
-                                </tr>
-                                <tr class="ng-hide">
-                                    <td>Rhona Davidson</td>
-                                    <td>Integration Specialist</td>
-                                    <td>Tokyo</td>
-                                    <td>55</td>
-                                    <td>2010/10/14</td>
-                                    <td>$327,900</td>
-                                </tr>
-                                <tr class="ng-hide">
-                                    <td>Colleen Hurst</td>
-                                    <td>Javascript Developer</td>
-                                    <td>San Francisco</td>
-                                    <td>39</td>
-                                    <td>2009/09/15</td>
-                                    <td>$205,500</td>
-                                </tr>
-                                <tr class="ng-hide">
-                                    <td>Sonya Frost</td>
-                                    <td>Software Engineer</td>
-                                    <td>Edinburgh</td>
-                                    <td>23</td>
-                                    <td>2008/12/13</td>
-                                    <td>$103,600</td>
-                                </tr>
-                                <tr class="ng-hide">
-                                    <td>Jena Gaines</td>
-                                    <td>Office Manager</td>
-                                    <td>London</td>
-                                    <td>30</td>
-                                    <td>2008/12/19</td>
-                                    <td>$90,560</td>
+
+
+                                <tr class="ng-hide" id="112">
+                                    <td>301</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>2011</td>
+                                    <td>19.03.02</td>
+                                    <td>Технология бродильных производств и виноделие</td>
+                                    <td class="input-group-btn">
+
+                                        <a href="/selectplan/?id=112" class="btn btn-xs"><i class="glyphicon glyphicon-triangle-right"></i></a>
+                                    </td>
                                 </tr>
 
-                                </tbody>
-                            </table>
+
+                                <tr class="ng-hide" id="198">
+                                    <td>302</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>2012</td>
+                                    <td>19.03.02</td>
+                                    <td>Технология общественного питания</td>
+                                    <td class="input-group-btn">
+
+                                        <a href="/selectplan/?id=198" class="btn btn-xs"><i class="glyphicon glyphicon-triangle-right"></i></a>
+                                    </td>
+                                </tr>
+
+
+                                <tr class="ng-hide" id="213">
+                                    <td>301</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>2011</td>
+                                    <td>260501</td>
+                                    <td>Технология продуктов общественного питания</td>
+                                    <td class="input-group-btn">
+
+                                        <a href="/selectplan/?id=213" class="btn btn-xs"><i class="glyphicon glyphicon-triangle-right"></i></a>
+                                    </td>
+                                </tr>
+
+
+                                <tr class="ng-hide" id="15">
+                                    <td>301</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>2001</td>
+                                    <td>260202</td>
+                                    <td>Технология хлеба, кондитерских и макаронных изделий</td>
+                                    <td class="input-group-btn">
+
+                                        <a href="/selectplan/?id=15" class="btn btn-xs"><i class="glyphicon glyphicon-triangle-right"></i></a>
+                                    </td>
+                                </tr>
+
+
+                                <tr class="ng-hide" id="16">
+                                    <td>301</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>2001</td>
+                                    <td>260204</td>
+                                    <td>Технология бродильных производств и виноделие</td>
+                                    <td class="input-group-btn">
+
+                                        <a href="/selectplan/?id=16" class="btn btn-xs"><i class="glyphicon glyphicon-triangle-right"></i></a>
+                                    </td>
+                                </tr>
+
+
+                                <tr class="ng-hide" id="17">
+                                    <td>301</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>2001</td>
+                                    <td>260402</td>
+                                    <td>Технология жиров, эфирных масел  и парфюмерно-косметических продуктов</td>
+                                    <td class="input-group-btn">
+
+                                        <a href="/selectplan/?id=17" class="btn btn-xs"><i class="glyphicon glyphicon-triangle-right"></i></a>
+                                    </td>
+                                </tr>
+
+
+                                <tr class="ng-hide" id="229">
+                                    <td>302</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>2013</td>
+                                    <td>19.03.02</td>
+                                    <td>Технология общественного питания</td>
+                                    <td class="input-group-btn">
+
+                                        <a href="/selectplan/?id=229" class="btn btn-xs"><i class="glyphicon glyphicon-triangle-right"></i></a>
+                                    </td>
+                                </tr>
+
+
+                                <tr class="ng-hide" id="230">
+                                    <td>301</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>2013</td>
+                                    <td>260501</td>
+                                    <td>Технология продуктов общественного питания</td>
+                                    <td class="input-group-btn">
+
+                                        <a href="/selectplan/?id=230" class="btn btn-xs"><i class="glyphicon glyphicon-triangle-right"></i></a>
+                                    </td>
+                                </tr>
+
+
+                                <tr class="ng-hide" id="231">
+                                    <td>301</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>2013</td>
+                                    <td>260501</td>
+                                    <td>Технология продуктов общественного питания</td>
+                                    <td class="input-group-btn">
+
+                                        <a href="/selectplan/?id=231" class="btn btn-xs"><i class="glyphicon glyphicon-triangle-right"></i></a>
+                                    </td>
+                                </tr>
+
+
+                                <tr class="ng-hide" id="232">
+                                    <td>301</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>2013</td>
+                                    <td>260501</td>
+                                    <td>Технология продуктов общественного питания</td>
+                                    <td class="input-group-btn">
+
+                                        <a href="/selectplan/?id=232" class="btn btn-xs"><i class="glyphicon glyphicon-triangle-right"></i></a>
+                                    </td>
+                                </tr>
+
+
+                                <tr class="ng-hide" id="308">
+                                    <td>302</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>2013</td>
+                                    <td>19.03.02</td>
+                                    <td>Технология общественного питания</td>
+                                    <td class="input-group-btn">
+
+                                        <a href="/selectplan/?id=308" class="btn btn-xs"><i class="glyphicon glyphicon-triangle-right"></i></a>
+                                    </td>
+                                </tr>
+
+
+                                <tr class="ng-hide" id="309">
+                                    <td>302</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>2013</td>
+                                    <td>19.03.02</td>
+                                    <td>Технология общественного питания</td>
+                                    <td class="input-group-btn">
+
+                                        <a href="/selectplan/?id=309" class="btn btn-xs"><i class="glyphicon glyphicon-triangle-right"></i></a>
+                                    </td>
+                                </tr>
+
+
+                                <tr class="ng-hide" id="310">
+                                    <td>302</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>2013</td>
+                                    <td>19.03.02</td>
+                                    <td>Технология общественного питания</td>
+                                    <td class="input-group-btn">
+
+                                        <a href="/selectplan/?id=310" class="btn btn-xs"><i class="glyphicon glyphicon-triangle-right"></i></a>
+                                    </td>
+                                </tr>
+
+
+                                <tr class="ng-hide" id="311">
+                                    <td>302</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>2013</td>
+                                    <td>19.03.02</td>
+                                    <td>Технология общественного питания</td>
+                                    <td class="input-group-btn">
+
+                                        <a href="/selectplan/?id=311" class="btn btn-xs"><i class="glyphicon glyphicon-triangle-right"></i></a>
+                                    </td>
+                                </tr>
+
+
+                                <tr class="ng-hide" id="312">
+                                    <td>302</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>2013</td>
+                                    <td>260501</td>
+                                    <td>Технология общественного питания</td>
+                                    <td class="input-group-btn">
+
+                                        <a href="/selectplan/?id=312" class="btn btn-xs"><i class="glyphicon glyphicon-triangle-right"></i></a>
+                                    </td>
+                                </tr>
+
+
+                                <tr class="ng-hide" id="313">
+                                    <td>302</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>2013</td>
+                                    <td>260501</td>
+                                    <td>Технология общественного питания</td>
+                                    <td class="input-group-btn">
+
+                                        <a href="/selectplan/?id=313" class="btn btn-xs"><i class="glyphicon glyphicon-triangle-right"></i></a>
+                                    </td>
+                                </tr>
+
+
+                                <tr class="ng-hide" id="314">
+                                    <td>302</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>2013</td>
+                                    <td>260501</td>
+                                    <td>Технология общественного питания</td>
+                                    <td class="input-group-btn">
+
+                                        <a href="/selectplan/?id=314" class="btn btn-xs"><i class="glyphicon glyphicon-triangle-right"></i></a>
+                                    </td>
+                                </tr>
+
+
+                                <tr class="ng-hide" id="374">
+                                    <td>302</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>2015</td>
+                                    <td>190302</td>
+                                    <td>Технология продуктов общественного питания</td>
+                                    <td class="input-group-btn">
+
+                                        <a href="/selectplan/?id=374" class="btn btn-xs"><i class="glyphicon glyphicon-triangle-right"></i></a>
+                                    </td>
+                                </tr>
+
+
+                                <tr class="ng-hide" id="375">
+                                    <td>302</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>2015</td>
+                                    <td>190302</td>
+                                    <td>Технология продуктов общественного питания</td>
+                                    <td class="input-group-btn">
+
+                                        <a href="/selectplan/?id=375" class="btn btn-xs"><i class="glyphicon glyphicon-triangle-right"></i></a>
+                                    </td>
+                                </tr>
+
+
+                                <tr class="ng-hide" id="420">
+                                    <td>301</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>2015</td>
+                                    <td>190401</td>
+                                    <td>Биотехнология</td>
+                                    <td class="input-group-btn">
+
+                                        <a href="/selectplan/?id=420" class="btn btn-xs"><i class="glyphicon glyphicon-triangle-right"></i></a>
+                                    </td>
+                                </tr>
+
+
+                                <tr class="ng-hide" id="469">
+                                    <td>301</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>2016</td>
+                                    <td>190401</td>
+                                    <td>Биотехнология функциональных продуктов питания и биологически активных веществ</td>
+                                    <td class="input-group-btn">
+
+                                        <a href="/selectplan/?id=469" class="btn btn-xs"><i class="glyphicon glyphicon-triangle-right"></i></a>
+                                    </td>
+                                </tr>
+
+
+                                <tr class="ng-hide" id="495">
+                                    <td>302</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>2016</td>
+                                    <td>190304</td>
+                                    <td>Технология производства продуктов и организация общественного питания</td>
+                                    <td class="input-group-btn">
+
+                                        <a href="/selectplan/?id=495" class="btn btn-xs"><i class="glyphicon glyphicon-triangle-right"></i></a>
+                                    </td>
+                                </tr>
+
+
+                                <tr class="ng-hide" id="496">
+                                    <td>302</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>2016</td>
+                                    <td>190304</td>
+                                    <td>Технология производства продуктов и организация общественного питания</td>
+                                    <td class="input-group-btn">
+
+                                        <a href="/selectplan/?id=496" class="btn btn-xs"><i class="glyphicon glyphicon-triangle-right"></i></a>
+                                    </td>
+                                </tr>
+
+
+                                </tbody>                            </table>
 
                         </div>
                         <!-- /.box-body -->
@@ -147,30 +373,25 @@
                 <!-- /.col -->
             </div>
 
-            <!-- DataTables -->
             <script type="text/javascript" src="adminlte/plugins/datatables/jquery.dataTables.min.js"></script>
-{{--
-            <script type="text/javascript" src="adminlte/plugins/datatables/dataTables.bootstrap.min.js"></script>
---}}
             <script type="text/javascript" src="adminlte/plugins/jQuery/jquery-2.2.3.min.js"></script>
-
             <link rel="stylesheet" href="adminlte/plugins/datatables/jquery.dataTables.min.css">
 
-
-            <script>
-                $(document).ready(function() {
-                    $('#example').DataTable({
+            <script type="text/javascript">
+                $(window).ready(function() {
+                    $('#table-plans').DataTable({
                         "paging":   false,
-                       // "ordering": false,
                         "info":     false,
                         "language": {
                             "zeroRecords": "Ничего не найдено!",
                             "search": "Поиск:"
-
                         }
                     });
-                } );
+                });
             </script>
+
+
+
 
         </section>
     </div>
