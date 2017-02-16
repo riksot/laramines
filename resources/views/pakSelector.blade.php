@@ -49,7 +49,7 @@
     <script type="text/javascript" src="adminlte/plugins/jQuery/jquery-2.2.3.min.js"></script>
     <script type="text/javascript">  // Вывод списка учебных планов при выборе факультета
         $('#fakults').on('change',function (e) {
-            console.log(e);
+            //console.log(e);
             var fakult = e.target.value;
 
             $.get('/ajax-plans?fakult='+fakult,function (data) {

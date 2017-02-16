@@ -20,6 +20,10 @@ Route::get('/pak', 'Pak@selectFaculty')->name('pak');
 Route::get('/paklist', 'Pak@selectPak')->name('paklist');
 
 
+
+
+Route::get('/stud', 'Pak@selectStudent')->name('stud');
+
 // Route::get('/test', 'Pak@selectPlans');
 
 Route::get('/test', function () {

@@ -5,10 +5,16 @@
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
-            <h1>
-                Протокол аттестации
-                <small></small>
-            </h1>
+            <h3>Иванов Иван Иванович (1 курс, 23 группа)</h3>
+            <button class="btn btn-primary" type="button">Протокол аттестации</button>
+            <button class="btn btn-default" type="button">Титул</button>
+            <button class="btn btn-default" type="button">График</button>
+            <button class="btn btn-default" type="button">План</button>
+            <button class="btn btn-default" type="button">Свод</button>
+            <button class="btn btn-default" type="button">Индивидуальный график</button>
+            <button class="btn btn-default" type="button">Зачетка</button>
+
+
             <ol class="breadcrumb">
                 <li><a href="/">Главная</a></li>
                 <li class="active">ПАК</li>
@@ -22,10 +28,15 @@
                 <div class="col-md-6">
                     <div class="box box-info">
                     <div class="box-header with-border">
-    {{--
                         <h3 class="box-title">Протокол аттестации</h3>
-    --}}
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        </div>
+
+
+                        {{--
                         <input name="" class="form-control " placeholder="ФИО" type="text">
+--}}
     {{--
                         <div class="box-tools">
                             <div class="input-group" style="width: 300px;">
@@ -37,14 +48,26 @@
 
                     <div class="box-body">
                         <div class="form-group">
+                            <form action="/pak" method="get">
+                                <input type="hidden" name="studid" value="00000">
+                                {{ csrf_field() }}
+                                {{Session::put('studid','11111100000')}}
+{{--
+                                @if(isset($_REQUEST['id']))
+                                    <div>{{$_REQUEST['id']}}</div>
+                                @endif
+--}}
+
+                                <button class="btn btn-primary" type="submit">Выбор учебного плана</button><br/>
+                            </form>
                             <label>Претендующего на зачисление в порядке</label>
-                            <select  name="" id="" title="">
+                            <select class="form-control-static" name="" id="" title="">
                                 <option>Приёма</option>
                                 <option>Перевода</option>
                                 <option>Зачисления</option>
                             </select>
                             <label>на</label>
-                            <select name="" id="" title="">
+                            <select class="form-control-static" name="" id="" title="">
                                 <option>1</option>
                                 <option>2</option>
                                 <option>3</option>
@@ -52,7 +75,7 @@
                                 <option>5</option>
                             </select>
                             <label>курс</label>
-                            <input id="" placeholder="Заочного факультета" type="">
+                            <input class="form-control-static" id="" placeholder="Заочного факультета" type="">
                         </div>
                         <div class="form-group">
                             <label>Для обучения по направлению подготовки (специальности)</label>
@@ -60,7 +83,7 @@
                             {{--<label>ЗАПОЛНИТСЯ ПОСЛЕ ВЫБОРА УЧЕБНОГО ПЛАНА</label>--}}
                         </div>
                         <div class="form-group">
-                            <label">по образовательной программе</label>
+                            <label>по образовательной программе</label>
                             <input class="form-control " id="" placeholder="ЗАПОЛНИТСЯ ПОСЛЕ ВЫБОРА УЧЕБНОГО ПЛАНА" type="">
                             {{--<label>ЗАПОЛНИТСЯ ПОСЛЕ ВЫБОРА УЧЕБНОГО ПЛАНА</label>--}}
                         </div>
@@ -88,8 +111,7 @@
                             <h3 class="box-title">Выводы аттестационной комиссии</h3>
 
                             <div class="box-tools pull-right">
-                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                             </div>
                             <!-- /.box-tools -->
                         </div>
@@ -148,7 +170,7 @@
                                     </tr>
                                     <tr>
                                         <td>Дата</td>
-                                        <td><input class="form-control" type="text" ></td>
+                                        <td><input class="form-control" type="text" id="" ></td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -158,6 +180,7 @@
                         </div>
                         <!-- /.box-body -->
                         <div class="box-footer">
+                            <button type="submit" class="btn btn-primary">Печать</button>
                             <button type="submit" class="btn btn-primary pull-right">Сохранить</button>
                         </div>
                     </div>

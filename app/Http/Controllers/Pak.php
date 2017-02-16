@@ -15,9 +15,18 @@ class Pak extends Controller
 {
     public function selectFaculty(Fak $facultyModel){ // Выборка всех факультетов
         $faculty = $facultyModel->getFak();
-        // $faculty = DB::select('SELECT * FROM FAK');  // Выбираем все факультеты в базе
-        // dump($faculty);
-        return view('pakSelector',['faculty' => $faculty]); // Передаем информацию в pakSelector
+        if (isset($_REQUEST['studid'])){
+            $studid = $_REQUEST['studid'];
+        } else ($studid = null);
+
+//        $id = $_REQUEST['id'];
+//        $faculty = DB::select('SELECT * FROM FAK');  // Выбираем все факультеты в базе
+//        dump($studid);
+        return view('pakSelector',['faculty' => $faculty, 'studid' => $studid]); // Передаем информацию в pakSelector
+    }
+
+    public function selectStudent(){ // Выборка студентов
+        return view('students'); // Передаем информацию в pakSelector
     }
 
     public function jqueryResponse(Plan $planModel){
@@ -28,12 +37,13 @@ class Pak extends Controller
 //        return \Response::json($plans);
     }
 
-
-
     public function selectPak(){  // Выборка всех планов
+        if (isset($_REQUEST['studid'])){
+            $studid = $_REQUEST['studid'];
+        } else ($studid = null);
 //        $plans = Plan::query(['RPRID,RPRNF,RPRNK,RPRKS,RPRNS,RPRG'])->get();
-//        dump($plans);
-        return view('protocol');
+        //dump($studid);
+        return view('protocol',['studid' => $studid]);
     }
 
     public function testJquery(){ // Вывод таблицы из вида tables.plans
