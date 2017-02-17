@@ -38,5 +38,6 @@ class PlanController extends Controller
             $file->move($destinationPath,$file->getClientOriginalName());
         }
         else echo 'Не тот тип файла. Загрузите xml!';
+        dd($file);
     }
 }

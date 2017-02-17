@@ -18,6 +18,9 @@ use Barryvdh\DomPDF\Facade as PDF;
 
 Route::get('/', 'PlanController@index')->name('plan');
 
+
+Route::get('/uploadplan', 'PlanController@index')->name('uploadplan');
+
 Route::post('/uploadfile', 'PlanController@showUploadFile');
 
 Route::get('/pak', 'PakController@selectFaculty')->name('pak');
