@@ -5,6 +5,7 @@
             <li><a href="{{route('stud')}}"><i class="fa fa-users"></i>Контенгент</a></li>
             <li><a href="{{route('paklist')}}"><i class="fa fa-table"></i>ПАК</a></li>
             <li><a href="{{route('pak')}}"><i class="fa fa-files-o"></i>Выбор учебного плана</a></li>
+            <li><a href="{{route('pak')}}"><i class="fa fa-download"></i>Загрузка учебного плана</a></li>
 {{--
             <li class="treeview">
                 <a href="#">

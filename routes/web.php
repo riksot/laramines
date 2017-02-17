@@ -12,15 +12,19 @@
 */
 use Barryvdh\DomPDF\Facade as PDF;
 
-Route::get('/', function () {
-    return view('test');
-});
+/*Route::get('/', function () {
+    return view('plan');
+});*/
 
-Route::get('/pak', 'Pak@selectFaculty')->name('pak');
+Route::get('/', 'PlanController@index')->name('plan');
 
-Route::get('/paklist', 'Pak@selectPak')->name('paklist');
+Route::post('/uploadfile', 'PlanController@showUploadFile');
 
-Route::get('/stud', 'Pak@selectStudent')->name('stud');
+Route::get('/pak', 'PakController@selectFaculty')->name('pak');
+
+Route::get('/paklist', 'PakController@selectPak')->name('paklist');
+
+Route::get('/stud', 'PakController@selectStudent')->name('stud');
 
 Route::get('pdf', 'PdfController@pdf');
 //Route::get('pdf', function(){
@@ -40,6 +44,6 @@ Route::get('/test', function () {
 //    }
 //});
 
-Route::get('/getRequest', 'Pak@testJquery'); // Обработка jquery в контроллере pak
+Route::get('/getRequest', 'PakController@testJquery'); // Обработка jquery в контроллере pak
 
-Route::get('/ajax-plans', 'Pak@jqueryResponse');
+Route::get('/ajax-plans', 'PakController@jqueryResponse');

@@ -200,7 +200,7 @@
                                     <td rowspan="3">Индекс</td>
                                     <td rowspan="3">Наименование дисциплин учебного плана СамГТУ</td>
                                     <td colspan="8">ИЗУЧЕНО И ПЕРЕЗАЧТЕНО</td>
-                                    <td rowspan="3">Результат аттестации <br/>(зачтено/ незачтено/ оценка)</td>
+                                    <td width="80px;" rowspan="3">Результат аттестации <br/>(зачтено/ незачтено/ оценка)</td>
                                     <td colspan="2" rowspan="2">Всего подлежит изучению</td>
                                 </tr>
                                 <tr style="text-align: center;">
@@ -209,24 +209,24 @@
                                     <td width="50px;" rowspan="2">Часов</td>
                                 </tr>
                                 <tr style="text-align: center;">
-                                    <td width="80px;">Экзамены</td>
-                                    <td width="80px;">Зачеты</td>
-                                    <td width="80px;">Зачеты с оценкой</td>
-                                    <td width="80px;">Курсовые проекты</td>
-                                    <td width="80px;">Курсовые работы</td>
-                                    <td width="80px;">Контрольные</td>
+                                    <td width="80px;">Экзамен</td>
+                                    <td width="80px;">Зачет</td>
+                                    <td width="80px;">Зачет с оценкой</td>
+                                    <td width="80px;">Курсовой проект</td>
+                                    <td width="80px;">Курсовая работа</td>
+                                    <td width="80px;">Контрольная</td>
                                     <td width="50px;">ЗЕТ</td>
                                     <td width="50px;">Часов</td>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 @for($i=1; $i < 10; $i++)
-                                    <tr class="ng-hide">
+                                    <tr class="ng-hide text-center">
                                         <td>
                                             {{$i}}
                                         </td>
-                                        <td>
-                                            Наименование дисциплин учебного плана СамГТУ
+                                        <td class="text-left">
+                                            Наименование дисциплины учебного плана учебного плана учебного плана СамГТУ
                                         </td>
                                         <td>
                                            3
@@ -241,7 +241,7 @@
                                             6
                                         </td>
                                         <td>
-                                            7
+                                            {{--<input class="form-control " id="" placeholder="7" type="">--}}7
                                         </td>
                                         <td>
                                             8

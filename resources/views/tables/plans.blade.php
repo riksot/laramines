@@ -29,7 +29,7 @@
                     <th style="width: 120px">Заведующий</th>
                     <th>Форма</th>
                     <th style="width: 20px">Год</th>
-                    <th>Номер</th>
+                    <th>Номер <br/>направления</th>
                     <th>Наименование учебной программы</th>
                     <th data-orderable="false"></th>
                 </tr>
@@ -49,9 +49,13 @@
                             <form action="/paklist" method="get">
                                 <input type="hidden" name="planid" value="{{$plan->RPRID}}">
                                 <input type="hidden" name="studid" value="{{Session::get('studid')}}">
-
                                 <button class="btn btn-xs" type="submit"><i class="glyphicon glyphicon-triangle-right"></i></button>
                             </form>
+{{--
+                            <a class="btn btn-xs" href="/paklist?palnid={{$plan->RPRID}}" ><i class="glyphicon glyphicon-triangle-right"></i></a>
+                            <a class="btn btn-xs" href="/paklist?palnid={{$plan->RPRID}}" type="submit"><i class="fa fa-edit"></i></a>
+--}}
+
 {{--
                             <a href="/printplan/?id={{$plan->RPRID}}" class="btn btn-xs"><i class="fa fa-print"></i></a>
                             <button type="button" class="btn btn-info btn-flat"><a href="/editplan/?id={{$plan->RPRID}}" class="btn btn-xs"><i class="fa fa-edit"></i></a></button>

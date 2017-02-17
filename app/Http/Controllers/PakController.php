@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Input;
 
 //use Symfony\Component\Console\Input\Input;
 
-class Pak extends Controller
+class PakController extends Controller
 {
     public function selectFaculty(Fak $facultyModel){ // Выборка всех факультетов
         $faculty = $facultyModel->getFak();
