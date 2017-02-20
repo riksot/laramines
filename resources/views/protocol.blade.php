@@ -205,18 +205,18 @@
                                 </tr>
                                 <tr style="text-align: center;">
                                     <td colspan="6">Формы контроля</td>
-                                    <td width="50px;" rowspan="2">ЗЕТ</td>
-                                    <td width="50px;" rowspan="2">Часов</td>
+                                    <td width="50px;" rowspan="2"><div >ЗЕТ</div></td>
+                                    <td width="50px;" rowspan="2"><div >Часов</div></td>
                                 </tr>
                                 <tr style="text-align: center;">
-                                    <td width="80px;">Экзамен</td>
-                                    <td width="80px;">Зачет</td>
-                                    <td width="80px;">Зачет с оценкой</td>
-                                    <td width="80px;">Курсовой проект</td>
-                                    <td width="80px;">Курсовая работа</td>
-                                    <td width="80px;">Контрольная</td>
-                                    <td width="50px;">ЗЕТ</td>
-                                    <td width="50px;">Часов</td>
+                                    <td><div class="vertical-orient">Экзамен</div></td>
+                                    <td><div class="vertical-orient">Зачет</div></td>
+                                    <td><div class="vertical-orient">Зачет с оценкой</div></td>
+                                    <td><div class="vertical-orient">Курсовой проект</div></td>
+                                    <td><div class="vertical-orient">Курсовая работа</div></td>
+                                    <td><div class="vertical-orient">Контрольная</div></td>
+                                    <td width="50px;"><div >ЗЕТ</div></td>
+                                    <td width="50px;"><div >Часов</div></td>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -226,28 +226,28 @@
                                             {{$i}}
                                         </td>
                                         <td class="text-left">
-                                            Наименование дисциплины учебного плана учебного плана учебного плана СамГТУ
+                                            Наименование дисциплины учебного плана учебного плана учебного плана СамГТУ учебного плана учебного плана СамГТУ учебного плана учебного плана СамГТУ
                                         </td>
                                         <td>
-                                           3
+                                            <input type="checkbox" checked>
                                         </td>
                                         <td>
-                                           4
+                                            <input type="checkbox">
                                         </td>
                                         <td>
-                                            5
+                                            <input type="checkbox">
                                         </td>
                                         <td>
-                                            6
+                                            <input type="checkbox">
                                         </td>
                                         <td>
-                                            {{--<input class="form-control " id="" placeholder="7" type="">--}}7
+                                            {{--<input class="form-control " id="" placeholder="7" type="">--}}<input type="checkbox">
                                         </td>
                                         <td>
-                                            8
+                                            <input type="checkbox">
                                         </td>
                                         <td>
-                                            9
+                                            32
                                         </td>
                                         <td>
                                             10

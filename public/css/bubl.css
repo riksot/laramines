@@ -1,0 +1,8 @@
+/*!
+ * Добавление новых свойств
+ */
+
+.vertical-orient {
+    writing-mode: sideways-lr;
+
+}
