@@ -61,43 +61,43 @@
                                 <button class="btn btn-primary" type="submit">Выбор учебного плана</button><br/>
                             </form>
                             <label>Претендующего на зачисление в порядке</label>
-                            <select class="form-control-static" name="" id="" title="">
-                                <option>Приёма</option>
-                                <option>Перевода</option>
-                                <option>Зачисления</option>
+                            <select class="form-control-static" name="poryadok" id="" title="">
+                                <option value="1">Приёма</option>
+                                <option value="2">Перевода</option>
+                                <option value="3">Зачисления</option>
                             </select>
                             <label>на</label>
-                            <select class="form-control-static" name="" id="" title="">
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
+                            <select class="form-control-static" name="kurs" id="" title="">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
                             </select>
                             <label>курс</label>
-                            <input class="form-control-static" id="" placeholder="Заочного факультета" type="">
+                            <input class="form-control-static" id="fakultet" placeholder="Заочного факультета" type="">
                         </div>
                         <div class="form-group">
                             <label>Для обучения по направлению подготовки (специальности)</label>
-                            <input class="form-control " id="" placeholder="ЗАПОЛНИТСЯ ПОСЛЕ ВЫБОРА УЧЕБНОГО ПЛАНА" type="">
+                            <input class="form-control " id="napravlenie" placeholder="ЗАПОЛНИТСЯ ПОСЛЕ ВЫБОРА УЧЕБНОГО ПЛАНА" type="">
                             {{--<label>ЗАПОЛНИТСЯ ПОСЛЕ ВЫБОРА УЧЕБНОГО ПЛАНА</label>--}}
                         </div>
                         <div class="form-group">
                             <label>по образовательной программе</label>
-                            <input class="form-control " id="" placeholder="ЗАПОЛНИТСЯ ПОСЛЕ ВЫБОРА УЧЕБНОГО ПЛАНА" type="">
+                            <input class="form-control " id="programma" placeholder="ЗАПОЛНИТСЯ ПОСЛЕ ВЫБОРА УЧЕБНОГО ПЛАНА" type="">
                             {{--<label>ЗАПОЛНИТСЯ ПОСЛЕ ВЫБОРА УЧЕБНОГО ПЛАНА</label>--}}
                         </div>
                         <div class="form-group">
                             <label>по результатам освоения в</label>
-                            <input class="form-control " id="" placeholder="Наименование вуза" type="">
+                            <input class="form-control " id="izuchVuz" placeholder="Наименование вуза" type="">
                         </div>
                         <div class="form-group">
                             <label>образовательной программы</label>
-                            <input class="form-control" id="" placeholder="Наименование программы" type="">
+                            <input class="form-control" id="izuchProgramma" placeholder="Наименование программы" type="">
                         </div>
                         <div class="form-group">
                             <label>по направлению подготовки</label>
-                            <input class="form-control" id="" placeholder="Наименование направления" type="">
+                            <input class="form-control" id="izuchNapravlenie" placeholder="Наименование направления" type="">
                         </div>
 
                     </div>
@@ -123,19 +123,19 @@
                                     <tbody>
                                     <tr>
                                         <td>Рекомендован к зачислению на</td>
-                                        <td>XX курс, ХХ семестр</td>
+                                        <td><div id="rekomKurs">XX курс, XX семестр</div></td>
                                     </tr>
                                     <tr>
                                         <td>Ориентировочный срок обучения</td>
-                                        <td>== года</td>
+                                        <td><div id="rekomSrok">XX года</div></td>
                                     </tr>
                                     <tr>
                                         <td>Итого зачетных единиц по учебному плану СамГТУ</td>
-                                        <td><b>ХХХХ</b></td>
+                                        <td><b><div id="itigoZet">XXXX</div></b></td>
                                     </tr>
                                     <tr>
                                         <td>Перезачтено, зачетных единиц</td>
-                                        <td><b>ХХХХ</b></td>
+                                        <td><b><div id="perezachZet">XXXX</div></b></td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -274,7 +274,6 @@
                 </div>
 
             </div>
-
         </section>
         <!-- /.content -->
     </div>

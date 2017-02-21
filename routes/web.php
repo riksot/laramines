@@ -36,9 +36,9 @@ Route::get('pdf', 'PdfController@pdf');
 //    return $pdf->download('pdf.pdf');
 //});
 
-Route::get('/test', function () {
-    return view('test');
-});
+Route::get('/test/{studid?}', function ($studid = null) {
+    return view('test',['studid' => $studid]);
+})->name('test');
 
 //Route::get('/getRequest',function(){
 //    if(Request::ajax()){
@@ -50,3 +50,7 @@ Route::get('/test', function () {
 Route::get('/getRequest', 'PakController@testJquery'); // Обработка jquery в контроллере pak
 
 Route::get('/ajax-plans', 'PakController@jqueryResponse');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index');

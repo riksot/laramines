@@ -43,7 +43,7 @@ class PakController extends Controller
         } else ($studid = null);
 //        $plans = Plan::query(['RPRID,RPRNF,RPRNK,RPRKS,RPRNS,RPRG'])->get();
         //dump($studid);
-        return view('protocol',['studid' => $studid]);
+        return view('pak.protocol',['studid' => $studid]);
     }
 
     public function testJquery(){ // Вывод таблицы из вида tables.plans
