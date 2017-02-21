@@ -229,10 +229,10 @@
                                             Наименование дисциплины учебного плана учебного плана учебного плана СамГТУ учебного плана учебного плана СамГТУ учебного плана учебного плана СамГТУ
                                         </td>
                                         <td>
-                                            <input type="checkbox" checked>
+                                            <input type="checkbox" checked >
                                         </td>
                                         <td>
-                                            <input type="checkbox">
+                                            <input type="checkbox" disabled>
                                         </td>
                                         <td>
                                             <input type="checkbox">

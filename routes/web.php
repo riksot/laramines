@@ -16,6 +16,9 @@ use Barryvdh\DomPDF\Facade as PDF;
     return view('plan');
 });*/
 
+Auth::routes();
+Route::get('/home', 'HomeController@index');
+
 Route::get('/', 'PlanController@index')->name('plan');
 
 
@@ -36,9 +39,12 @@ Route::get('pdf', 'PdfController@pdf');
 //    return $pdf->download('pdf.pdf');
 //});
 
-Route::get('/test/{studid?}', function ($studid = null) {
-    return view('test',['studid' => $studid]);
-})->name('test');
+Route::get('/test/{studid?}', 'PakController@getStudentInfo')->name('test');
+
+
+//Route::get('/test/{studid?}', function ($studid = null) {
+//    return view('test',['studid' => $studid]);
+//})->name('test');
 
 //Route::get('/getRequest',function(){
 //    if(Request::ajax()){
@@ -51,6 +57,4 @@ Route::get('/getRequest', 'PakController@testJquery'); // Обработка jqu
 
 Route::get('/ajax-plans', 'PakController@jqueryResponse');
 
-Auth::routes();
 
-Route::get('/home', 'HomeController@index');

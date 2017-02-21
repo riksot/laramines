@@ -1,247 +1,72 @@
+<table class="table-condensed table-bordered table-hover">
+    <thead>
+    <tr style="text-align: center;">
+        <td rowspan="3">Индекс</td>
+        <td rowspan="3">Наименование дисциплин учебного плана СамГТУ</td>
+        <td colspan="8">ИЗУЧЕНО И ПЕРЕЗАЧТЕНО</td>
+        <td width="80px;" rowspan="3">Результат аттестации <br/>(зачтено/ незачтено/ оценка)</td>
+        <td colspan="2" rowspan="2">Всего подлежит изучению</td>
+    </tr>
+    <tr style="text-align: center;">
+        <td colspan="6">Формы контроля</td>
+        <td width="50px;" rowspan="2"><div >ЗЕТ</div></td>
+        <td width="50px;" rowspan="2"><div >Часов</div></td>
+    </tr>
+    <tr style="text-align: center;">
+        <td><div class="vertical-orient">Экзамен</div></td>
+        <td><div class="vertical-orient">Зачет</div></td>
+        <td><div class="vertical-orient">Зачет с оценкой</div></td>
+        <td><div class="vertical-orient">Курсовой проект</div></td>
+        <td><div class="vertical-orient">Курсовая работа</div></td>
+        <td><div class="vertical-orient">Контрольная</div></td>
+        <td width="50px;"><div >ЗЕТ</div></td>
+        <td width="50px;"><div >Часов</div></td>
+    </tr>
+    </thead>
+    <tbody>
+    @for($i=1; $i < 10; $i++)
+        <tr class="ng-hide text-center">
+            <td>
+                {{$i}}
+            </td>
+            <td class="text-left">
+                Наименование дисциплины учебного плана учебного плана учебного плана СамГТУ учебного плана учебного плана СамГТУ учебного плана учебного плана СамГТУ
+            </td>
+            <td>
+                <input type="checkbox" checked disabled>
+            </td>
+            <td>
+                <input type="checkbox">
+            </td>
+            <td>
+                <input type="checkbox">
+            </td>
+            <td>
+                <input type="checkbox">
+            </td>
+            <td>
+                <input type="checkbox">
+            </td>
+            <td>
+                <input type="checkbox">
+            </td>
+            <td>
+                32
+            </td>
+            <td>
+                10
+            </td>
+            <td>
+                11
+            </td>
+            <td>
+                12
+            </td>
+            <td>
+                13
+            </td>
+        </tr>
+    @endfor
 
-    <table>
-        <tr>
-            <td><p>Индекс</p>
-            </td>
-            <td><p>Наименование дисциплин учебного плана СамГТУ</p>
-            </td>
-            <td><p>ИЗУЧЕНО И ПЕРЕЗАЧТЕНО</p>
-            </td>
-            <td><p>Результат аттестации (зачтено/ незачтено/ оценка)</p>
-            </td>
-            <td><p>Всего подлежит изучению</p>
-            </td>
-        </tr>
-        <tr>
-            <td><p>Формы контроля</p>
-            </td>
-            <td><p>ЗЕТ</p>
-            </td>
-            <td><p>Часов</p>
-            </td>
-        </tr>
-        <tr>
-            <td><p>Экзамены</p>
-            </td>
-            <td><p>Зачеты</p>
-            </td>
-            <td><p>Зачеты с оценкой</p>
-            </td>
-            <td><p>Курсовые проекты</p>
-            </td>
-            <td><p>Курсовые работы</p>
-            </td>
-            <td><p>Контрольные</p>
-            </td>
-            <td><p>ЗЕТ</p>
-            </td>
-            <td><p>Часов</p>
-            </td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td><p></p>
-            </td>
-            <td><p><strong>Итого</strong></p>
-            </td>
-            <td><p>3</p>
-            </td>
-            <td><p>7</p>
-            </td>
-            <td><p>2</p>
-            </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><p>49.5</p>
-            </td>
-            <td><p>1782</p>
-            </td>
-            <td></td>
-            <td><p>240</p>
-            </td>
-            <td><p>8968</p>
-            </td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td><p><strong>Б1</strong></p>
-            </td>
-            <td><p><strong>Дисциплины (модули)</strong></p>
-            </td>
-            <td><p>3</p>
-            </td>
-            <td><p>7</p>
-            </td>
-            <td><p>2</p>
-            </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><p>49.5</p>
-            </td>
-            <td><p>1782</p>
-            </td>
-            <td></td>
-            <td><p>213</p>
-            </td>
-            <td><p>7996</p>
-            </td>
-        </tr>
-        <tr>
-            <td><p>Б1.Б.1</p>
-            </td>
-            <td><p>Философия</p>
-            </td>
-            <td><p>1</p>
-            </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><p>3</p>
-            </td>
-            <td><p>108</p>
-            </td>
-            <td></td>
-            <td><p>3</p>
-            </td>
-            <td><p>108</p>
-            </td>
-        </tr>
-        <tr>
-            <td><p>Б1.Б.2</p>
-            </td>
-            <td><p>История</p>
-            </td>
-            <td><p>1</p>
-            </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><p>3</p>
-            </td>
-            <td><p>108</p>
-            </td>
-            <td></td>
-            <td><p>3</p>
-            </td>
-            <td><p>108</p>
-            </td>
-        </tr>
-        <tr>
-            <td><p>Б1.Б.3</p>
-            </td>
-            <td><p>Иностранный язык</p>
-            </td>
-            <td></td>
-            <td></td>
-            <td><p>1</p>
-            </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><p>9</p>
-            </td>
-            <td><p>324</p>
-            </td>
-            <td></td>
-            <td><p>9</p>
-            </td>
-            <td><p>324</p>
-            </td>
-        </tr>
-        <tr>
-            <td><p>Б1.Б.4</p>
-            </td>
-            <td><p>Безопасность жизнедеятельности</p>
-            </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><p>3</p>
-            </td>
-            <td><p>108</p>
-            </td>
-            <td></td>
-            <td><p>3</p>
-            </td>
-            <td><p>108</p>
-            </td>
-        </tr>
-        <tr>
-            <td><p>Б1.Б.5</p>
-            </td>
-            <td><p>Физическая культура и спорт</p>
-            </td>
-            <td></td>
-            <td><p>1</p>
-            </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><p>2</p>
-            </td>
-            <td><p>72</p>
-            </td>
-            <td></td>
-            <td><p>2</p>
-            </td>
-            <td><p>72</p>
-            </td>
-        </tr>
-        <tr>
-            <td><p>Б1.Б.6</p>
-            </td>
-            <td><p>Математика</p>
-            </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><p>10.5</p>
-            </td>
-            <td><p>378</p>
-            </td>
-            <td></td>
-            <td><p>16</p>
-            </td>
-            <td><p>576</p>
-            </td>
-        </tr>
-    </table>
+    </tbody>
+</table>
