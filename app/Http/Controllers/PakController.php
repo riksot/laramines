@@ -61,12 +61,13 @@ class PakController extends Controller
         if ($studid === null) {
             return view('test');
         } else {
-            $student = Student::where('id','=',$studid)->get()->first();  // Выбрали одну строку
+            $student = Student::find($studid); // Поиск по id студента
+            //$student = Student::where('id','=',$studid)->get()->first();  // Выбрали одну строку
             //$fio = $student->pluck('name')->first(); // Выбрали одно поле
 
             $plan = Plan::where('RPRID','=',$student->pluck('plan')->first())->get()->first();
-            $discs = Discipline::where('UPNOM','=',$student->pluck('plan')->first())->get();
-            //dd($student->kurs);
+            $discs = Discipline::where('UPNOM','=',$student->pluck('plan')->first())->orderBy('UPIND')->get();
+            //dd($student);
             return view('tables.test-table', ['student' => $student, 'plan' => $plan, 'discs' => $discs]);
         }
     }

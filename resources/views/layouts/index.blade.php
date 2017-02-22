@@ -62,7 +62,7 @@
 <!-- ./wrapper -->
 
 <!-- jQuery 2.2.3 -->
-<script src="{{ asset('adminlte') }}adminlte/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<script src="{{ asset('adminlte/plugins/jQuery/jquery-2.2.3.min.js') }}"></script>
 <!-- jQuery UI 1.11.4 -->
 <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
@@ -99,21 +99,9 @@
 <!-- AdminLTE for demo purposes -->
 <script src="{{ asset('adminlte/dist/js/demo.js') }}"></script>
 
-<!-- jQuery 2.2.3 -->
-<script src="{{ asset('adminlte/plugins/jQuery/jquery-2.2.3.min.js') }}"></script>
-<!-- Bootstrap 3.3.6 -->
-<script src="{{ asset('adminlte/bootstrap/js/bootstrap.min.js') }}"></script>
 <!-- DataTables -->
 <script src="{{ asset('adminlte/plugins/datatables/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('adminlte/plugins/datatables/dataTables.bootstrap.min.js') }}"></script>
-<!-- SlimScroll -->
-<script src="{{ asset('adminlte/plugins/slimScroll/jquery.slimscroll.min.js') }}"></script>
-<!-- FastClick -->
-<script src="{{ asset('adminlte/plugins/fastclick/fastclick.js') }}"></script>
-<!-- AdminLTE App -->
-<script src="{{ asset('adminlte/dist/js/app.min.js') }}"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="{{ asset('adminlte/dist/js/demo.js') }}"></script>
 <!-- page script -->
 
 
