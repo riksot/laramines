@@ -11,7 +11,8 @@
         "barryvdh/laravel-ide-helper": "^2.2",
         "doctrine/dbal": "^2.5",
         "graham-campbell/exceptions": "^9.3",
-        "laravel/framework": "5.3.*"
+        "laravel/framework": "5.3.*",
+        "orchestra/parser": "~3.0"
     },
     "require-dev": {
         "filp/whoops": "^2.1",
