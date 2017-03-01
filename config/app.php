@@ -162,6 +162,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        Nathanmac\Utilities\Parser\ParserServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -230,6 +231,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
         'XmlParser' => Orchestra\Parser\Xml\Facade::class,
+        'Parser' => Nathanmac\Utilities\Parser\Facades\Parser::class,
     ],
 
 ];
