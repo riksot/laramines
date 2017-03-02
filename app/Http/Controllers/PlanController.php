@@ -56,6 +56,8 @@ class PlanController extends Controller
                 $dis = array_add($dis, 'ПроектЗЕТПерезачтено',      array_get($disc, '@ПроектЗЕТПерезачтено'));
                 $dis = array_add($dis, 'КредитовНаДисциплину',      array_get($disc, '@КредитовНаДисциплину'));
 
+                if (!$dis['ПодлежитИзучению']) $dis = array_add($dis, 'ПерезачтеннаяДисциплина', 'Да');
+
 // =========== Проверяем, есть ли перезачеты ===========================================================================
 
                 if (array_get($disc, 'Курс') !== null){
@@ -67,21 +69,24 @@ class PlanController extends Controller
                     if (array_get($disc, 'Курс.@Ном') === null) {
 //                    $dis = array_add($dis, 'НомерКурса', array_get($disc, 'Курс'));
                         $kolvoKursov = 0;
-                        foreach (array_get($disc, 'Курс') as $kurs){
+                        if (is_array(array_get($disc, 'Курс'))) {
+                            foreach (array_get($disc, 'Курс') as $kurs) {
 //                        $dis = array_add($dis, 'НомерКурса'.$kolvoKursov, array_get($disc, 'Курс.'.$kolvoKursov));
 // ===================== Если несколько сессий в нескольких курсах =====================================================
-                            if (array_get(array_get($disc, 'Курс.'.$kolvoKursov), 'Сессия') !== null)
-                            if (array_get(array_get($disc, 'Курс.'.$kolvoKursov), 'Сессия.@Ном') === null) {
-                                $kolvosessii = 0;
-                                foreach (array_get($kurs, 'Сессия') as $sessia) {
-                                    $dis = array_add($dis, 'НомерКурса'.$kolvoKursov.'.Сессия'.$kolvosessii, $sessia);
-                                    $kolvosessii++;
-                                }
+                                if (array_get(array_get($disc, 'Курс.' . $kolvoKursov), 'Сессия') !== null)
+                                    if (array_get(array_get($disc, 'Курс.' . $kolvoKursov), 'Сессия.@Ном') === null) {
+                                        $kolvosessii = 0;
+                                        if (is_array(array_get($kurs, 'Сессия'))) {
+                                            foreach (array_get($kurs, 'Сессия') as $sessia) {
+                                                $dis = array_add($dis, 'НомерКурса' . $kolvoKursov . '.Сессия' . $kolvosessii, $sessia);
+                                                $kolvosessii++;
+                                            }
+                                        }
+                                    } else {
+                                        $dis = array_add($dis, 'НомерКурса' . $kolvoKursov . '.Сессия0', array_get($kurs, 'Сессия'));
+                                    }
+                                $kolvoKursov++;
                             }
-                            else {
-                                $dis = array_add($dis, 'НомерКурса'.$kolvoKursov.'.Сессия0', array_get($kurs, 'Сессия'));
-                            }
-                            $kolvoKursov++;
                         }
                     }
                     else {
@@ -93,9 +98,11 @@ class PlanController extends Controller
                         if (array_get(array_get($disc, 'Курс'), 'Сессия.@Ном') === null) {
                             $kolvosessii = 0;
                             //dd(array_get(array_get($disc, 'Курс'), 'Сессия'));
-                            foreach (array_get(array_get($disc, 'Курс'), 'Сессия') as $sessia) {
-                                $dis = array_add($dis, 'НомерКурса0'.'.Сессия'.$kolvosessii, $sessia);
-                                $kolvosessii++;
+                            if (is_array(array_get(array_get($disc, 'Курс'), 'Сессия'))) {
+                                foreach (array_get(array_get($disc, 'Курс'), 'Сессия') as $sessia) {
+                                    $dis = array_add($dis, 'НомерКурса0' . '.Сессия' . $kolvosessii, $sessia);
+                                    $kolvosessii++;
+                                }
                             }
                         }
                         else {
@@ -112,13 +119,61 @@ class PlanController extends Controller
 // ========================== Парсинг курсов Конец =====================================================================
                 }
                 else {
-                    $dis = array_add($dis, 'ПерезачтеннаяДисциплина', 'Да');
-//                    dd($disc);
+//                    $dis = array_add($dis, 'ПерезачтеннаяДисциплина', 'Да');
                 }
 
                     $discs[] = $dis;
 
             }
+// ========================== Парсинг дисциплин Конец ==================================================================
+
+// ========================== Парсинг практик Начало ===================================================================
+
+            $practics_parsed = array_get($parsed, 'План.СпецВидыРаботНов');
+            $practics = array();
+            $numberPractics = 0;
+            if (array_get($practics_parsed, 'УчебПрактики.ПрочаяПрактика') !== null) {
+                if (array_get($practics_parsed, 'УчебПрактики.ПрочаяПрактика.@Наименование') !== null) {
+                    $practics = array_add($practics, 'Практика'.$numberPractics++, array_get($practics_parsed, 'УчебПрактики.ПрочаяПрактика'));
+                }
+                else {
+                    $counter_practic = 0;
+                    if (is_array(array_get($practics_parsed, 'УчебПрактики.ПрочаяПрактика'))) {
+                        foreach (array_get($practics_parsed, 'УчебПрактики.ПрочаяПрактика') as $practic) {
+                            $practics = array_add($practics, 'Практика' . $numberPractics++, array_get($practics_parsed, 'УчебПрактики.ПрочаяПрактика.' . $counter_practic++));
+                        }
+                    }
+                }
+            }
+            if (array_get($practics_parsed, 'НИР.ПрочаяПрактика') !== null) {
+                if (array_get($practics_parsed, 'НИР.ПрочаяПрактика.@Наименование') !== null) {
+                    $practics = array_add($practics, 'Практика'.$numberPractics++, array_get($practics_parsed, 'НИР.ПрочаяПрактика'));
+                }
+                else {
+                    $counter_practic = 0;
+                    if (is_array(array_get($practics_parsed, 'НИР.ПрочаяПрактика'))) {
+                        foreach (array_get($practics_parsed, 'НИР.ПрочаяПрактика') as $practic) {
+                            $practics = array_add($practics, 'Практика' . $numberPractics++, array_get($practics_parsed, 'НИР.ПрочаяПрактика.' . $counter_practic++));
+                        }
+                    }
+                }
+            }
+            if (array_get($practics_parsed, 'ПрочиеПрактики.ПрочаяПрактика') !== null) {
+                if (array_get($practics_parsed, 'ПрочиеПрактики.ПрочаяПрактика.@Наименование') !== null) {
+                    $practics = array_add($practics, 'Практика'.$numberPractics++, array_get($practics_parsed, 'ПрочиеПрактики.ПрочаяПрактика'));
+                }
+                else {
+                    $counter_practic = 0;
+                    if (is_array(array_get($practics_parsed, 'ПрочиеПрактики.ПрочаяПрактика'))) {
+                        foreach (array_get($practics_parsed, 'ПрочиеПрактики.ПрочаяПрактика') as $practic) {
+                            $practics = array_add($practics, 'Практика' . $numberPractics++, array_get($practics_parsed, 'ПрочиеПрактики.ПрочаяПрактика.' . $counter_practic++));
+                        }
+                    }
+                }
+            }
+
+// ========================== Парсинг практик Конец ====================================================================
+
             dd($discs);
 //            $array = array_only($discs, array('@Дис', '@Цикл', '@НовЦикл', '@НовИдДисциплины', '@Кафедра', 'Курс')); $discs
 
