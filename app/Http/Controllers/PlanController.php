@@ -54,6 +54,8 @@ class PlanController extends Controller
             $parser = new Parser();
             $parsed = $parser->xml(file_get_contents($file));
 
+// ========================== Достаём информацию о плане из xml ================================
+
             $plan = array(
                 'Головная' =>                   array_get($parsed, 'План.Титул.@Головная'),
                 'ОбразовательноеУчреждение' =>  array_get($parsed, 'План.Титул.@ИмяВуза'),
@@ -71,9 +73,11 @@ class PlanController extends Controller
                 'ВидыДеятельности' =>           array_get($parsed, 'План.Титул.ВидыДеятельности.ВидДеятельности'),
             );
 
-            $discs = array_get($parsed, 'План.СтрокиПлана.Строка'); // Достаём дисциплины из xml
-            $dis_arr = array();
-            foreach ($discs as $disc){
+// ========================== Достаём дисциплины из xml ================================
+
+            $discs_parsed = array_get($parsed, 'План.СтрокиПлана.Строка');
+            $discs = array();
+            foreach ($discs_parsed as $disc){
 //                $dis = array_only($disc, array('@Дис', '@Цикл', '@НовЦикл', '@ИдетификаторДисциплины', '@НовИдДисциплины', '@Кафедра'));
                 $dis = array();
                 $dis = array_add($dis, 'Дисциплина', array_get($disc, '@Дис'));
@@ -82,13 +86,28 @@ class PlanController extends Controller
                 $dis = array_add($dis, 'ИдетификаторДисциплины', array_get($disc, '@ИдетификаторДисциплины'));
                 $dis = array_add($dis, 'НовИдДисциплины', array_get($disc, '@НовИдДисциплины'));
                 $dis = array_add($dis, 'Кафедра', array_get($disc, '@Кафедра'));
-                $dis = array_add($dis, 'НомерКурса', array_get($disc, 'Курс.@Ном'));
-                if (array_get($disc, 'Курс.@Лек')) $dis = array_add($dis, 'ЛекцииВсего', array_get($disc, 'Курс.@Лек'));
-                if (array_get($disc, 'Курс.@Лаб')) $dis = array_add($dis, 'ЛабораторныеВсего', array_get($disc, 'Курс.@Лаб'));
-                if (array_get($disc, 'Курс.@Пр')) $dis = array_add($dis, 'ПрактикиВсего', array_get($disc, 'Курс.@Пр'));
-                if (array_get($disc, 'Курс.@КСР')) $dis = array_add($dis, 'КСРВсего', array_get($disc, 'Курс.@КСР'));
-                if (array_get($disc, 'Курс.@СРС')) $dis = array_add($dis, 'СРСВсего', array_get($disc, 'Курс.@СРС'));
-                if (array_get($disc, 'Курс.@ЗЕТ')) $dis = array_add($dis, 'ЗЕТВсего', array_get($disc, 'Курс.@ЗЕТ'));
+//                if (array_get($disc, 'Курс.@Лек')) $dis = array_add($dis, 'ЛекцииВсего', array_get($disc, 'Курс.@Лек'));
+//                if (array_get($disc, 'Курс.@Лаб')) $dis = array_add($dis, 'ЛабораторныеВсего', array_get($disc, 'Курс.@Лаб'));
+//                if (array_get($disc, 'Курс.@Пр')) $dis = array_add($dis, 'ПрактикиВсего', array_get($disc, 'Курс.@Пр'));
+//                if (array_get($disc, 'Курс.@КСР')) $dis = array_add($dis, 'КСРВсего', array_get($disc, 'Курс.@КСР'));
+//                if (array_get($disc, 'Курс.@СРС')) $dis = array_add($dis, 'СРСВсего', array_get($disc, 'Курс.@СРС'));
+//                if (array_get($disc, 'Курс.@ЗЕТ')) $dis = array_add($dis, 'ЗЕТВсего', array_get($disc, 'Курс.@ЗЕТ'));
+
+                // Парсинг курсов
+
+                $kolvoKursov = 1;
+                if (array_get($disc, 'Курс.@Ном') === null) {
+//                    $dis = array_add($dis, 'НомерКурса', array_get($disc, 'Курс'));
+                    $kolvoKursov = 0;
+                    foreach (array_get($disc, 'Курс') as $kurs){
+                        $dis = array_add($dis, 'НомерКурса'.$kolvoKursov, array_get($disc, 'Курс.'.$kolvoKursov++));
+
+                    }
+                } else {
+                    $dis = array_add($dis, 'НомерКурса0', array_get($disc, 'Курс'));
+                }
+                $dis = array_add($dis, 'Количествокурсов', $kolvoKursov);
+
 
                 // Парсинг сессий
                 if (array_get($disc, 'Курс.Сессия') !== null) {
@@ -167,14 +186,14 @@ class PlanController extends Controller
 //                    $dis = array_add($dis, 'ЗЕТВсего', array_get($disc, 'Курс.@ЗЕТ'));
 //                }
 
-                $dis_arr[] = $dis;
+                $discs[] = $dis;
             };
 
 
 
 
 //            $array = array_only($discs, array('@Дис', '@Цикл', '@НовЦикл', '@НовИдДисциплины', '@Кафедра', 'Курс')); $discs
-            dd($dis_arr);
+            dd($discs);
 
 // =========================== Конец Nathanmac\Utilities\Parser\Parser ==============================
 
