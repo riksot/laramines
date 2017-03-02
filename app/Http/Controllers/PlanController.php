@@ -1,9 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
-use Orchestra\Parser\XmlServiceProvider;
+
 use Nathanmac\Utilities\Parser\Parser;
 class PlanController extends Controller
 {
@@ -13,48 +12,14 @@ class PlanController extends Controller
 
     public function showUploadFile(Request $request){
         $file = $request->file('uploadfile');
-
         if ($file->getMimeType() == 'application/xml') {
 
-/*// =========================== Начало Orchestra\Parser\XmlServiceProvider ==============================
-
-
-            $xml = \XmlParser::load($file->getPathname());
-            $plan = $xml->parse([
-                'Головная' =>                   ['uses' => 'План.Титул::Головная'],
-                'ОбразовательноеУчреждение' =>  ['uses' => 'План.Титул::ИмяВуза'],
-                'СтруктурноеПодразделение' =>   ['uses' => 'План.Титул::ИмяВуза2'],
-                'Кафедра' =>                    ['uses' => 'План.Титул::КодКафедры'],
-                'Факультет' =>                  ['uses' => 'План.Титул::Факультет'],
-                'WhoRatif' =>                   ['uses' => 'План.Титул::WhoRatif'],
-                'КодНаправления' =>             ['uses' => 'План.Титул::ПоследнийШифр'],
-                'ГодНачалаПодготовки' =>        ['uses' => 'План.Титул::ГодНачалаПодготовки'],
-                'ТипГОСа' =>                    ['uses' => 'План.Титул::ТипГОСа'],
-                'ДокументГОСа' =>               ['uses' => 'План.Титул::ДокументГОСа'],
-                'ДатаГОСа' =>                   ['uses' => 'План.Титул::ДатаГОСа'],
-                'Квалификация' =>               ['uses' => 'План.Титул.Квалификации.Квалификация::Название'],
-                'СрокОбучения' =>               ['uses' => 'План.Титул.Квалификации.Квалификация::СрокОбучения'],
-                'ВидыДеятельности' =>           ['uses' => 'План.Титул.ВидыДеятельности.ВидДеятельности[::Ном>Ном,::Название>Название]', 'default' => null],
-                'Разработчики' =>               ['uses' => 'План.Титул.Разработчики.Разработчик[::Ном>Ном,::ФИО>ФИО,::Должность>Должность,::Активный>Активный]', 'default' => null],
-                'Специальности' =>              ['uses' => 'План.Титул.Специальности.Специальность[::Ном>Ном,::Название>Название]', 'default' => null],
-                'Дисциплины' =>                 ['uses' => 'План.СтрокиПлана.Строка[::Дис>Дисциплина,::НовИдДисциплины>ИдДисциплины,::Цикл>Цикл,::НовЦикл>НовЦикл,::Кафедра>Кафедра,Курс::Ном>НомерКурса,Курс.Сессия::Ном>СессияНомер]', 'default' => null],
-
-            ]);
-            dd($plan);
-// =========================== Конец Orchestra\Parser\XmlServiceProvider ==============================*/
-
-
-// =========================== Начало Nathanmac\Utilities\Parser\Parser ==============================
-
-//            $responseItems = (array) $parsed['План']['СтрокиПлана']['Строка'];
-//            foreach ($responseItems as $responseItem){
-//                dd($responseItem);
-//            };
+// =========================== Начало Nathanmac\Utilities\Parser\Parser ================================================
 
             $parser = new Parser();
             $parsed = $parser->xml(file_get_contents($file));
 
-// ========================== Достаём информацию о плане из xml ================================
+// ========================== Достаём информацию о плане из xml ========================================================
 
             $plan = array(
                 'Головная' =>                   array_get($parsed, 'План.Титул.@Головная'),
@@ -73,129 +38,110 @@ class PlanController extends Controller
                 'ВидыДеятельности' =>           array_get($parsed, 'План.Титул.ВидыДеятельности.ВидДеятельности'),
             );
 
-// ========================== Достаём дисциплины из xml ================================
+// ========================== Достаём дисциплины из xml ================================================================
 
             $discs_parsed = array_get($parsed, 'План.СтрокиПлана.Строка');
             $discs = array();
             foreach ($discs_parsed as $disc){
 //                $dis = array_only($disc, array('@Дис', '@Цикл', '@НовЦикл', '@ИдетификаторДисциплины', '@НовИдДисциплины', '@Кафедра'));
                 $dis = array();
-                $dis = array_add($dis, 'Дисциплина', array_get($disc, '@Дис'));
-                $dis = array_add($dis, 'Цикл', array_get($disc, '@Цикл'));
-                $dis = array_add($dis, 'НовЦикл', array_get($disc, '@НовЦикл'));
-                $dis = array_add($dis, 'ИдетификаторДисциплины', array_get($disc, '@ИдетификаторДисциплины'));
-                $dis = array_add($dis, 'НовИдДисциплины', array_get($disc, '@НовИдДисциплины'));
-                $dis = array_add($dis, 'Кафедра', array_get($disc, '@Кафедра'));
-//                if (array_get($disc, 'Курс.@Лек')) $dis = array_add($dis, 'ЛекцииВсего', array_get($disc, 'Курс.@Лек'));
-//                if (array_get($disc, 'Курс.@Лаб')) $dis = array_add($dis, 'ЛабораторныеВсего', array_get($disc, 'Курс.@Лаб'));
-//                if (array_get($disc, 'Курс.@Пр')) $dis = array_add($dis, 'ПрактикиВсего', array_get($disc, 'Курс.@Пр'));
-//                if (array_get($disc, 'Курс.@КСР')) $dis = array_add($dis, 'КСРВсего', array_get($disc, 'Курс.@КСР'));
-//                if (array_get($disc, 'Курс.@СРС')) $dis = array_add($dis, 'СРСВсего', array_get($disc, 'Курс.@СРС'));
-//                if (array_get($disc, 'Курс.@ЗЕТ')) $dis = array_add($dis, 'ЗЕТВсего', array_get($disc, 'Курс.@ЗЕТ'));
+                $dis = array_add($dis, 'Дисциплина',                array_get($disc, '@Дис'));
+                $dis = array_add($dis, 'Цикл',                      array_get($disc, '@Цикл'));
+                $dis = array_add($dis, 'НовЦикл',                   array_get($disc, '@НовЦикл'));
+                $dis = array_add($dis, 'ИдетификаторДисциплины',    array_get($disc, '@ИдетификаторДисциплины'));
+                $dis = array_add($dis, 'НовИдДисциплины',           array_get($disc, '@НовИдДисциплины'));
+                $dis = array_add($dis, 'Кафедра',                   array_get($disc, '@Кафедра'));
+                $dis = array_add($dis, 'ПодлежитИзучению',          array_get($disc, '@ПодлежитИзучению'));
+                $dis = array_add($dis, 'ПерезачетЧасов',            array_get($disc, '@ПерезачетЧасов'));
+                $dis = array_add($dis, 'ПроектЗЕТПерезачтено',      array_get($disc, '@ПроектЗЕТПерезачтено'));
+                $dis = array_add($dis, 'КредитовНаДисциплину',      array_get($disc, '@КредитовНаДисциплину'));
 
-                // Парсинг курсов
+// =========== Проверяем, есть ли перезачеты ===========================================================================
 
-                $kolvoKursov = 1;
-                if (array_get($disc, 'Курс.@Ном') === null) {
+                if (array_get($disc, 'Курс') !== null){
+
+// ========================== Парсинг курсов Начало ====================================================================
+
+                    $kolvoKursov = 1;
+// ==================== Если несколько курсов ==========================================================================
+                    if (array_get($disc, 'Курс.@Ном') === null) {
 //                    $dis = array_add($dis, 'НомерКурса', array_get($disc, 'Курс'));
-                    $kolvoKursov = 0;
-                    foreach (array_get($disc, 'Курс') as $kurs){
-                        $dis = array_add($dis, 'НомерКурса'.$kolvoKursov, array_get($disc, 'Курс.'.$kolvoKursov++));
-
-                    }
-                } else {
-                    $dis = array_add($dis, 'НомерКурса0', array_get($disc, 'Курс'));
-                }
-                $dis = array_add($dis, 'Количествокурсов', $kolvoKursov);
-
-
-                // Парсинг сессий
-                if (array_get($disc, 'Курс.Сессия') !== null) {
-                    for ($i=1 ; $i <= 3; $i++){
-                        switch (array_get($disc, 'Курс.Сессия.@Ном')) {
-                            case '1':
-                                $dis = array_add($dis, 'СессияУстановочная', array_get($disc, 'Курс.Сессия'));
-                                break;
-                            case '2':
-                                $dis = array_add($dis, 'СессияОсень', array_get($disc, 'Курс.Сессия'));
-                                break;
-                            case '3':
-                                $dis = array_add($dis, 'СессияВесна', array_get($disc, 'Курс.Сессия'));
-                                break;
+                        $kolvoKursov = 0;
+                        foreach (array_get($disc, 'Курс') as $kurs){
+//                        $dis = array_add($dis, 'НомерКурса'.$kolvoKursov, array_get($disc, 'Курс.'.$kolvoKursov));
+// ===================== Если несколько сессий в нескольких курсах =====================================================
+                            if (array_get(array_get($disc, 'Курс.'.$kolvoKursov), 'Сессия') !== null)
+                            if (array_get(array_get($disc, 'Курс.'.$kolvoKursov), 'Сессия.@Ном') === null) {
+                                $kolvosessii = 0;
+                                foreach (array_get($kurs, 'Сессия') as $sessia) {
+                                    $dis = array_add($dis, 'НомерКурса'.$kolvoKursov.'.Сессия'.$kolvosessii, $sessia);
+                                    $kolvosessii++;
+                                }
+                            }
+                            else {
+                                $dis = array_add($dis, 'НомерКурса'.$kolvoKursov.'.Сессия0', array_get($kurs, 'Сессия'));
+                            }
+                            $kolvoKursov++;
                         }
-                        if (array_get($disc, 'Курс.Сессия.0.@Ном') !== null) $dis = array_add($dis, 'СессияУстановочная', array_get($disc, 'Курс.Сессия.0'));
-                        if (array_get($disc, 'Курс.Сессия.1.@Ном') !== null) $dis = array_add($dis, 'СессияОсень', array_get($disc, 'Курс.Сессия.1'));
-                        if (array_get($disc, 'Курс.Сессия.2.@Ном') !== null) $dis = array_add($dis, 'СессияВесна', array_get($disc, 'Курс.Сессия.2'));
                     }
+                    else {
+
+ //                   $dis = array_add($dis, 'НомерКурса0', array_get($disc, 'Курс'));
+// ===================== Если несколько сессий в одном курсе ===========================================================
+
+                        if (array_get(array_get($disc, 'Курс'), 'Сессия') !== null)
+                        if (array_get(array_get($disc, 'Курс'), 'Сессия.@Ном') === null) {
+                            $kolvosessii = 0;
+                            //dd(array_get(array_get($disc, 'Курс'), 'Сессия'));
+                            foreach (array_get(array_get($disc, 'Курс'), 'Сессия') as $sessia) {
+                                $dis = array_add($dis, 'НомерКурса0'.'.Сессия'.$kolvosessii, $sessia);
+                                $kolvosessii++;
+                            }
+                        }
+                        else {
+                            $dis = array_add($dis, 'НомерКурса0'.'.Сессия0', array_get($disc, 'Курс.Сессия'));
+                        }
+
+//                    $temp = array_get($disc, 'Курс');
+//                    if (array_get($temp, 'Сессия.@Ном') === '1') $dis = array_add($dis, 'НомерКурса0.СессияУстановочная', array_get($temp, 'Сессия'));
+//                    if (array_get($temp, 'Сессия.@Ном') === '2') $dis = array_add($dis, 'НомерКурса0.СессияОсень', array_get($temp, 'Сессия'));
+//                    if (array_get($temp, 'Сессия.@Ном') === '3') $dis = array_add($dis, 'НомерКурса0.СессияВесна', array_get($temp, 'Сессия'));
+                    }
+                    $dis = array_add($dis, 'Количествокурсов', $kolvoKursov);
+
+// ========================== Парсинг курсов Конец =====================================================================
+                }
+                else {
+                    $dis = array_add($dis, 'ПерезачтеннаяДисциплина', 'Да');
+//                    dd($disc);
                 }
 
+                    $discs[] = $dis;
 
-
-//                echo($dis['Дисциплина']);
-//                foreach (array_get($disc, 'Курс.Сессия') as $ar){
-//                    $dis = array_add($dis, 'Сессия', $ar);
-//                }
-//                for ($i=1 ; $i <= 3; $i++){
-//                    if (array_get($disc, 'Курс.Сессия.@Ном') == '1') $dis = array_add($dis, 'СессияУстановочная', array_get($disc, 'Курс.Сессия'));
-//                    if (array_get($disc, 'Курс.Сессия.@Ном') == '2') $dis = array_add($dis, 'СессияОсень', array_get($disc, 'Курс.Сессия'));
-//                    if (array_get($disc, 'Курс.Сессия.@Ном') == '3') $dis = array_add($dis, 'СессияВесна', array_get($disc, 'Курс.Сессия'));
-//                    if ((array_get($disc, 'Курс.Сессия.@Ном') === null) & is_array(array_get($disc, 'Курс.Сессия.@Ном'))) {
-//
-//                        foreach (array_get($disc, 'Курс.Сессия') as $ar){
-//                            if (array_get($ar, '@Ном') == '1') $dis = array_add($dis, '=СессияУстановочная', array_get($ar, '@Ном'));
-//                            if (array_get($ar, '@Ном') == '2') $dis = array_add($dis, '=СессияОсень', array_get($ar, '@Ном'));
-//                            if (array_get($ar, '@Ном') == '3') $dis = array_add($dis, '=СессияВесна', array_get($ar, '@Ном'));
-//                        }
-//                    }
-//                }
-//                dd($dis);
-//                if (is_array(array_only($disc, array('Курс.Сессия.@Ном')))) {
-//                    $dis = array_add($dis, 'НомерСессии', 'Несколько сессий');
-//                    dd(array_get($disc, 'Курс'));
-//                } else $dis = array_add($dis, 'НомерСессии', array_get($disc, 'Курс.Сессия.@Ном'));
-//                  $dis = array_add($dis, 'Сессия', array_only($disc, array('Курс.Сессия.@Ном')));
-//                switch (array_get($disc, 'Курс.Сессия.@Ном')){
-//                    case '1':
-//                        $dis = array_add($dis, 'ЛекцииУстановочные', array_get($disc, 'Курс.Сессия.@Лек'));
-//                        $dis = array_add($dis, 'ЛабораторныеУстановочные', array_get($disc, 'Курс.Сессия.@Лаб'));
-//                        $dis = array_add($dis, 'ПрактикиУстановочные', array_get($disc, 'Курс.Сессия.@Пр'));
-//                        $dis = array_add($dis, 'КСРУстановочные', array_get($disc, 'Курс.Сессия.@КСР'));
-//                        $dis = array_add($dis, 'СРСУстановочные', array_get($disc, 'Курс.Сессия.@СРС'));
-//                        $dis = array_add($dis, 'ЗЕТУстановочные', array_get($disc, 'Курс.Сессия.@ЗЕТ'));
-//                    break;
-//                    case '2':
-//                        $dis = array_add($dis, 'ЛекцииОсень', array_get($disc, 'Курс.Сессия.@Лек'));
-//                        $dis = array_add($dis, 'ЛабораторныеОсень', array_get($disc, 'Курс.Сессия.@Лаб'));
-//                        $dis = array_add($dis, 'ПрактикиОсень', array_get($disc, 'Курс.Сессия.@Пр'));
-//                        $dis = array_add($dis, 'КСРОсень', array_get($disc, 'Курс.Сессия.@КСР'));
-//                        $dis = array_add($dis, 'СРСОсень', array_get($disc, 'Курс.Сессия.@СРС'));
-//                        $dis = array_add($dis, 'ЗЕТОсень', array_get($disc, 'Курс.Сессия.@ЗЕТ'));
-//                    break;
-//                    case '3':
-//                        $dis = array_add($dis, 'ЛекцииВесна', array_get($disc, 'Курс.Сессия.@Лек'));
-//                        $dis = array_add($dis, 'ЛабораторныеВеснае', array_get($disc, 'Курс.Сессия.@Лаб'));
-//                        $dis = array_add($dis, 'ПрактикиВесна', array_get($disc, 'Курс.Сессия.@Пр'));
-//                        $dis = array_add($dis, 'КСРВесна', array_get($disc, 'Курс.Сессия.@КСР'));
-//                        $dis = array_add($dis, 'СРСВесна', array_get($disc, 'Курс.Сессия.@СРС'));
-//                        $dis = array_add($dis, 'ЗЕТВесна', array_get($disc, 'Курс.Сессия.@ЗЕТ'));
-//                    break;
-//                    case null:
-//                    break;
-//                }
-//                if (array_get($disc, 'Курс.Сессия.@Ном') === '1'){
-//                    $dis = array_add($dis, 'ЗЕТВсего', array_get($disc, 'Курс.@ЗЕТ'));
-//                }
-
-                $discs[] = $dis;
-            };
-
-
-
-
-//            $array = array_only($discs, array('@Дис', '@Цикл', '@НовЦикл', '@НовИдДисциплины', '@Кафедра', 'Курс')); $discs
+            }
             dd($discs);
+//            $array = array_only($discs, array('@Дис', '@Цикл', '@НовЦикл', '@НовИдДисциплины', '@Кафедра', 'Курс')); $discs
 
-// =========================== Конец Nathanmac\Utilities\Parser\Parser ==============================
+// =========================== Конец Nathanmac\Utilities\Parser\Parser =================================================
+
+        }
+        else echo 'Не тот тип файла. Загрузите правильный файл!';
+
+    }
+}
+
+
+
+// ==========================  СВАЛКА!!!!! =============================================================================
+// $xml = \XmlParser::load($file->getPathname());
+
+//            $responseItems = (array) $parsed['План']['СтрокиПлана']['Строка'];
+//            foreach ($responseItems as $responseItem){
+//                dd($responseItem);
+//            };
+//                if (array_get($disc, 'Курс.@Лек')) $dis = array_add($dis, 'ЛекцииВсего', array_get($disc, 'Курс.@Лек'));
+// ==========================  СВАЛКА!!!!! =============================================================================
+
 
 
 //            //Display File Name
@@ -220,12 +166,30 @@ class PlanController extends Controller
 //            //Move Uploaded File
 //            $destinationPath = 'uploads';
 //            $file->move($destinationPath,$file->getClientOriginalName());
-        }
-        else echo 'Не тот тип файла. Загрузите xml!';
 
-       // $xml = \XmlParser::load($file->getPathname());
+/*// =========================== Начало Orchestra\Parser\XmlServiceProvider ============================================
 
+use Orchestra\Parser\XmlServiceProvider;
+            $xml = \XmlParser::load($file->getPathname());
+            $plan = $xml->parse([
+                'Головная' =>                   ['uses' => 'План.Титул::Головная'],
+                'ОбразовательноеУчреждение' =>  ['uses' => 'План.Титул::ИмяВуза'],
+                'СтруктурноеПодразделение' =>   ['uses' => 'План.Титул::ИмяВуза2'],
+                'Кафедра' =>                    ['uses' => 'План.Титул::КодКафедры'],
+                'Факультет' =>                  ['uses' => 'План.Титул::Факультет'],
+                'WhoRatif' =>                   ['uses' => 'План.Титул::WhoRatif'],
+                'КодНаправления' =>             ['uses' => 'План.Титул::ПоследнийШифр'],
+                'ГодНачалаПодготовки' =>        ['uses' => 'План.Титул::ГодНачалаПодготовки'],
+                'ТипГОСа' =>                    ['uses' => 'План.Титул::ТипГОСа'],
+                'ДокументГОСа' =>               ['uses' => 'План.Титул::ДокументГОСа'],
+                'ДатаГОСа' =>                   ['uses' => 'План.Титул::ДатаГОСа'],
+                'Квалификация' =>               ['uses' => 'План.Титул.Квалификации.Квалификация::Название'],
+                'СрокОбучения' =>               ['uses' => 'План.Титул.Квалификации.Квалификация::СрокОбучения'],
+                'ВидыДеятельности' =>           ['uses' => 'План.Титул.ВидыДеятельности.ВидДеятельности[::Ном>Ном,::Название>Название]', 'default' => null],
+                'Разработчики' =>               ['uses' => 'План.Титул.Разработчики.Разработчик[::Ном>Ном,::ФИО>ФИО,::Должность>Должность,::Активный>Активный]', 'default' => null],
+                'Специальности' =>              ['uses' => 'План.Титул.Специальности.Специальность[::Ном>Ном,::Название>Название]', 'default' => null],
+                'Дисциплины' =>                 ['uses' => 'План.СтрокиПлана.Строка[::Дис>Дисциплина,::НовИдДисциплины>ИдДисциплины,::Цикл>Цикл,::НовЦикл>НовЦикл,::Кафедра>Кафедра,Курс::Ном>НомерКурса,Курс.Сессия::Ном>СессияНомер]', 'default' => null],
 
-
-    }
-}
+            ]);
+            dd($plan);
+// =========================== Конец Orchestra\Parser\XmlServiceProvider =============================================*/
