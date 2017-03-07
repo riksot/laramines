@@ -66,9 +66,13 @@ class Plan extends Model
         return $plans;
     }
 
-//    public function scopePlans($query){
-//        $fakult = Input::get('fakult');
-//        $query->where('RPRNF','=',$fakult);
-//    }
+    public function parseXmlFile($file){ // Парсинг загруженного XML файла
+
+    }
+
+    public function extractPlanDiscs($discs){ // Упорядочивание загруженных дисциплин
+
+    }
+
 }
 

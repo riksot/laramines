@@ -77,13 +77,16 @@ class PlanController extends Controller
                                     if (array_get(array_get($disc, 'Курс.' . $kolvoKursov), 'Сессия.@Ном') === null) {
                                         $kolvosessii = 0;
                                         if (is_array(array_get($kurs, 'Сессия'))) {
+ //============================================
+                                            $dis = array_add($dis, 'НомерКурса'. $kolvoKursov, array_get($kurs, '@Ном'));
                                             foreach (array_get($kurs, 'Сессия') as $sessia) {
-                                                $dis = array_add($dis, 'НомерКурса' . $kolvoKursov . '.Сессия' . $kolvosessii, $sessia);
+                                                $dis = array_add($dis, 'Курс' . $kolvoKursov . '.Сессия' . $kolvosessii, $sessia);
                                                 $kolvosessii++;
                                             }
                                         }
                                     } else {
-                                        $dis = array_add($dis, 'НомерКурса' . $kolvoKursov . '.Сессия0', array_get($kurs, 'Сессия'));
+                                        $dis = array_add($dis, 'НомерКурса'. $kolvoKursov, array_get($kurs, '@Ном'));
+                                        $dis = array_add($dis, 'Курс' . $kolvoKursov . '.Сессия0', array_get($kurs, 'Сессия'));
                                     }
                                 $kolvoKursov++;
                             }
@@ -99,14 +102,16 @@ class PlanController extends Controller
                             $kolvosessii = 0;
                             //dd(array_get(array_get($disc, 'Курс'), 'Сессия'));
                             if (is_array(array_get(array_get($disc, 'Курс'), 'Сессия'))) {
+                                $dis = array_add($dis, 'НомерКурса0', array_get($disc, 'Курс.@Ном'));
                                 foreach (array_get(array_get($disc, 'Курс'), 'Сессия') as $sessia) {
-                                    $dis = array_add($dis, 'НомерКурса0' . '.Сессия' . $kolvosessii, $sessia);
+                                    $dis = array_add($dis, 'Курс0' . '.Сессия' . $kolvosessii, $sessia);
                                     $kolvosessii++;
                                 }
                             }
                         }
                         else {
-                            $dis = array_add($dis, 'НомерКурса0'.'.Сессия0', array_get($disc, 'Курс.Сессия'));
+                            $dis = array_add($dis, 'НомерКурса0', array_get($disc, 'Курс.@Ном'));
+                            $dis = array_add($dis, 'Курс0'.'.Сессия0', array_get($disc, 'Курс.Сессия'));
                         }
 
 //                    $temp = array_get($disc, 'Курс');
