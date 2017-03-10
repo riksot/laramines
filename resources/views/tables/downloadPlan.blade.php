@@ -38,16 +38,10 @@
                             <h5>{{array_get($planAll, 'Информация')['Головная']}}</h5>
                             <h5>{{array_get($planAll, 'Информация')['ОбразовательноеУчреждение']}}</h5>
                             <h5>{{array_get($planAll, 'Информация')['СтруктурноеПодразделение']}}</h5>
+                            <h5><b>{{array_get($planAll, 'Информация')['Направление']}}</b></h5>
+                            <h5><b>{{array_get($planAll, 'Информация')['Профиль']}}</b></h5>
 
                             <table class="col-sm-8">
-                                <tr>
-                                    <td class="col-sm-3" align="right">Направление:  </td>
-                                    <td><b>{{array_get($planAll, 'Информация')['Направление']}}</b></td>
-                                </tr>
-                                <tr>
-                                    <td class="col-sm-3" align="right">Профиль:  </td>
-                                    <td><b>{{array_get($planAll, 'Информация')['Профиль']}}</b></td>
-                                </tr>
                                 <tr>
                                     <td class="col-sm-3" align="right">Код направления:  </td>
                                     <td><b>{{array_get($planAll, 'Информация')['КодНаправления']}}</b></td>
@@ -65,10 +59,7 @@
                                     <td><b>{{array_get($planAll, 'Информация')['СрокОбучения']}}</b></td>
                                 </tr>
                             </table>
-
-
                         </div>
-
                     </div>
                 </div>
             </div>

@@ -11,7 +11,7 @@ class Plan extends Model
     protected $table = 'RPR';
 //    public static $key = 'post_id'; Переопределение ключа
 
-    public function getPlans(){
+    public function getPlans(){  // Достаем планы из старой базы
         $fakult = Input::get('fakult');
         $plans =  Plan::where('RPRNF','=',$fakult)->get();
 
@@ -70,10 +70,69 @@ class Plan extends Model
     public function parseXmlFile($file){ // Парсинг загруженного XML файла с помощью Nathanmac\Utilities\Parser\Parser
 
         $parser = new Parser();
-        $parsed = $parser->xml(file_get_contents($file));
+        $parsed = $parser->xml(file_get_contents($file));   // Парсинг файла
 
-// ========================== Достаём информацию о плане из xml ========================================================
+        $planInfo = $this->getPlanInfoFromXML($parsed);     // Достаем информацию о плане
+        $discs = $this->getDiscsFromXML($parsed);           // Достаем дисциплины
+        $practics = $this->getPracticsFromXML($parsed);     // Достаем практики
 
+// ========================== Собираем всё в кучу и отправляем =========================================================
+        $planAll = array();
+        $planAll = array_add($planAll, 'Информация', $planInfo);
+        $planAll = array_add($planAll, 'Дисциплины', $discs);
+        $planAll = array_add($planAll, 'Практики',   $practics);
+//        dd($parsed['План']['СтрокиПлана']['Строка']);
+//        dd($planAll['Дисциплины']);
+        return $planAll;
+    }
+
+    private function getPracticsFromXML($parsed){ //  Достаем практики
+        $practics_parsed = array_get($parsed, 'План.СпецВидыРаботНов');
+        $practics = array();
+        $numberPractics = 0;
+        if (array_get($practics_parsed, 'УчебПрактики.ПрочаяПрактика') !== null) {
+            if (array_get($practics_parsed, 'УчебПрактики.ПрочаяПрактика.@Наименование') !== null) {
+                $practics = array_add($practics, 'Практика'.$numberPractics++, array_get($practics_parsed, 'УчебПрактики.ПрочаяПрактика'));
+            }
+            else {
+                $counter_practic = 0;
+                if (is_array(array_get($practics_parsed, 'УчебПрактики.ПрочаяПрактика'))) {
+                    foreach (array_get($practics_parsed, 'УчебПрактики.ПрочаяПрактика') as $practic) {
+                        $practics = array_add($practics, 'Практика' . $numberPractics++, array_get($practics_parsed, 'УчебПрактики.ПрочаяПрактика.' . $counter_practic++));
+                    }
+                }
+            }
+        }
+        if (array_get($practics_parsed, 'НИР.ПрочаяПрактика') !== null) {
+            if (array_get($practics_parsed, 'НИР.ПрочаяПрактика.@Наименование') !== null) {
+                $practics = array_add($practics, 'Практика'.$numberPractics++, array_get($practics_parsed, 'НИР.ПрочаяПрактика'));
+            }
+            else {
+                $counter_practic = 0;
+                if (is_array(array_get($practics_parsed, 'НИР.ПрочаяПрактика'))) {
+                    foreach (array_get($practics_parsed, 'НИР.ПрочаяПрактика') as $practic) {
+                        $practics = array_add($practics, 'Практика' . $numberPractics++, array_get($practics_parsed, 'НИР.ПрочаяПрактика.' . $counter_practic++));
+                    }
+                }
+            }
+        }
+        if (array_get($practics_parsed, 'ПрочиеПрактики.ПрочаяПрактика') !== null) {
+            if (array_get($practics_parsed, 'ПрочиеПрактики.ПрочаяПрактика.@Наименование') !== null) {
+                $practics = array_add($practics, 'Практика'.$numberPractics++, array_get($practics_parsed, 'ПрочиеПрактики.ПрочаяПрактика'));
+            }
+            else {
+                $counter_practic = 0;
+                if (is_array(array_get($practics_parsed, 'ПрочиеПрактики.ПрочаяПрактика'))) {
+                    foreach (array_get($practics_parsed, 'ПрочиеПрактики.ПрочаяПрактика') as $practic) {
+                        $practics = array_add($practics, 'Практика' . $numberPractics++, array_get($practics_parsed, 'ПрочиеПрактики.ПрочаяПрактика.' . $counter_practic++));
+                    }
+                }
+            }
+        }
+        return $practics;
+    }
+
+    private function getPlanInfoFromXML($parsed){ //  Достаём информацию о плане из xml
         $plan = array(
             'Головная' =>                   array_get($parsed, 'План.Титул.@Головная'),
             'ОбразовательноеУчреждение' =>  array_get($parsed, 'План.Титул.@ИмяВуза'),
@@ -92,9 +151,10 @@ class Plan extends Model
             'Направление' =>                array_get($parsed, 'План.Титул.Специальности.Специальность.0.@Название'),
             'Профиль' =>                    array_get($parsed, 'План.Титул.Специальности.Специальность.1.@Название'),
         );
+        return $plan;
+    }
 
-// ========================== Достаём дисциплины из xml ================================================================
-
+    private function getDiscsFromXML($parsed){ //  Достаём дисциплины из xml
         $discs_parsed = array_get($parsed, 'План.СтрокиПлана.Строка');
         $discs = array();
         foreach ($discs_parsed as $disc){
@@ -184,107 +244,9 @@ class Plan extends Model
             $discs[] = $dis;
 
         }
-// ========================== Парсинг дисциплин Конец ==================================================================
-
-// ========================== Парсинг практик Начало ===================================================================
-
-        $practics_parsed = array_get($parsed, 'План.СпецВидыРаботНов');
-        $practics = array();
-        $numberPractics = 0;
-        if (array_get($practics_parsed, 'УчебПрактики.ПрочаяПрактика') !== null) {
-            if (array_get($practics_parsed, 'УчебПрактики.ПрочаяПрактика.@Наименование') !== null) {
-                $practics = array_add($practics, 'Практика'.$numberPractics++, array_get($practics_parsed, 'УчебПрактики.ПрочаяПрактика'));
-            }
-            else {
-                $counter_practic = 0;
-                if (is_array(array_get($practics_parsed, 'УчебПрактики.ПрочаяПрактика'))) {
-                    foreach (array_get($practics_parsed, 'УчебПрактики.ПрочаяПрактика') as $practic) {
-                        $practics = array_add($practics, 'Практика' . $numberPractics++, array_get($practics_parsed, 'УчебПрактики.ПрочаяПрактика.' . $counter_practic++));
-                    }
-                }
-            }
-        }
-        if (array_get($practics_parsed, 'НИР.ПрочаяПрактика') !== null) {
-            if (array_get($practics_parsed, 'НИР.ПрочаяПрактика.@Наименование') !== null) {
-                $practics = array_add($practics, 'Практика'.$numberPractics++, array_get($practics_parsed, 'НИР.ПрочаяПрактика'));
-            }
-            else {
-                $counter_practic = 0;
-                if (is_array(array_get($practics_parsed, 'НИР.ПрочаяПрактика'))) {
-                    foreach (array_get($practics_parsed, 'НИР.ПрочаяПрактика') as $practic) {
-                        $practics = array_add($practics, 'Практика' . $numberPractics++, array_get($practics_parsed, 'НИР.ПрочаяПрактика.' . $counter_practic++));
-                    }
-                }
-            }
-        }
-        if (array_get($practics_parsed, 'ПрочиеПрактики.ПрочаяПрактика') !== null) {
-            if (array_get($practics_parsed, 'ПрочиеПрактики.ПрочаяПрактика.@Наименование') !== null) {
-                $practics = array_add($practics, 'Практика'.$numberPractics++, array_get($practics_parsed, 'ПрочиеПрактики.ПрочаяПрактика'));
-            }
-            else {
-                $counter_practic = 0;
-                if (is_array(array_get($practics_parsed, 'ПрочиеПрактики.ПрочаяПрактика'))) {
-                    foreach (array_get($practics_parsed, 'ПрочиеПрактики.ПрочаяПрактика') as $practic) {
-                        $practics = array_add($practics, 'Практика' . $numberPractics++, array_get($practics_parsed, 'ПрочиеПрактики.ПрочаяПрактика.' . $counter_practic++));
-                    }
-                }
-            }
-        }
-// ========================== Парсинг практик Конец ====================================================================
-
-// ========================== Собираем всё в кучу и отправляем =========================================================
-        $planAll = array();
-        $planAll = array_add($planAll, 'Информация', $plan);
         $discs = $this->mergeUstanSemestr($this->extractPlanDiscs($discs)); // разбиваем по семестрам и сливаем установочные семестры
-//        $discs = $this->mergeUstanSemestr($this->extractPlanDiscs($discs)); // разбиваем по семестрам и сливаем установочные семестры
-//        $discs = $this->extractPlanDiscs($discs); // разбиваем по семестрам и сливаем установочные семестры
-//        dd($discs);
-//        dd($discs);
-        $planAll = array_add($planAll, 'Дисциплины', $discs);
-        $planAll = array_add($planAll, 'Практики', $practics);
-//        dd(array_get($planAll, 'Практики'));
-
-//        dd($planAll);
-        return $planAll;
-    }
-
-    private function mergeUstanSemestr($discs) { // Слияние установочного семестра с первым семестром и подсчет Часов и ЗЕТ
-        $dis = array();
-
-        foreach ($discs as $key => $disc){
-            if (array_get($disc, 'СеместрУстановочный')){
-                if (array_get($disc, 'Лекции')) {
-                    if (isset($discs[$key+1]['Лекции']))
-                        $discs[$key+1]['Лекции'] += $discs[$key]['Лекции'];
-                    else $discs[$key+1]['Лекции'] = $discs[$key]['Лекции'];
-                }
-                if (array_get($disc, 'Лабораторные')) {
-                    if (isset($discs[$key+1]['Лабораторные']))
-                        $discs[$key+1]['Лабораторные'] += $discs[$key]['Лабораторные'];
-                    else $discs[$key+1]['Лабораторные'] = $discs[$key]['Лабораторные'];
-                }
-                if (array_get($disc, 'Практики')) {
-                    if (isset($discs[$key+1]['Практики']))
-                        $discs[$key+1]['Практики'] += $discs[$key]['Практики'];
-                    else $discs[$key+1]['Практики'] = $discs[$key]['Практики'];
-                }
-                array_forget($discs,$key);
-            } else {
-                $dis[] = $disc;
-                $discs[$key]['Часы'] = 0;
-                if (isset($discs[$key]['Лекции']))          $discs[$key]['Часы'] +=$discs[$key]['Лекции'];
-                if (isset($discs[$key]['Лабораторные']))    $discs[$key]['Часы'] +=$discs[$key]['Лабораторные'];
-                if (isset($discs[$key]['Практики']))        $discs[$key]['Часы'] +=$discs[$key]['Практики'];
-                if (isset($discs[$key]['КСР']))             $discs[$key]['Часы'] +=$discs[$key]['КСР'];
-                if (isset($discs[$key]['СРС']))             $discs[$key]['Часы'] +=$discs[$key]['СРС'];
-                if (isset($discs[$key]['ЧасЭкз']))          $discs[$key]['Часы'] +=$discs[$key]['ЧасЭкз'];
-                if ($disc['Наименование'] != "Элективные курсы по физической культуре") $discs[$key]['ЗЕТ'] = $discs[$key]['Часы']/36;
-            }
-        }
-//        dd($discs);
         return $discs;
     }
-
 
     private function extractPlanDiscs($discs){ // Упорядочивание загруженных дисциплин
 
@@ -352,6 +314,43 @@ class Plan extends Model
 //        $deleted = array_except($extractedDiscs, array_keys($extractedDiscs, 'СеместрУстановочный'));
 //        dd($deleted);
         return $extractedDiscs;
+    }
+
+    private function mergeUstanSemestr($discs) { // Слияние установочного семестра с первым семестром и подсчет Часов и ЗЕТ
+        $dis = array();
+
+        foreach ($discs as $key => $disc){
+            if (array_get($disc, 'СеместрУстановочный')){
+                if (array_get($disc, 'Лекции')) {
+                    if (isset($discs[$key+1]['Лекции']))
+                        $discs[$key+1]['Лекции'] += $discs[$key]['Лекции'];
+                    else $discs[$key+1]['Лекции'] = $discs[$key]['Лекции'];
+                }
+                if (array_get($disc, 'Лабораторные')) {
+                    if (isset($discs[$key+1]['Лабораторные']))
+                        $discs[$key+1]['Лабораторные'] += $discs[$key]['Лабораторные'];
+                    else $discs[$key+1]['Лабораторные'] = $discs[$key]['Лабораторные'];
+                }
+                if (array_get($disc, 'Практики')) {
+                    if (isset($discs[$key+1]['Практики']))
+                        $discs[$key+1]['Практики'] += $discs[$key]['Практики'];
+                    else $discs[$key+1]['Практики'] = $discs[$key]['Практики'];
+                }
+                array_forget($discs,$key);
+            } else {
+                $dis[] = $disc;
+                $discs[$key]['Часы'] = 0;
+                if (isset($discs[$key]['Лекции']))          $discs[$key]['Часы'] +=$discs[$key]['Лекции'];
+                if (isset($discs[$key]['Лабораторные']))    $discs[$key]['Часы'] +=$discs[$key]['Лабораторные'];
+                if (isset($discs[$key]['Практики']))        $discs[$key]['Часы'] +=$discs[$key]['Практики'];
+                if (isset($discs[$key]['КСР']))             $discs[$key]['Часы'] +=$discs[$key]['КСР'];
+                if (isset($discs[$key]['СРС']))             $discs[$key]['Часы'] +=$discs[$key]['СРС'];
+                if (isset($discs[$key]['ЧасЭкз']))          $discs[$key]['Часы'] +=$discs[$key]['ЧасЭкз'];
+                if ($disc['Наименование'] != "Элективные курсы по физической культуре") $discs[$key]['ЗЕТ'] = $discs[$key]['Часы']/36;
+            }
+        }
+//        dd($discs);
+        return $discs;
     }
 
 }
