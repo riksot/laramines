@@ -15,7 +15,8 @@ class PlanController extends Controller
         $file = $request->file('uploadfile');
         if ($file->getMimeType() == 'application/xml') {
             $planAll = $planModel->parseXmlFile($file);   // Парсинг файла в модели Plan
-            dd(array_get($planAll,'Дисциплины'));
+            //dd(array_get($planAll,'Дисциплины'));
+            return view('tables.downloadPlan', ['planAll' => $planAll]);
         }
         else echo 'Не тот тип файла. Загрузите правильный файл!';
 

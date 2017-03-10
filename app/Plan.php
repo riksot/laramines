@@ -89,6 +89,8 @@ class Plan extends Model
             'Квалификация' =>               array_get($parsed, 'План.Титул.Квалификации.Квалификация.@Название'),
             'СрокОбучения' =>               array_get($parsed, 'План.Титул.Квалификации.Квалификация.@СрокОбучения'),
             'ВидыДеятельности' =>           array_get($parsed, 'План.Титул.ВидыДеятельности.ВидДеятельности'),
+            'Направление' =>                array_get($parsed, 'План.Титул.Специальности.Специальность.0.@Название'),
+            'Профиль' =>                    array_get($parsed, 'План.Титул.Специальности.Специальность.1.@Название'),
         );
 
 // ========================== Достаём дисциплины из xml ================================================================
@@ -171,7 +173,7 @@ class Plan extends Model
 //                    if (array_get($temp, 'Сессия.@Ном') === '2') $dis = array_add($dis, 'НомерКурса0.СессияОсень', array_get($temp, 'Сессия'));
 //                    if (array_get($temp, 'Сессия.@Ном') === '3') $dis = array_add($dis, 'НомерКурса0.СессияВесна', array_get($temp, 'Сессия'));
                 }
-                $dis = array_add($dis, 'Количествокурсов', $kolvoKursov);
+                $dis = array_add($dis, 'КоличествоКурсов', $kolvoKursov);
 
 // ========================== Парсинг курсов Конец =====================================================================
             }
@@ -233,56 +235,123 @@ class Plan extends Model
 // ========================== Собираем всё в кучу и отправляем =========================================================
         $planAll = array();
         $planAll = array_add($planAll, 'Информация', $plan);
-        $planAll = array_add($planAll, 'Дисциплины', $this->extractPlanDiscs($discs));
+        $discs = $this->mergeUstanSemestr($this->extractPlanDiscs($discs)); // разбиваем по семестрам и сливаем установочные семестры
+//        $discs = $this->mergeUstanSemestr($this->extractPlanDiscs($discs)); // разбиваем по семестрам и сливаем установочные семестры
+//        $discs = $this->extractPlanDiscs($discs); // разбиваем по семестрам и сливаем установочные семестры
+//        dd($discs);
+//        dd($discs);
+        $planAll = array_add($planAll, 'Дисциплины', $discs);
         $planAll = array_add($planAll, 'Практики', $practics);
-        dd(array_get($planAll, 'Дисциплины'));
-        dd($discs);
+//        dd(array_get($planAll, 'Практики'));
 
+//        dd($planAll);
         return $planAll;
     }
 
+    private function mergeUstanSemestr($discs) { // Слияние установочного семестра с первым семестром и подсчет Часов и ЗЕТ
+        $dis = array();
+
+        foreach ($discs as $key => $disc){
+            if (array_get($disc, 'СеместрУстановочный')){
+                if (array_get($disc, 'Лекции')) {
+                    if (isset($discs[$key+1]['Лекции']))
+                        $discs[$key+1]['Лекции'] += $discs[$key]['Лекции'];
+                    else $discs[$key+1]['Лекции'] = $discs[$key]['Лекции'];
+                }
+                if (array_get($disc, 'Лабораторные')) {
+                    if (isset($discs[$key+1]['Лабораторные']))
+                        $discs[$key+1]['Лабораторные'] += $discs[$key]['Лабораторные'];
+                    else $discs[$key+1]['Лабораторные'] = $discs[$key]['Лабораторные'];
+                }
+                if (array_get($disc, 'Практики')) {
+                    if (isset($discs[$key+1]['Практики']))
+                        $discs[$key+1]['Практики'] += $discs[$key]['Практики'];
+                    else $discs[$key+1]['Практики'] = $discs[$key]['Практики'];
+                }
+                array_forget($discs,$key);
+            } else {
+                $dis[] = $disc;
+                $discs[$key]['Часы'] = 0;
+                if (isset($discs[$key]['Лекции']))          $discs[$key]['Часы'] +=$discs[$key]['Лекции'];
+                if (isset($discs[$key]['Лабораторные']))    $discs[$key]['Часы'] +=$discs[$key]['Лабораторные'];
+                if (isset($discs[$key]['Практики']))        $discs[$key]['Часы'] +=$discs[$key]['Практики'];
+                if (isset($discs[$key]['КСР']))             $discs[$key]['Часы'] +=$discs[$key]['КСР'];
+                if (isset($discs[$key]['СРС']))             $discs[$key]['Часы'] +=$discs[$key]['СРС'];
+                if (isset($discs[$key]['ЧасЭкз']))          $discs[$key]['Часы'] +=$discs[$key]['ЧасЭкз'];
+                if ($disc['Наименование'] != "Элективные курсы по физической культуре") $discs[$key]['ЗЕТ'] = $discs[$key]['Часы']/36;
+            }
+        }
+//        dd($discs);
+        return $discs;
+    }
+
+
     private function extractPlanDiscs($discs){ // Упорядочивание загруженных дисциплин
+
+        function makeOneDisc($itemSessia, $Kurs){ // Разделяем дисциплины, которые идут несколько семестров в курсе
+            $dis = array();
+            switch (array_get($itemSessia, '@Ном')){ // Расписываем номера семестров
+                case 1:
+                    $dis = array_add($dis, 'СеместрУстановочный', $itemSessia);
+                    break;
+                case 2:
+                    $dis = array_add($dis, 'НомерСеместра', (($Kurs)*2-1));
+//                    $dis = array_add($dis, 'СеместрОсенний', $itemSessia);
+                    break;
+                case 3:
+                    $dis = array_add($dis, 'НомерСеместра', (($Kurs)*2));
+//                    $dis = array_add($dis, 'СеместрВесенний', $itemSessia);
+                    break;
+            }
+
+//            if (array_get($itemSessia, '@'))            $dis = array_add($dis, 'Часы',                  array_get($itemSessia, '@'));
+            if (array_get($itemSessia, '@Лек'))         $dis = array_add($dis, 'Лекции',                array_get($itemSessia, '@Лек'));
+            if (array_get($itemSessia, '@Лаб'))         $dis = array_add($dis, 'Лабораторные',          array_get($itemSessia, '@Лаб'));
+            if (array_get($itemSessia, '@Пр'))          $dis = array_add($dis, 'Практики',              array_get($itemSessia, '@Пр'));
+            if (array_get($itemSessia, '@КСР'))         $dis = array_add($dis, 'КСР',                   array_get($itemSessia, '@КСР'));
+            if (array_get($itemSessia, '@СРС'))         $dis = array_add($dis, 'СРС',                   array_get($itemSessia, '@СРС'));
+//            if (array_get($itemSessia, '@ЗЕТ'))         $dis = array_add($dis, 'ЗЕТ',                   array_get($itemSessia, '@ЗЕТ'));
+            if (array_get($itemSessia, '@Экз'))         $dis = array_add($dis, 'Экзамен',               array_get($itemSessia, '@Экз'));
+            if (array_get($itemSessia, '@ЧасЭкз'))      $dis = array_add($dis, 'ЧасЭкз',                array_get($itemSessia, '@ЧасЭкз'));
+            if (array_get($itemSessia, '@Зач'))         $dis = array_add($dis, 'Зачет',                 array_get($itemSessia, '@Зач'));
+            if (array_get($itemSessia, '@ЗачО'))        $dis = array_add($dis, 'ЗачетСОценкой',         array_get($itemSessia, '@ЗачО'));
+            if (array_get($itemSessia, '@КП'))          $dis = array_add($dis, 'КП',                    array_get($itemSessia, '@КП'));
+            if (array_get($itemSessia, '@КР'))          $dis = array_add($dis, 'КР',                    array_get($itemSessia, '@КР'));
+            if (array_get($itemSessia, '@КонтрРаб'))    $dis = array_add($dis, 'КонтрольнаяРабота',     array_get($itemSessia, '@КонтрРаб'));
+            if (array_get($itemSessia, '@Контр'))       $dis = array_add($dis, 'Контр',                 array_get($itemSessia, '@Контр'));
+            if (array_get($itemSessia, '@ВидКонтр'))    $dis = array_add($dis, 'ВидКонтроля',           array_get($itemSessia, '@ВидКонтр'));
+
+            return $dis;
+        }
+
         $extractedDiscs = array();
-        foreach ($discs as $disc){
-            for ($index=0; $index < array_get($disc, 'Количествокурсов'); $index++) { // index - индекс курса = 0..5
-                $extractedDiscs[] = $this->makeOneDisc($disc, $index);
+
+        if (is_array($discs)){
+            foreach ($discs as $disc){ // Просматриваем дисциплины
+                for ($indexKurs=0; $indexKurs < array_get($disc, 'КоличествоКурсов'); $indexKurs++) { // index - индекс курса = 0..5
+                    if (is_array(array_get($disc, 'Курс'.$indexKurs)))  // Просматриваем сессии в курсе
+                        foreach (array_get($disc, 'Курс'.$indexKurs) as $itemSessia) {
+                            $dis = array();
+                            if (array_get($disc, 'НовЦикл'))                $dis = array_add($dis, 'Цикл',                          array_get($disc, 'НовЦикл'));
+                            if (array_get($disc, 'НовИдДисциплины'))        $dis = array_add($dis, 'Индекс',                        array_get($disc, 'НовИдДисциплины'));
+                            if (array_get($disc, 'Дисциплина'))             $dis = array_add($dis, 'Наименование',                  array_get($disc, 'Дисциплина'));
+                            if (array_get($disc, 'ПодлежитИзучению'))       $dis = array_add($dis, 'ПодлежитИзучениюЧасовВсего',    array_get($disc, 'ПодлежитИзучению'));
+                            if (array_get($disc, 'ПерезачетЧасов'))         $dis = array_add($dis, 'ПерезачетЧасовВсего',           array_get($disc, 'ПерезачетЧасов'));
+                            if (array_get($disc, 'ПроектЗЕТПерезачтено'))   $dis = array_add($dis, 'ПроектЗЕТПерезачтеноВсего',     array_get($disc, 'ПроектЗЕТПерезачтено'));
+                            if (array_get($disc, 'КоличествоКурсов'))       $dis = array_add($dis, 'КоличествоКурсов',              array_get($disc, 'КоличествоКурсов'));
+                            if (array_get($disc, 'КредитовНаДисциплину'))   $dis = array_add($dis, 'ЗЕТВсего',                      array_get($disc, 'КредитовНаДисциплину'));
+                            if (array_get($disc, 'НомерКурса'.$indexKurs))  $dis = array_add($dis, 'НомерКурса',                    array_get($disc, 'НомерКурса'.$indexKurs));
+//                            if (array_get($disc, 'Курс'.$indexKurs))        $dis = array_add($dis, 'Курс',                          array_get($disc, 'Курс'.$indexKurs));
+                            $dis = array_collapse([$dis, makeOneDisc($itemSessia, array_get($disc, 'НомерКурса'.$indexKurs))]); // Запрос на разделение на семестры по номеру курса
+                            $extractedDiscs[] = $dis;
+                        }
+                }
             }
         }
 
+//        $deleted = array_except($extractedDiscs, array_keys($extractedDiscs, 'СеместрУстановочный'));
+//        dd($deleted);
         return $extractedDiscs;
-
-
-    }
-
-    private function makeOneDisc($disc, $index){ // Формируем запись в дисциплинах
-
-        $dis = array();
-        $dis = array_add($dis, 'Цикл', array_get($disc, 'НовЦикл'));
-        $dis = array_add($dis, 'Индекс', array_get($disc, 'НовИдДисциплины'));
-        $dis = array_add($dis, 'Наименование', array_get($disc, 'Дисциплина'));
-        $dis = array_add($dis, 'ПодлежитИзучениюЧасов', array_get($disc, 'ПодлежитИзучению'));
-        $dis = array_add($dis, 'ПерезачетЧасов', array_get($disc, 'ПерезачетЧасов'));
-        $dis = array_add($dis, 'ПроектЗЕТПерезачтено', array_get($disc, 'ПроектЗЕТПерезачтено'));
-        $dis = array_add($dis, 'ЗЕТ', array_get($disc, 'КредитовНаДисциплину'));
-        $dis = array_add($dis, 'НомерКурса', array_get($disc, 'НомерКурса'.$index));
-//        $dis = array_add($dis, 'Курс', array_get($disc, 'Курс'.$index));
-
-        if (is_array(array_get($disc, 'Курс'.$index)))
-            foreach (array_get($disc, 'Курс'.$index) as $itemKurs) {
-                switch (array_get($itemKurs, '@Ном')){
-                    case 1:
-                        $dis = array_add($dis, 'СеместрУстановочный', $itemKurs);
-                        break;
-                    case 2:
-                        $dis = array_add($dis, 'СеместрОсенний', $itemKurs);
-                        break;
-                    case 3:
-                        $dis = array_add($dis, 'СеместрВесенний', $itemKurs);
-                        break;
-                }
-            }
-
-        return $dis;
     }
 
 }
