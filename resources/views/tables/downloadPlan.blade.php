@@ -58,6 +58,17 @@
                                     <td class="col-sm-3" align="right">Срок обучения: </td>
                                     <td><b>{{array_get($planAll, 'Информация')['СрокОбучения']}}</b></td>
                                 </tr>
+
+                                @if (array_get($planAll, 'Информация')['ВидыДеятельности'])
+                                <tr>
+                                    <td class="col-sm-3" align="right">Виды деятельности:  </td>
+                                    <td><b>
+                                           @foreach (array_get($planAll, 'Информация')['ВидыДеятельности'] as $item)
+                                                {{$item['@Название']}} <br/>
+                                           @endforeach
+                                        </b></td>
+                                </tr>
+                                @endif
                             </table>
                         </div>
                     </div>
@@ -105,6 +116,7 @@
                                 <tbody>
 
 {{--================================================== Разбираем дисциплины=========================================--}}
+
                                 @foreach (array_get($planAll, 'Дисциплины') as $disc)
                                     <tr class="ng-hide text-center">
                                         <td>
@@ -181,7 +193,7 @@
                                             <input type="text" style="width: 40px;  text-align: center;" maxlength="5" >
                                         </td>
                                         <td> {{--Экз., зач. 1,2,3,4,5 Зач--}}
-                                            <select class=" " style="width: 50px;" name="" id="" title="">
+                                            <select class=" " style="width: 50px;" name="" id="" title="" >
                                                 <option></option>
                                                 <option>2</option>
                                                 <option>3</option>
@@ -216,14 +228,25 @@
                                         </td>
                                     </tr>
                                 @endforeach
+
 {{--=================================================== Разбираем практики =========================================--}}
+
+                                    <th class="ng-hide text-center">
+                                        <td colspan="19"><b>ПРАКТИКИ</b></td>
+                                    </th>
                                 @foreach (array_get($planAll, 'Практики') as $pract)
                                     <tr class="ng-hide text-center">
                                         <td>
-
+                                            {{array_get($pract, 'Индекс')}}
                                         </td>
                                         <td class="text-left">
-                                            {{array_get($pract, '@Наименование')}}
+                                            {{array_get($pract, 'Наименование')}}
+                                        </td>
+                                        <td>
+                                            {{array_get($pract, 'НомерСеместра')}}
+                                        </td>
+                                        <td>
+                                            {{array_get($pract, 'ПланЧасов')}}
                                         </td>
                                         <td>
                                         </td>
@@ -238,12 +261,10 @@
                                         <td>
                                         </td>
                                         <td>
+                                            {{array_get($pract, 'ПланЗЕТ')}}
                                         </td>
                                         <td>
-                                        </td>
-                                        <td>
-                                        </td>
-                                        <td>
+                                            @if(array_get($pract, 'ЗачО')) Зо @endif
                                         </td>
                                         <td>
                                         </td>
@@ -251,16 +272,16 @@
                                         </td>
                                         {{--========================================= Перезачтенные часы====================================================--}}
                                         <td> {{--Часы все--}}
-                                            <input type="text" style="width: 40px;  text-align: center;" maxlength="5" >
+                                            <input type="text" style="width: 40px;  text-align: center;" maxlength="5" @if(array_get($pract, 'ПерезачетЧасов')) value="{{array_get($pract, 'ПерезачетЧасов')}}" @endif>
                                         </td>
                                         <td> {{--Экз., зач.--}}
-                                            <input type="text" style="width: 40px;  text-align: center;" maxlength="5" >
+                                            
                                         </td>
                                         <td>{{--КП КР--}}
-                                            <input type="text" style="width: 40px;  text-align: center;" maxlength="5" >
+
                                         </td>
                                         <td>{{-- ЗЕТ--}}
-                                            <input type="text" style="width: 40px;  text-align: center;" maxlength="5" >
+                                            <input type="text" style="width: 40px;  text-align: center;" maxlength="5" @if(array_get($pract, 'ПерезачетЧасов')) value="{{array_get($pract, 'ПерезачетЧасов')/36}}" @endif>
                                         </td>
                                         <td>{{-- Подлежит изучению --}}
 

@@ -72,64 +72,14 @@ class Plan extends Model
         $parser = new Parser();
         $parsed = $parser->xml(file_get_contents($file));   // Парсинг файла
 
-        $planInfo = $this->getPlanInfoFromXML($parsed);     // Достаем информацию о плане
-        $discs = $this->getDiscsFromXML($parsed);           // Достаем дисциплины
-        $practics = $this->getPracticsFromXML($parsed);     // Достаем практики
-
-// ========================== Собираем всё в кучу и отправляем =========================================================
         $planAll = array();
-        $planAll = array_add($planAll, 'Информация', $planInfo);
-        $planAll = array_add($planAll, 'Дисциплины', $discs);
-        $planAll = array_add($planAll, 'Практики',   $practics);
+        $planAll = array_add($planAll, 'Информация', $this->getPlanInfoFromXML($parsed));   // Достаем информацию о плане
+        $planAll = array_add($planAll, 'Дисциплины', $this->getDiscsFromXML($parsed));      // Достаем дисциплины
+        $planAll = array_add($planAll, 'Практики',   $this->getPracticsFromXML($parsed));   // Достаем практики
 //        dd($parsed['План']['СтрокиПлана']['Строка']);
 //        dd($planAll['Дисциплины']);
+//        dd($planAll);
         return $planAll;
-    }
-
-    private function getPracticsFromXML($parsed){ //  Достаем практики
-        $practics_parsed = array_get($parsed, 'План.СпецВидыРаботНов');
-        $practics = array();
-        $numberPractics = 0;
-        if (array_get($practics_parsed, 'УчебПрактики.ПрочаяПрактика') !== null) {
-            if (array_get($practics_parsed, 'УчебПрактики.ПрочаяПрактика.@Наименование') !== null) {
-                $practics = array_add($practics, 'Практика'.$numberPractics++, array_get($practics_parsed, 'УчебПрактики.ПрочаяПрактика'));
-            }
-            else {
-                $counter_practic = 0;
-                if (is_array(array_get($practics_parsed, 'УчебПрактики.ПрочаяПрактика'))) {
-                    foreach (array_get($practics_parsed, 'УчебПрактики.ПрочаяПрактика') as $practic) {
-                        $practics = array_add($practics, 'Практика' . $numberPractics++, array_get($practics_parsed, 'УчебПрактики.ПрочаяПрактика.' . $counter_practic++));
-                    }
-                }
-            }
-        }
-        if (array_get($practics_parsed, 'НИР.ПрочаяПрактика') !== null) {
-            if (array_get($practics_parsed, 'НИР.ПрочаяПрактика.@Наименование') !== null) {
-                $practics = array_add($practics, 'Практика'.$numberPractics++, array_get($practics_parsed, 'НИР.ПрочаяПрактика'));
-            }
-            else {
-                $counter_practic = 0;
-                if (is_array(array_get($practics_parsed, 'НИР.ПрочаяПрактика'))) {
-                    foreach (array_get($practics_parsed, 'НИР.ПрочаяПрактика') as $practic) {
-                        $practics = array_add($practics, 'Практика' . $numberPractics++, array_get($practics_parsed, 'НИР.ПрочаяПрактика.' . $counter_practic++));
-                    }
-                }
-            }
-        }
-        if (array_get($practics_parsed, 'ПрочиеПрактики.ПрочаяПрактика') !== null) {
-            if (array_get($practics_parsed, 'ПрочиеПрактики.ПрочаяПрактика.@Наименование') !== null) {
-                $practics = array_add($practics, 'Практика'.$numberPractics++, array_get($practics_parsed, 'ПрочиеПрактики.ПрочаяПрактика'));
-            }
-            else {
-                $counter_practic = 0;
-                if (is_array(array_get($practics_parsed, 'ПрочиеПрактики.ПрочаяПрактика'))) {
-                    foreach (array_get($practics_parsed, 'ПрочиеПрактики.ПрочаяПрактика') as $practic) {
-                        $practics = array_add($practics, 'Практика' . $numberPractics++, array_get($practics_parsed, 'ПрочиеПрактики.ПрочаяПрактика.' . $counter_practic++));
-                    }
-                }
-            }
-        }
-        return $practics;
     }
 
     private function getPlanInfoFromXML($parsed){ //  Достаём информацию о плане из xml
@@ -137,9 +87,9 @@ class Plan extends Model
             'Головная' =>                   array_get($parsed, 'План.Титул.@Головная'),
             'ОбразовательноеУчреждение' =>  array_get($parsed, 'План.Титул.@ИмяВуза'),
             'СтруктурноеПодразделение' =>   array_get($parsed, 'План.Титул.@ИмяВуза2'),
-            'Кафедра' =>                    array_get($parsed, 'План.Титул.@КодКафедры'),
+            'НомерКафедры' =>               array_get($parsed, 'План.Титул.@КодКафедры'),
             'Факультет' =>                  array_get($parsed, 'План.Титул.@Факультет'),
-            'WhoRatif' =>                   array_get($parsed, 'План.Титул.@WhoRatif'),
+            'КемОдобренПлан' =>             array_get($parsed, 'План.Титул.@WhoRatif'),
             'КодНаправления' =>             array_get($parsed, 'План.Титул.@ПоследнийШифр'),
             'ГодНачалаПодготовки' =>        array_get($parsed, 'План.Титул.@ГодНачалаПодготовки'),
             'ТипГОСа' =>                    array_get($parsed, 'План.Титул.@ТипГОСа'),
@@ -152,6 +102,76 @@ class Plan extends Model
             'Профиль' =>                    array_get($parsed, 'План.Титул.Специальности.Специальность.1.@Название'),
         );
         return $plan;
+    }
+
+    private function getPracticsFromXML($parsed){ //  Достаем практики
+        $practics_parsed = array_get($parsed, 'План.СпецВидыРаботНов');
+        $practics = array();
+        $numberPractics = 0;
+        if (array_get($practics_parsed, 'УчебПрактики.ПрочаяПрактика') !== null) {
+            if (array_get($practics_parsed, 'УчебПрактики.ПрочаяПрактика.@Наименование') !== null) {
+                $practics = array_add($practics, 'Практика'.$numberPractics, array_get($practics_parsed, 'УчебПрактики.ПрочаяПрактика'));
+                $practics['Практика'.$numberPractics++]['Индекс'] = 'Б2.У.1';
+            }
+            else {
+                if (is_array(array_get($practics_parsed, 'УчебПрактики.ПрочаяПрактика'))) {
+                    foreach (array_get($practics_parsed, 'УчебПрактики.ПрочаяПрактика') as $key => $practic) {
+                        $practics = array_add($practics, 'Практика' . $numberPractics, array_get($practics_parsed, 'УчебПрактики.ПрочаяПрактика.' . $key));
+                        $practics['Практика'.$numberPractics++]['Индекс'] = 'Б2.У.'.($key+1);
+                    }
+                }
+            }
+        }
+        if (array_get($practics_parsed, 'НИР.ПрочаяПрактика') !== null) {
+            if (array_get($practics_parsed, 'НИР.ПрочаяПрактика.@Наименование') !== null) {
+                $practics = array_add($practics, 'Практика'.$numberPractics, array_get($practics_parsed, 'НИР.ПрочаяПрактика'));
+                $practics['Практика'.$numberPractics++]['Индекс'] = 'Б2.Н.1';
+            }
+            else {
+                if (is_array(array_get($practics_parsed, 'НИР.ПрочаяПрактика'))) {
+                    foreach (array_get($practics_parsed, 'НИР.ПрочаяПрактика') as $key => $practic) {
+                        $practics = array_add($practics, 'Практика' . $numberPractics, array_get($practics_parsed, 'НИР.ПрочаяПрактика.' . $key));
+                        $practics['Практика'.$numberPractics++]['Индекс'] = 'Б2.Н.'.($key+1);
+                    }
+                }
+            }
+        }
+        if (array_get($practics_parsed, 'ПрочиеПрактики.ПрочаяПрактика') !== null) {
+            if (array_get($practics_parsed, 'ПрочиеПрактики.ПрочаяПрактика.@Наименование') !== null) {
+                $practics = array_add($practics, 'Практика'.$numberPractics, array_get($practics_parsed, 'ПрочиеПрактики.ПрочаяПрактика'));
+                $practics['Практика'.$numberPractics++]['Индекс'] = 'Б2.П.1';
+            }
+            else {
+                if (is_array(array_get($practics_parsed, 'ПрочиеПрактики.ПрочаяПрактика'))) {
+                    foreach (array_get($practics_parsed, 'ПрочиеПрактики.ПрочаяПрактика') as $key => $practic) {
+                        $practics = array_add($practics, 'Практика' . $numberPractics, array_get($practics_parsed, 'ПрочиеПрактики.ПрочаяПрактика.' . $key));
+                        $practics['Практика'.$numberPractics++]['Индекс'] = 'Б2.П.'.($key+1);
+                    }
+                }
+            }
+        }
+
+        $practics = $this->extractPractics($practics);
+
+        return $practics;
+    }
+
+    private function extractPractics($practics){
+        $pract = array();
+
+        if (is_array($practics))
+            foreach ($practics as $practic){
+                $tempPractic = array();
+                $tempPractic = array_add($tempPractic, 'Индекс',            array_get($practic, 'Индекс'));
+                $tempPractic = array_add($tempPractic, 'Наименование',      array_get($practic, '@Наименование'));
+                $tempPractic = array_add($tempPractic, 'НомерСеместра',     array_get($practic, 'Семестр.@Ном')*2);
+                $tempPractic = array_add($tempPractic, 'ПланЧасов',         array_get($practic, 'Семестр.@ПланЧасов'));
+                $tempPractic = array_add($tempPractic, 'ПланЗЕТ',           array_get($practic, 'Семестр.@ПланЗЕТ'));
+                $tempPractic = array_add($tempPractic, 'ЗачО',              array_get($practic, 'Семестр.@ЗачО'));
+                $tempPractic = array_add($tempPractic, 'ПерезачетЧасов',    array_get($practic, '@ПерезачетЧасов'));
+                $pract[] = $tempPractic;
+            }
+        return $pract;
     }
 
     private function getDiscsFromXML($parsed){ //  Достаём дисциплины из xml
