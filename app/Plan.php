@@ -71,7 +71,6 @@ class Plan extends Model
 
         $parser = new Parser();
         $parsed = $parser->xml(file_get_contents($file));   // Парсинг файла
-
         $planAll = array();
         $planAll = array_add($planAll, 'Информация', $this->getPlanInfoFromXML($parsed));   // Достаем информацию о плане
         $planAll = array_add($planAll, 'Дисциплины', $this->getDiscsFromXML($parsed));      // Достаем дисциплины
@@ -156,9 +155,8 @@ class Plan extends Model
         return $practics;
     }
 
-    private function extractPractics($practics){
+    private function extractPractics($practics){ // Редактируем практики под правильный формат после парсинга
         $pract = array();
-
         if (is_array($practics))
             foreach ($practics as $practic){
                 $tempPractic = array();
@@ -184,11 +182,12 @@ class Plan extends Model
             $dis = array_add($dis, 'НовЦикл',                   array_get($disc, '@НовЦикл'));
             $dis = array_add($dis, 'ИдетификаторДисциплины',    array_get($disc, '@ИдетификаторДисциплины'));
             $dis = array_add($dis, 'НовИдДисциплины',           array_get($disc, '@НовИдДисциплины'));
-            $dis = array_add($dis, 'Кафедра',                   array_get($disc, '@Кафедра'));
-            $dis = array_add($dis, 'ПодлежитИзучению',          array_get($disc, '@ПодлежитИзучению'));
-            $dis = array_add($dis, 'ПерезачетЧасов',            array_get($disc, '@ПерезачетЧасов'));
-            $dis = array_add($dis, 'ПроектЗЕТПерезачтено',      array_get($disc, '@ПроектЗЕТПерезачтено'));
-            $dis = array_add($dis, 'КредитовНаДисциплину',      array_get($disc, '@КредитовНаДисциплину'));
+            $dis = array_add($dis, 'Кафедра',                   array_get($disc, '@Кафедра'));                  // Идентификатор кафедры в шахтах
+            $dis = array_add($dis, 'ВсегоЧасов',                array_get($disc, '@ГОС'));                      // Всего часов
+            $dis = array_add($dis, 'ПодлежитИзучению',          array_get($disc, '@ПодлежитИзучению'));         // Подлежит изучению часов
+            $dis = array_add($dis, 'ПерезачетЧасов',            array_get($disc, '@ПерезачетЧасов'));           // Перезачтено часов
+            $dis = array_add($dis, 'ПроектЗЕТПерезачтено',      array_get($disc, '@ПроектЗЕТПерезачтено'));     // Перезачтено ЗЕТ
+            $dis = array_add($dis, 'КредитовНаДисциплину',      array_get($disc, '@КредитовНаДисциплину'));     // ЗЕТ
 
             if (!$dis['ПодлежитИзучению']) $dis = array_add($dis, 'ПерезачтеннаяДисциплина', 'Да');
 
@@ -212,16 +211,18 @@ class Plan extends Model
                                 if (array_get(array_get($disc, 'Курс.' . $kolvoKursov), 'Сессия.@Ном') === null) {
                                     $kolvosessii = 0;
                                     if (is_array(array_get($kurs, 'Сессия'))) {
-                                        //============================================
                                         $dis = array_add($dis, 'НомерКурса'. $kolvoKursov, array_get($kurs, '@Ном'));
                                         foreach (array_get($kurs, 'Сессия') as $sessia) {
                                             $dis = array_add($dis, 'Курс' . $kolvoKursov . '.Сессия' . $kolvosessii, $sessia);
                                             $kolvosessii++;
                                         }
+//                                        $dis['Курс' . $kolvoKursov]['НомерКурса'] = array_get($kurs, '@Ном');
                                     }
                                 } else {
+
                                     $dis = array_add($dis, 'НомерКурса'. $kolvoKursov, array_get($kurs, '@Ном'));
                                     $dis = array_add($dis, 'Курс' . $kolvoKursov . '.Сессия0', array_get($kurs, 'Сессия'));
+//                                    $dis['Курс' . $kolvoKursov]['НомерКурса'] = array_get($kurs, '@Ном');
                                 }
                             $kolvoKursov++;
                         }
@@ -239,6 +240,7 @@ class Plan extends Model
                                 $dis = array_add($dis, 'НомерКурса0', array_get($disc, 'Курс.@Ном'));
                                 foreach (array_get(array_get($disc, 'Курс'), 'Сессия') as $sessia) {
                                     $dis = array_add($dis, 'Курс0' . '.Сессия' . $kolvosessii, $sessia);
+//                                    $dis['Курс0']['НомерКурса'] = array_get($disc, 'Курс.@Ном');
                                     $kolvosessii++;
                                 }
                             }
@@ -246,6 +248,7 @@ class Plan extends Model
                         else {
                             $dis = array_add($dis, 'НомерКурса0', array_get($disc, 'Курс.@Ном'));
                             $dis = array_add($dis, 'Курс0'.'.Сессия0', array_get($disc, 'Курс.Сессия'));
+//                            $dis['Курс0']['НомерКурса'] = array_get($disc, 'Курс.@Ном');
                         }
 
 //                    $temp = array_get($disc, 'Курс');
@@ -264,6 +267,7 @@ class Plan extends Model
             $discs[] = $dis;
 
         }
+        //dd($discs);
         $discs = $this->mergeUstanSemestr($this->extractPlanDiscs($discs)); // разбиваем по семестрам и сливаем установочные семестры
         return $discs;
     }
