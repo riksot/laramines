@@ -14,9 +14,11 @@ class PlanController extends Controller
     public function showUploadFile(Request $request, Plan $planModel){
         $file = $request->file('uploadfile');
         if ($file->getMimeType() == 'application/xml') {
-            $planAll = $planModel->parseXmlFile($file);   // Парсинг файла в модели Plan
+//            $planAll = $planModel->parseXmlFile($file);   // Парсинг файла в модели Plan
+            $planAll = $planModel->getXMLtoXML($file);
+            echo 'Готово! <br/> <a href="\uploads\file.xml">Скачать готовый файл</a>';
             //dd(array_get($planAll,'Дисциплины'));
-            return view('tables.downloadPlan', ['planAll' => $planAll]);
+//            return view('tables.downloadPlan', ['planAll' => $planAll]);
         }
         else echo 'Не тот тип файла. Загрузите правильный файл!';
 
