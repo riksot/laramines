@@ -32,8 +32,6 @@ class PakController extends Controller
         return view('students'); // Передаем информацию в pakSelector
     }
 
-
-
     public function jqueryResponse(Plan $planModel){
 //        $fakult = Input::get('fakult');
 //        $plans =  Plan::where('RPRNF','=',$fakult)->get();

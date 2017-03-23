@@ -7,6 +7,7 @@
             <li><a href="{{route('paklist')}}"><i class="fa fa-table"></i><span>ПАК</span></a></li>
             <li><a href="{{route('pak')}}"><i class="fa fa-files-o"></i><span>Выбор учебного плана</span></a></li>
             <li><a href="{{route('uploadplan')}}"><i class="fa fa-download"></i><span>Загрузка учебного плана</span></a></li>
+            <li><a href="{{route('tools')}}"><i class="fa fa-wrench"></i><span>Утилиты</span></a></li>
             <li><a href="{{route('test')}}"><i class="fa fa-child"></i><span>ТЕСТ</span></a></li>
 {{--
             <li class="treeview">

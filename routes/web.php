@@ -17,14 +17,18 @@ use Barryvdh\DomPDF\Facade as PDF;
 });*/
 
 Auth::routes();
+
 Route::get('/home', 'HomeController@index');
 
 Route::get('/', 'PlanController@index')->name('plan');
 
-
 Route::get('/uploadplan', 'PlanController@index')->name('uploadplan');
 
+Route::get('/tools', 'ToolsController@index')->name('tools');
+
 Route::post('/uploadfile', 'PlanController@showUploadFile');
+
+Route::post('/uploadxmlfile', 'ToolsController@showUploadFile');
 
 Route::get('/pak', 'PakController@selectFaculty')->name('pak');
 

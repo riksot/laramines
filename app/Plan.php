@@ -377,83 +377,9 @@ class Plan extends Model
         return $discs;
     }
 
-    public function getXMLtoXML($file){ // Получаем XML и разбираем его вручную
-        $items = simplexml_load_file($file);
-
-        $itemsKurs = $items->xpath('//Строка/Курс');
-
-            $temp = array();
-        foreach ($itemsKurs as $item){
-            $item['КСР_НА_КУРС'] = $item['ЗЕТ'];
-            $pr = 0;
-            $lk = 0;
-                $temp[] =  $item->{'Сессия'}->count();
-//                if($item->{'Сессия'}->count() > 1){
-                    for ($i=0; $i <= ($item->{'Сессия'}->count() - 1); $i++){
-
-                        switch ($item->{'Сессия'}[$i]['Ном']) {
-                            case 1:
-                                $pr = $item->{'Сессия'}[$i]['Пр'];
-                                $lk = $item->{'Сессия'}[$i]['Лек'];
-                                break;
-                            case 2:
-                                $item->{'Сессия'}[$i]['КСР_НА_СЕМЕСТР_ХХ'] =
-                                    ($item->{'Сессия'}[$i]['Пр']
-                                        +$item->{'Сессия'}[$i]['Лек']
-                                        +$item->{'Сессия'}[$i]['Лаб']
-                                        +$item->{'Сессия'}[$i]['СРС']
-                                        +$item->{'Сессия'}[$i]['ЧасЭкз']+$pr+$lk)/36;
-                                $pr = 0;
-                                $lk = 0;
-
-                                break;
-                            case 3:
-                                $item->{'Сессия'}[$i]['КСР_НА_СЕМЕСТР_ХХ'] =
-                                    ($item->{'Сессия'}[$i]['Пр']
-                                        +$item->{'Сессия'}[$i]['Лек']
-                                        +$item->{'Сессия'}[$i]['Лаб']
-                                        +$item->{'Сессия'}[$i]['СРС']
-                                        +$item->{'Сессия'}[$i]['ЧасЭкз'])/36;
-                                break;
-                        }
-                    }
+}
 
 
-//                }
-
-//                switch ($item->{'Сессия'}['Ном']) {
-//                    case 1:
-//                        $pr = $item->{'Сессия'}['Пр'];
-//                        $lk = $item->{'Сессия'}['Лек'];
-//                        break;
-//                    case 2:
-//                        $item->{'Сессия'}['КСР_НА_СЕМЕСТР'] =
-//                            ($item->{'Сессия'}['Пр']
-//                                +$item->{'Сессия'}['Лек']
-//                                +$item->{'Сессия'}['Лаб']
-//                                +$item->{'Сессия'}['СРС']
-//                                +$item->{'Сессия'}['ЧасЭкз']+$pr+$lk)/36;
-//                        $pr = 0;
-//                        $lk = 0;
-//                        break;
-//                    case 3:
-//                        $item->{'Сессия'}['КСР_НА_СЕМЕСТР'] =
-//                            ($item->{'Сессия'}['Пр']
-//                                +$item->{'Сессия'}['Лек']
-//                                +$item->{'Сессия'}['Лаб']
-//                                +$item->{'Сессия'}['СРС']
-//                                +$item->{'Сессия'}['ЧасЭкз'])/36;
-//                        break;
-//                }
-
-
-//            $temp[] = $item->xpath('//Сессия');
-//            $temp['ТЕСТ'] = 'ХХХХХХХХХХХХХ';
-
-
-        }
-//       dd($temp);
-        file_put_contents('uploads\file.xml',$items->asXML());
 
 //        $dom = new \DOMDocument('1.0', 'UTF-8');
 //        $dom->loadXML(file_get_contents($file));
@@ -469,6 +395,5 @@ class Plan extends Model
 //        }
 //        $dom->save('uploads\file.xml');
 //        return $file;
-    }
-}
+
 
