@@ -51,16 +51,25 @@
 
     <script type="text/javascript" src="adminlte/plugins/jQuery/jquery-2.2.3.min.js"></script>
     <script type="text/javascript">  // Вывод списка учебных планов при выборе факультета
-        $('#sendxmlfile').on('click',function (e) {
-            //console.log(e);
-           // var fakult = e.target.value;
+        $('#sendxmlfile').on('click', function() {
+            var file_data = $('#uploadxmlfile').prop('files')[0];
+            var form_data = new FormData();
+            form_data.append('file', file_data);
 
-            $.get('/ajax-plans?fakult='+fakult,function (data) {
-                $('#footxmlfile').empty();
-                $('#footxmlfile').append(data);
-//                console.log(data);
-            })
-        })
+            $.ajax({
+                url         : '/ajax-xml',     // point to server-side PHP script
+                dataType    : 'text',           // what to expect back from the PHP script, if anything
+                cache       : false,
+                contentType : false,
+                processData : false,
+                data        : form_data,
+                type        : 'post',
+                success     : function(output){
+                    alert(output);              // display response from the PHP script, if any
+                }
+            });
+            $('#uploadxmlfile').val('');                     /* Clear the file container */
+        });
     </script>
 
 

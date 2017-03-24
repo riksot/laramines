@@ -24,7 +24,8 @@ Route::get('/', 'PlanController@index')->name('plan');
 
 Route::get('/uploadplan', 'PlanController@index')->name('uploadplan');
 
-Route::get('/tools', 'ToolsController@index')->name('tools');
+Route::get('/tools',    'ToolsController@index')->name('tools');
+Route::get('/ajax-xml', 'ToolsController@showUploadFile');
 
 Route::post('/uploadfile', 'PlanController@showUploadFile');
 

@@ -21,7 +21,7 @@ class Tool extends Model
         $temp = array();
         foreach ($itemsKurs as $item) {
             if ($item['ЗЕТ'] !== null && $item['КСР'] == null) {
-                $item['КСР'] = round((float)$item['ЗЕТ'], 0, PHP_ROUND_HALF_UP); // Добавляем КСР в курс
+                $item['КСР'] = ceil((float)$item['ЗЕТ']); // Добавляем КСР в курс
                 $tempItem = $item->addChild('VZ'); // Добавляем узел
                 $tempItem->addAttribute('ID', '106'); // Добавляем атрибуты узлу
                 $tempItem->addAttribute('H', $item['КСР']); // Добавляем атрибуты узлу
@@ -42,11 +42,11 @@ class Tool extends Model
                             $lk = $item->{'Сессия'}[$i]['Лек'];
                             break;
                         case 2:
-                            $ksr = round((float)(($item->{'Сессия'}[$i]['Пр']
+                            $ksr = ceil((float)(($item->{'Сессия'}[$i]['Пр']
                                     + $item->{'Сессия'}[$i]['Лек']
                                     + $item->{'Сессия'}[$i]['Лаб']
                                     + $item->{'Сессия'}[$i]['СРС']
-                                    + $item->{'Сессия'}[$i]['ЧасЭкз'] + $pr + $lk) / 36), 0, PHP_ROUND_HALF_UP);
+                                    + $item->{'Сессия'}[$i]['ЧасЭкз'] + $pr + $lk) / 36));
                             $item->{'Сессия'}[$i]['КСР'] = $ksr;
                             $item->{'Сессия'}[$i]['СРС'] -= $item->{'Сессия'}[$i]['КСР'];
                             $pr = 0;
