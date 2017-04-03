@@ -27,6 +27,9 @@ Route::get('/uploadplan', 'PlanController@index')->name('uploadplan');
 Route::get('/tools',    'ToolsController@index')->name('tools');
 Route::get('/ajax-xml', 'ToolsController@showUploadFile');
 
+Route::post('/makestudentcard', 'ToolsController@makeWordDocument');
+
+
 Route::post('/uploadfile', 'PlanController@showUploadFile');
 
 Route::post('/uploadxmlfile', 'ToolsController@showUploadFile');

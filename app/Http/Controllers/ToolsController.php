@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Document;
 use App\Tool;
 use Illuminate\Http\Request;
 
@@ -20,5 +21,10 @@ class ToolsController extends Controller
         }
         else $resp = 'Не тот тип файла. Загрузите правильный файл!';
         return view('tools',['fileName' => $file->getClientOriginalName(), 'resp' => $resp]);
+    }
+
+    public function makeWordDocument(Request $request, Document $document){
+        $file = $request->file('file');
+        $document->makeWordDocument($file);
     }
 }
