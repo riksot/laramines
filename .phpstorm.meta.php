@@ -3,7 +3,7 @@ namespace PHPSTORM_META {
 
    /**
     * PhpStorm Meta file, to provide autocomplete information for PhpStorm
-    * Generated on 2017-03-01.
+    * Generated on 2017-04-03.
     *
     * @author Barry vd. Heuvel <barryvdh@gmail.com>
     * @see https://github.com/barryvdh/laravel-ide-helper
@@ -38,6 +38,7 @@ namespace PHPSTORM_META {
             'view.engine.resolver' instanceof \Illuminate\View\Engines\EngineResolver,
             'view.finder' instanceof \Illuminate\View\FileViewFinder,
             'view' instanceof \Illuminate\View\Factory,
+            'Parser' instanceof \Nathanmac\Utilities\Parser\Parser,
             'GrahamCampbell\Exceptions\ExceptionIdentifier' instanceof \GrahamCampbell\Exceptions\ExceptionIdentifier,
             'GrahamCampbell\Exceptions\ExceptionInfo' instanceof \GrahamCampbell\Exceptions\ExceptionInfo,
             'GrahamCampbell\Exceptions\Displayers\HtmlDisplayer' instanceof \GrahamCampbell\Exceptions\Displayers\HtmlDisplayer,
@@ -161,6 +162,7 @@ namespace PHPSTORM_META {
             'view.engine.resolver' instanceof \Illuminate\View\Engines\EngineResolver,
             'view.finder' instanceof \Illuminate\View\FileViewFinder,
             'view' instanceof \Illuminate\View\Factory,
+            'Parser' instanceof \Nathanmac\Utilities\Parser\Parser,
             'GrahamCampbell\Exceptions\ExceptionIdentifier' instanceof \GrahamCampbell\Exceptions\ExceptionIdentifier,
             'GrahamCampbell\Exceptions\ExceptionInfo' instanceof \GrahamCampbell\Exceptions\ExceptionInfo,
             'GrahamCampbell\Exceptions\Displayers\HtmlDisplayer' instanceof \GrahamCampbell\Exceptions\Displayers\HtmlDisplayer,
@@ -284,6 +286,7 @@ namespace PHPSTORM_META {
             'view.engine.resolver' instanceof \Illuminate\View\Engines\EngineResolver,
             'view.finder' instanceof \Illuminate\View\FileViewFinder,
             'view' instanceof \Illuminate\View\Factory,
+            'Parser' instanceof \Nathanmac\Utilities\Parser\Parser,
             'GrahamCampbell\Exceptions\ExceptionIdentifier' instanceof \GrahamCampbell\Exceptions\ExceptionIdentifier,
             'GrahamCampbell\Exceptions\ExceptionInfo' instanceof \GrahamCampbell\Exceptions\ExceptionInfo,
             'GrahamCampbell\Exceptions\Displayers\HtmlDisplayer' instanceof \GrahamCampbell\Exceptions\Displayers\HtmlDisplayer,
@@ -407,6 +410,7 @@ namespace PHPSTORM_META {
             'view.engine.resolver' instanceof \Illuminate\View\Engines\EngineResolver,
             'view.finder' instanceof \Illuminate\View\FileViewFinder,
             'view' instanceof \Illuminate\View\Factory,
+            'Parser' instanceof \Nathanmac\Utilities\Parser\Parser,
             'GrahamCampbell\Exceptions\ExceptionIdentifier' instanceof \GrahamCampbell\Exceptions\ExceptionIdentifier,
             'GrahamCampbell\Exceptions\ExceptionInfo' instanceof \GrahamCampbell\Exceptions\ExceptionInfo,
             'GrahamCampbell\Exceptions\Displayers\HtmlDisplayer' instanceof \GrahamCampbell\Exceptions\Displayers\HtmlDisplayer,
