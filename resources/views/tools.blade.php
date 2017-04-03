@@ -19,7 +19,6 @@
             </ol>
         </section>
 
-        <!-- Main content -->
         <section class="content">
             <div class="row">
                 <div class="col-xs-12">
@@ -31,8 +30,8 @@
                             <form role="form" action="/uploadxmlfile" method="post" enctype="multipart/form-data" >
                                 <div class="box-body">
                                     <div class="form-group">
-                                        <label for="exampleInputFile">Выбрать учебный план в формате xml</label>
-                                        <input id="exampleInputFile" type="file" name="uploadxmlfile" accept="application/xml">
+                                        <label for="inputXMLFile">Выбрать учебный план в формате xml</label>
+                                        <input id="inputXMLFile" type="file" name="uploadxmlfile" accept="application/xml">
                                         {{ csrf_field() }}
                                     </div>
                                 </div>
@@ -45,33 +44,64 @@
                     </div>
                 </div>
             </div>
-
         </section>
+
+        <section class="content">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box box-info">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Подготовка карточки студента</h3>
+                        </div>
+                        <div class="box-body">
+                            <form role="form" action="/makestudentcard" method="post" enctype="multipart/form-data" >
+                                <div class="box-body">
+                                    <div class="form-group">
+                                        <label for="inputXMLFile">Выбрать учебный план в формате xml</label>
+                                        <input id="inputXMLFile" type="file" name="file" accept="application/xml">
+                                        {{ csrf_field() }}
+                                    </div>
+                                </div>
+                                <div class="box-footer">
+                                    <button type="submit" class="btn btn-primary" id="makestudentcard">Создать pdf</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+
     </div>
-
-    <script type="text/javascript" src="adminlte/plugins/jQuery/jquery-2.2.3.min.js"></script>
-    <script type="text/javascript">  // Вывод списка учебных планов при выборе факультета
-        $('#sendxmlfile').on('click', function() {
-            var file_data = $('#uploadxmlfile').prop('files')[0];
-            var form_data = new FormData();
-            form_data.append('file', file_data);
-
-            $.ajax({
-                url         : '/ajax-xml',     // point to server-side PHP script
-                dataType    : 'text',           // what to expect back from the PHP script, if anything
-                cache       : false,
-                contentType : false,
-                processData : false,
-                data        : form_data,
-                type        : 'post',
-                success     : function(output){
-                    alert(output);              // display response from the PHP script, if any
-                }
-            });
-            $('#uploadxmlfile').val('');                     /* Clear the file container */
-        });
-    </script>
 
 
 
 @endsection
+
+{{--
+<script type="text/javascript" src="adminlte/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<script type="text/javascript">  // Вывод списка учебных планов при выборе факультета
+    $('#sendxmlfile').on('click', function() {
+        var file_data = $('#uploadxmlfile').prop('files')[0];
+        var form_data = new FormData();
+        form_data.append('file', file_data);
+
+        $.ajax({
+            url         : '/ajax-xml',     // point to server-side PHP script
+            dataType    : 'text',           // what to expect back from the PHP script, if anything
+            cache       : false,
+            contentType : false,
+            processData : false,
+            data        : form_data,
+            type        : 'post',
+            success     : function(output){
+                alert(output);              // display response from the PHP script, if any
+            }
+        });
+        $('#uploadxmlfile').val('');                     /* Clear the file container */
+    });
+</script>
+--}}
