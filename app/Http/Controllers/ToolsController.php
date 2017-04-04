@@ -27,6 +27,8 @@ class ToolsController extends Controller
     public function makeWordDocument(Request $request, Document $document, FilesParser $info){
         $file = $request->file('file'); // получили файл
         $info->makeDataForDonePlanWordDocument($file); // из xml в array
+        $document->divideInfoForKurses($info->makeDataForDonePlanWordDocument($file));
+
         $document   ->makeDonePlanWordDocument($info->makeDataForDonePlanWordDocument($file))
                     ->saveAs('uploads\/'.$document->change_files_coding($file->getClientOriginalName()).'.doc');
         dd('Done');
