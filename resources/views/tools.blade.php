@@ -63,7 +63,7 @@
                                     </div>
                                 </div>
                                 <div class="box-footer">
-                                    <button type="submit" class="btn btn-primary" id="makestudentcard">Создать pdf</button>
+                                    <button type="submit" class="btn btn-primary" id="makestudentcard">Создать карточку</button>
                                 </div>
                             </form>
                         </div>

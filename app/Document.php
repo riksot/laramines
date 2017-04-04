@@ -26,14 +26,37 @@ class Document extends Model
         $templateProcessor->setValue('profile', $info['Профиль']);
         $templateProcessor->setValue('dekan', 'Декан заочного факультета');
         $info = $this->divideInfoForKurses($info);
-
         $templateProcessor->cloneRow('kurs', count($info['Курсы']));  // Создаем копии курсов
+
+
         foreach ($info['Курсы'] as $indexKurs => $kurs){
             $templateProcessor->setValue('kurs#'.($indexKurs+1), ($indexKurs+1));  // выставляем номера курсов с первом столбе
             $templateProcessor->cloneRow('disc#'.($indexKurs+1), (int)count($kurs));  // Создаем копии строк
             foreach ($kurs as $indexDisc => $disc){
-                $templateProcessor->setValue('disc#'.($indexKurs+1).'#'.($indexDisc+1), $disc['Дисциплина']);
                 $templateProcessor->setValue('zet#'.($indexKurs+1).'#'.($indexDisc+1), $disc['ЗЕТ']);
+                $templateProcessor->setValue('disc#'.($indexKurs+1).'#'.($indexDisc+1), $disc['Дисциплина']);
+                if ($disc['ЗЕТ'] != '')
+                    $templateProcessor->setValue('Часы#'.($indexKurs+1).'#'.($indexDisc+1), $disc['ЗЕТ']*36);
+                else
+                    $templateProcessor->setValue('Часы#'.($indexKurs+1).'#'.($indexDisc+1), '');
+
+//                if ($disc['КонтрРаб'] != '')
+//                    $templateProcessor->setValue('КонтрРаб#'.($indexKurs+1).'#'.($indexDisc+1), '·');
+//                else
+//                    $templateProcessor->setValue('КонтрРаб#'.($indexKurs+1).'#'.($indexDisc+1), '');
+//                if ($disc['Зач'] != '')
+//                    $templateProcessor->setValue('Зач#'.($indexKurs+1).'#'.($indexDisc+1), '·');
+//                else
+//                    $templateProcessor->setValue('Зач#'.($indexKurs+1).'#'.($indexDisc+1), '');
+//                if ($disc['КП'] != '')
+//                    $templateProcessor->setValue('КП#'.($indexKurs+1).'#'.($indexDisc+1), '·');
+//                else
+//                    $templateProcessor->setValue('КП#'.($indexKurs+1).'#'.($indexDisc+1), '');
+//                if ($disc['Экз'] != '')
+//                    $templateProcessor->setValue('Экз#'.($indexKurs+1).'#'.($indexDisc+1), '·');
+//                else
+//                    $templateProcessor->setValue('Экз#'.($indexKurs+1).'#'.($indexDisc+1), '');
+
             }
         }
 

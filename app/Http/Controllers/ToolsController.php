@@ -31,6 +31,7 @@ class ToolsController extends Controller
 
         $document   ->makeDonePlanWordDocument($info->makeDataForDonePlanWordDocument($file))
                     ->saveAs('uploads\/'.$document->change_files_coding($file->getClientOriginalName()).'.doc');
-        dd('Done');
+
+        return view('tools');
     }
 }
