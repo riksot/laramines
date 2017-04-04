@@ -8,7 +8,7 @@ class Tool extends Model
 {
     public function getXMLtoXML($file) { // Получаем XML и разбираем его вручную
 
-        function change_files_coding_to_UTF8($file_name) // Конвертируем названия файлов для сохранения на диске
+        function change_files_coding($file_name) // Конвертируем названия файлов для сохранения на диске
         {
             $coding   = mb_detect_encoding($file_name);
             $new_str  = mb_convert_encoding($file_name, 'Windows-1251' , $coding);
@@ -75,7 +75,7 @@ class Tool extends Model
                     }
                 }
             }
-            file_put_contents('uploads\\'.change_files_coding_to_UTF8($file->getClientOriginalName()), $items->asXML());
+            file_put_contents('uploads\\'.change_files_coding($file->getClientOriginalName()), $items->asXML());
         }
     }
 

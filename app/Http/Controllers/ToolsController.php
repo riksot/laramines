@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Document;
+use App\FilesParser;
 use App\Tool;
 use Illuminate\Http\Request;
 
@@ -23,8 +24,11 @@ class ToolsController extends Controller
         return view('tools',['fileName' => $file->getClientOriginalName(), 'resp' => $resp]);
     }
 
-    public function makeWordDocument(Request $request, Document $document){
-        $file = $request->file('file');
-        $document->makeWordDocument($file);
+    public function makeWordDocument(Request $request, Document $document, FilesParser $info){
+        $file = $request->file('file'); // получили файл
+        $info->makeDataForDonePlanWordDocument($file); // из xml в array
+        $document   ->makeDonePlanWordDocument($info->makeDataForDonePlanWordDocument($file))
+                    ->saveAs('uploads\/'.$document->change_files_coding($file->getClientOriginalName()).'.doc');
+        dd('Done');
     }
 }
