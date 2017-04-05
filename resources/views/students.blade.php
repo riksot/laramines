@@ -30,20 +30,21 @@
 
                         <div class="box-body" style="display: block;">
                                 <label>Курс</label>
-                                <select class="form-control select2 " name="" id="" title="kurs">
+
+                                <select class="form-control select2 " name="kurs" id="kurs" title="kurs-selector">
                                     <option></option>
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                </select>
-                                <label>Группа</label>
-                                <select class="form-control select2 " name="" id="" title="group">
-                                    <option></option>
-                                    <option>33</option>
-                                    <option>44</option>
-                                    <option>55</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
                                 </select>
 
+                                <label>Группа</label>
+                                <select class="form-control select2 " name="group" id="group" title="group-selector">
+
+                                </select>
+                        <div id="getRequestData"></div>
                         </div>
                     </div>
                 </div>
@@ -99,5 +100,41 @@
         </section>
         <!-- /.content -->
     </div>
+
+    <script type="text/javascript" src="adminlte/plugins/jQuery/jquery-2.2.3.min.js"></script>
+    <script type="text/javascript">
+        $('select[name=kurs]').on('change',function (e) {
+            $.ajax({
+                type:'POST',
+                url:'/getListGroupsForStudents',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "id": e.target.value
+                },
+                success:function(data){
+                    console.log(data);
+                    $('#group').empty();
+                    $.each(data, function (index, groups) {
+                        $('#group').append('<option value="'+groups.id+'">'+groups.name+'</option>')
+                    })
+                }
+            });
+        });
+
+        $('select[name=group]').on('change',function (e) {
+            $.ajax({
+                type:'POST',
+                url:'/getListStudentsForStudents',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "id": e.target.value
+                },
+                success:function(data){
+                    alert(data);
+                }
+            });
+        });
+    </script>
+
 
 @endsection

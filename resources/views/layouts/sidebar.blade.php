@@ -3,7 +3,7 @@
         <ul class="sidebar-menu">
             <li class="header">ГЛАВНОЕ МЕНЮ</li>
 
-            <li><a href="{{route('stud')}}"><i class="fa fa-users"></i><span>Контенгент</span></a></li>
+            <li><a href="{{route('students')}}"><i class="fa fa-users"></i><span>Контенгент</span></a></li>
             <li><a href="{{route('paklist')}}"><i class="fa fa-table"></i><span>ПАК</span></a></li>
             <li><a href="{{route('pak')}}"><i class="fa fa-files-o"></i><span>Выбор учебного плана</span></a></li>
             <li><a href="{{route('uploadplan')}}"><i class="fa fa-download"></i><span>Загрузка учебного плана</span></a></li>

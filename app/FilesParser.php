@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class FilesParser extends Model
 {
-    public function makeDataForDonePlanWordDocument($file){ // Вытаскиваем данные из xml в массив
+    public function makeDataForDonePlanWordDocument($file){ // Вытаскиваем данные из xml в массив для создания карточки дисциплин
         $info = array();
         $info = array_add($info, 'НазваниеФайла', $file->getClientOriginalName());
         $items = simplexml_load_file($file);

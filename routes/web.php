@@ -18,6 +18,13 @@ use Barryvdh\DomPDF\Facade as PDF;
 
 Auth::routes();
 
+// Страница со студентами
+
+Route::get('/students', 'StudentsController@index')->name('students');
+Route::post('/getListGroupsForStudents', 'StudentsController@getListGroupsForStudents');        // ajax
+Route::post('/getListStudentsForStudents', 'StudentsController@getListStudentsForStudents');    // ajax
+
+
 Route::get('/home', 'HomeController@index');
 
 Route::get('/', 'PlanController@index')->name('plan');
