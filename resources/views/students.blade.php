@@ -6,7 +6,7 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                Контенгент
+                Контингент
                 <small></small>
             </h1>
             <ol class="breadcrumb">
@@ -44,7 +44,9 @@
                                 <label>Группа</label>
                                 <select class="form-control select2 " name="group" id="group" title="group-selector">
                                 </select>
-                        <div id="getRequestData"></div>
+                        </div>
+                        <div class="box-footer">
+                            <button type="submit" class="btn btn-primary">Новый студент</button>
                         </div>
                     </div>
                 </div>

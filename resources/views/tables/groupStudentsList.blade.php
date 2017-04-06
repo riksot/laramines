@@ -39,15 +39,14 @@
                 @endforeach
                 </tbody>
             </table>
-
         </div>
-
 
     </div>
     <!-- /.box-body -->
     <div class="box-footer">
-        <button type="submit" class="btn btn-primary">Новый студент</button>
-        <button type="submit" class="btn btn-primary">Печать списка</button>
+
+        <button type="submit" class="btn btn-primary">Групповой план</button>
+        <button type="submit" class="btn btn-primary pull-right">Печать списка</button>
         {{--
                                     <button type="submit" class="btn btn-primary pull-right">Сохранить</button>
         --}}
