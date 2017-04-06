@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Students;
 use Illuminate\Http\Request;
 use App\Groups;
 
@@ -13,13 +14,20 @@ class StudentsController extends Controller
     }
 
 
-    public function getListGroupsForStudents(Groups $groups){ // Получаем список групп
-        return $groups->getGroups(\request('id'));
+    public function getListGroupsForStudents(Groups $groups){ // Получаем список групп на курсе
+        return $groups->getGroups(\request('idKurs'));
 //        return \request('id');
     }
 
-    public function getListStudentsForStudents($group){  // Получаем список студентов
-//        return $groups->getGroups(\request('id'));
-        return \request('id');
+    public function getListStudentsForStudents(Students $students){  // Получаем список студентов в группе
+//        return view('tables.groupStudentsList')->with('idGroup',\request('idGroup'));
+
+        $studentList = $students->getListStudentsFromGroup(\request('idKurs'), \request('idGroup'))[0]; // список студентов
+        $groupId = $students->getListStudentsFromGroup(\request('idKurs'), \request('idGroup'))[1];
+
+        return view('tables.groupStudentsList',['studentsList' => $studentList, 'groupId' => $groupId]);
+
+//        return $students->getListStudentsFromGroup(\request('idKurs'), \request('idGroup'));
+
     }
 }
