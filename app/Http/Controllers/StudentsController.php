@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Student;
 use App\Students;
 use Illuminate\Http\Request;
 use App\Groups;
@@ -29,5 +30,13 @@ class StudentsController extends Controller
 
 //        return $students->getListStudentsFromGroup(\request('idKurs'), \request('idGroup'));
 
+    }
+
+    public function showStudent($id)
+    {
+        //$student = Student::find($id);
+        $student = Student::select(['name','kurs','groupname'])->where('id',$id)->first();
+//        dump($student);
+        return view('student.protocol',['student' => $student]);
     }
 }

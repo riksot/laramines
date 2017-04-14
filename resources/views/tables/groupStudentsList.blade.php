@@ -30,8 +30,7 @@
                         <td width="30px;">{{$id+1}}</td>
                         <td>{{$student->name}}</td>
                         <td class="input-group-btn">
-                            <form action="/paklist" method="get">
-                                <input type="hidden" name="studentid" value="{{$student->id}}">
+                            <form action="{{route('student',['id'=>$student->id])}}" method="get">
                                 <button class="btn btn-xs" type="submit"><i class="glyphicon glyphicon-triangle-right"></i></button>
                             </form>
                         </td>

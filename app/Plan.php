@@ -71,6 +71,7 @@ class Plan extends Model
 
         $parser = new Parser();
         $parsed = $parser->xml(file_get_contents($file));   // Парсинг файла
+        dd($parsed);
         $planAll = array();
         $planAll = array_add($planAll, 'Информация', $this->getPlanInfoFromXML($parsed));   // Достаем информацию о плане
         $planAll = array_add($planAll, 'Дисциплины', $this->getDiscsFromXML($parsed));      // Достаем дисциплины
