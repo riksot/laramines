@@ -22,45 +22,48 @@ Route::get('/', 'StudentsController@index')->name('index');
 
 // Страница со студентами
 
-Route::get('/students', 'StudentsController@index')->name('students');
+Route::get('/students', 'StudentsController@index')->name('students'); // выбор студента по группе
 Route::post('/getListGroupsForStudents', 'StudentsController@getListGroupsForStudents');        // ajax
 Route::post('/getListStudentsForStudents', 'StudentsController@getListStudentsForStudents');    // ajax
 
-Route::get('/student/{id}', 'StudentsController@showStudent')->name('student');
+Route::get('/student/{id}', 'StudentsController@showStudent')->name('student'); // Один студент
+
+// работа с планами
+
+Route::get('/plan', 'PlanController@index')->name('plans');  // Главная страница планов
+Route::post('/uploadfile', 'PlanController@parseXMLFile');  // Загрузка плана в базу
 
 
-Route::get('/home', 'HomeController@index');
-
-Route::get('/plan', 'PlanController@index')->name('plan');
-
-Route::get('/uploadplan', 'PlanController@index')->name('uploadplan');
-
-Route::get('/tools',    'ToolsController@index')->name('tools');
-Route::get('/ajax-xml', 'ToolsController@showUploadFile');
-
-Route::post('/makestudentcard', 'ToolsController@makeWordDocument');
+//Route::get('/uploadfile', 'PlanController@index')->name('uploadplan');
 
 
-Route::post('/uploadfile', 'PlanController@showUploadFile');
-
-Route::post('/uploadxmlfile', 'ToolsController@showUploadFile');
-
+// Выбор учебного плана по факультету - тестовое
 Route::get('/pak', 'PakController@selectFaculty')->name('pak');
-
+Route::get('/ajax-plans', 'PakController@jqueryResponse');
 Route::get('/paklist', 'PakController@selectPak')->name('paklist');
 
-Route::get('/stud', 'PakController@selectStudent')->name('stud');
 
-Route::get('pdf', 'PdfController@pdf');
+
+// Утилиты
+
+Route::get('/tools',    'ToolsController@index')->name('tools');
+Route::post('/uploadxmlfile', 'ToolsController@showUploadFile');        // Создание КСР
+Route::post('/makestudentcard', 'ToolsController@makeWordDocument');   // Создание карточки
+
+
+
+
+//Route::post('/uploadfile', 'PlanController@showUploadFile');
+
+//Route::get('/ajax-xml', 'ToolsController@showUploadFile');
+//Route::get('/stud', 'PakController@selectStudent')->name('stud');
+//Route::get('pdf', 'PdfController@pdf');
 //Route::get('pdf', function(){
 //    $pdf = app('dompdf.wrapper');
 //    $pdf->loadView('pdf');
 //    return $pdf->download('pdf.pdf');
 //});
-
-Route::get('/test/{studid?}', 'PakController@getStudentInfo')->name('test');
-
-
+//Route::get('/test/{studid?}', 'PakController@getStudentInfo')->name('test');
 //Route::get('/test/{studid?}', function ($studid = null) {
 //    return view('test',['studid' => $studid]);
 //})->name('test');
@@ -72,8 +75,7 @@ Route::get('/test/{studid?}', 'PakController@getStudentInfo')->name('test');
 //    }
 //});
 
-Route::get('/getRequest', 'PakController@testJquery'); // Обработка jquery в контроллере pak
-
-Route::get('/ajax-plans', 'PakController@jqueryResponse');
+//Route::get('/getRequest', 'PakController@testJquery'); // Обработка jquery в контроллере pak
+//Route::get('/home', 'HomeController@index');
 
 

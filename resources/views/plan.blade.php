@@ -31,8 +31,8 @@
                             <form role="form" action="/uploadfile" method="post" enctype="multipart/form-data" >
                                 <div class="box-body">
                                     <div class="form-group">
-                                        <label for="exampleInputFile">Выбрать учебный план в формате xml</label>
-                                        <input id="exampleInputFile" type="file" name="uploadfile" accept="application/xml">
+                                        <label for="uploadfile">Выбрать учебный план в формате xml</label>
+                                        <input id="uploadfile" type="file" name="uploadfile" accept="application/xml">
                                         {{ csrf_field() }}
                                     </div>
                                 </div>
