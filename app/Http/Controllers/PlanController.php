@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 use App\Plan;
 use function foo\func;
 use Illuminate\Http\Request;
-
+use SoapBox\Formatter\Formatter;
 
 class PlanController extends Controller
 {
@@ -25,22 +25,64 @@ class PlanController extends Controller
 
     public function parseXMLFile(Request $request){ // Парсер шахтинского xml файла
 
-        function makeStringFromArray($xmlFile, $parent, $child){ // переделываем массив из xml файла в строку
-            $attr =(array)$xmlFile->{'План'}->{'Титул'}->{$parent};
-            $temparr = array();
-            if (is_array($attr[$child]))
-                foreach ($attr[$child] as $id => $item){
-                    $temparr = array_add($temparr, $child.$id, implode(';;',array_flatten((array)$item,1)));
+//        function makeStringFromArray($attr, $child = null){ // Переделываем массив из xml файла в строку
+//            if (isset($child)) {
+//                $tempArray = array();
+//                if (is_array($attr[$child])) {
+//                    foreach ($attr[$child] as $id => $item) {
+////                        $item = (array)$item;
+////                        $item = serialize($item['@attributes']);
+////                        dd(unserialize($item));
+////                    array_keys(array_divide((array)$item)[1][0]) // Вытащить ключи в 0  ячейку
+//                        $tempArray = array_add($tempArray, $child . $id, implode('&&', array_flatten((array)$item, 1)));
+//                    }
+//                } else
+//                    $tempArray = array_add($tempArray, $child, implode('&&', array_flatten((array)$attr[$child], 1)));
+//                return implode('##', $tempArray);
+//            }
+//            else
+//                return implode('##',array_flatten((array)$attr, 1));
+//        }
+        function makeStringFromArray($attr, $child = null){ // Переделываем массив из xml файла в строку
+            if (isset($child)) {
+                $tempArray = array();
+                foreach ((array)($attr[$child]) as  $item){
+                    $tempArray[] = serialize((array)$item);
                 }
+                return serialize($tempArray);
+            }
             else
-                $temparr = array_add($temparr, $child, implode(';;',array_flatten((array)$attr[$child],1)));
-            return $temparr;
+                return serialize($attr);
 
+
+
+//            if (isset($child)) {
+//                $tempArray = array();
+//                if (is_array($attr[$child])) {
+//                    foreach ($attr[$child] as $id => $item) {
+//                        $item = (array)$item;
+//                        $item = serialize($item);
+////                        dd(unserialize($item));
+////                        array_keys(array_divide((array)$item)[1][0]) // Вытащить ключи в 0  ячейку
+//                        $tempArray = array_add($tempArray, $child . $id, $item);
+//                    }
+//                } else
+//                    $tempArray = array_add($tempArray, $child, serialize((array)$attr[$child]));
+//                return serialize($tempArray);
+//            }
+//            else
+//                return serialize((array)$attr);
         }
 
         $file = $request->file('uploadfile');
         if ($file->getMimeType() == 'application/xml') {
             $xmlFile = simplexml_load_file($file);
+
+//            $dom = new \DOMDocument;
+//            $dom->load($file);
+//            dd($dom);
+
+
             $parsedFile = array();
             $items = array();
 /*
@@ -97,81 +139,54 @@ class PlanController extends Controller
             $items = array_add($items, 'ВидПлана', (string)$xmlFile->{'План'}->{'Титул'}['ВидПлана']);
             $items = array_add($items, 'КодУровня', (string)$xmlFile->{'План'}->{'Титул'}['КодУровня']);
             $items = array_add($items, 'СокрКонтрольФакт', (string)$xmlFile->{'План'}->{'Титул'}['СокрКонтрольФакт']);
-
 */
 
+            // ======================= Обработка массив - строка =========================
+
             // XML - АтрибутыЦикловНов
-            $attr =(array)$xmlFile->{'План'}->{'Титул'}->{'АтрибутыЦикловНов'};
-                $temparr = array();
-            if (is_array($attr['Цикл']))
-                foreach ($attr['Цикл'] as $id => $item){
-                    $temparr = array_add($temparr, 'Цикл'.$id, implode(';;',array_flatten((array)$item,1)));
-                }
-            else
-                $temparr = array_add($temparr, 'Цикл', implode(';;',array_flatten((array)$attr['Цикл'],1)));
-            $items = array_add($items, 'АтрибутыЦикловНов', implode('##',$temparr));
+            $items = array_add($items, 'АтрибутыЦикловНов', makeStringFromArray((array)$xmlFile->{'План'}->{'Титул'}->{'АтрибутыЦикловНов'},'Цикл'));
 
             // XML - АтрибутыЦиклов
-            $attr =(array)$xmlFile->{'План'}->{'Титул'}->{'АтрибутыЦиклов'};
-            $temparr = array();
-            if (is_array($attr['Цикл']))
-                foreach ($attr['Цикл'] as $id => $item){
-                    $temparr = array_add($temparr, 'Цикл'.$id, implode(';;',array_flatten((array)$item,1)));
-                }
-            else
-                $temparr = array_add($temparr, 'Цикл', implode(';;',array_flatten((array)$attr['Цикл'],1)));
-            $items = array_add($items, 'АтрибутыЦиклов', implode('##',$temparr));
+            $items = array_add($items, 'АтрибутыЦиклов', makeStringFromArray((array)$xmlFile->{'План'}->{'Титул'}->{'АтрибутыЦиклов'},'Цикл'));
+
+            // XML - Утверждение
+            $items = array_add($items, 'Утверждение', makeStringFromArray((array)$xmlFile->{'План'}->{'Титул'}->{'Утверждение'}));
 
             // XML - Специальности
-            $attr =(array)$xmlFile->{'План'}->{'Титул'}->{'Специальности'};
-            $temparr = array();
-            if (is_array($attr['Специальность']))
-                foreach ($attr['Специальность'] as $id => $item){
-                    $temparr = array_add($temparr, 'Специальность'.$id, implode(';;',array_flatten((array)$item,1)));
-                }
-            else
-                $temparr = array_add($temparr, 'Специальность', implode(';;',array_flatten((array)$attr['Специальность'],1)));
-            $items = array_add($items, 'Специальности', implode('##',$temparr));
+            $items = array_add($items, 'Специальности', makeStringFromArray((array)$xmlFile->{'План'}->{'Титул'}->{'Специальности'},'Специальность'));
+
+            // XML - ВоеннаяСпециальность
+            $items = array_add($items, 'ВоеннаяСпециальность', makeStringFromArray((array)$xmlFile->{'План'}->{'Титул'}->{'ВоеннаяСпециальность'}));
+
+            // XML - ВоеннаяСпециализация
+            $items = array_add($items, 'ВоеннаяСпециализация', makeStringFromArray((array)$xmlFile->{'План'}->{'Титул'}->{'ВоеннаяСпециализация'}));
+
+            // XML - ПредназначениеВыпускников
+            $items = array_add($items, 'ПредназначениеВыпускников', makeStringFromArray((array)$xmlFile->{'План'}->{'Титул'}->{'ПредназначениеВыпускников'}));
 
             // XML - Квалификации
-            $attr =(array)$xmlFile->{'План'}->{'Титул'}->{'Квалификации'};
-            $temparr = array();
-            if (is_array($attr['Квалификация']))
-                foreach ($attr['Квалификация'] as $id => $item){
-                    $temparr = array_add($temparr, 'Квалификация'.$id, implode(';;',array_flatten((array)$item,1)));
-                }
-            else
-                $temparr = array_add($temparr, 'Квалификация', implode(';;',array_flatten((array)$attr['Квалификация'],1)));
-            $items = array_add($items, 'Квалификации', implode('##',$temparr));
+            $items = array_add($items, 'Квалификации', makeStringFromArray((array)$xmlFile->{'План'}->{'Титул'}->{'Квалификации'},'Квалификация'));
 
             // XML - ВидыДеятельности
-            $attr =(array)$xmlFile->{'План'}->{'Титул'}->{'ВидыДеятельности'};
-            $temparr = array();
-            if (is_array($attr['ВидДеятельности']))
-                foreach ($attr['ВидДеятельности'] as $id => $item){
-                    $temparr = array_add($temparr, 'ВидДеятельности'.$id, implode(';;',array_flatten((array)$item,1)));
-                }
-            else
-                $temparr = array_add($temparr, 'ВидДеятельности', implode(';;',array_flatten((array)$attr['ВидДеятельности'],1)));
-            $items = array_add($items, 'ВидыДеятельности', implode('##',$temparr));
+            $items = array_add($items, 'ВидыДеятельности', makeStringFromArray((array)$xmlFile->{'План'}->{'Титул'}->{'ВидыДеятельности'},'ВидДеятельности'));
 
             // XML - Разработчики
-            $attr =(array)$xmlFile->{'План'}->{'Титул'}->{'Разработчики'};
-            $temparr = array();
-            if (is_array($attr['Разработчик']))
-                foreach ($attr['Разработчик'] as $id => $item){
-                    $temparr = array_add($temparr, 'Разработчик'.$id, implode(';;',array_flatten((array)$item,1)));
-                }
-            else
-                $temparr = array_add($temparr, 'Разработчик', implode(';;',array_flatten((array)$attr['Разработчик'],1)));
-            $items = array_add($items, 'Разработчики', implode('##',$temparr));
+            $items = array_add($items, 'Разработчики', makeStringFromArray((array)$xmlFile->{'План'}->{'Титул'}->{'Разработчики'},'Разработчик'));
 
+            $reverse1 = array();
+            $reverse = unserialize($items['Разработчики']);
+            foreach ($reverse as $item){
+                $item = unserialize($item);
+                $reverse1[] = $item;
+            }
+            $items['Разработчики'] = $reverse1;
 
+            $reverse1 = Formatter::make($xmlFile, Formatter::XML)->toArray();
+            $reverse2 = $reverse1;
 
+            dd($reverse1, $reverse2);
 
-
-
-            dd($xmlFile,$items);
+            dd((array)$xmlFile->{'План'}->{'Титул'}, $items , $reverse1);
 
             return view('tables.downloadPlan', ['planAll' => '']);
         }
