@@ -42,12 +42,36 @@
                     </table>
                 </div>
                 <div class="box-footer">
-                    <input hidden name="filepath" value="{{$fileName}}">
+{{--
+                    <form role="form" action="/uploadfiletobase" method="post" enctype="multipart/form-data">
+                        <input hidden name="filepath" value="{{$fileName}}">
+                        {{ csrf_field() }}
+                        <button type="submit" class="btn btn-primary pull-right">Загрузить в базу</button>
+                    </form>
+--}}
                     <button type="submit" class="btn btn-primary pull-right">Загрузить в базу</button>
+
                 </div>
             </div>
         </div>
     </div>
 
+    <script type="text/javascript" src="adminlte/plugins/jQuery/jquery-2.2.3.min.js"></script>
+    <script type="text/javascript">
+        $('button').on('click',function (e) {
+            $.ajax({
+                type:'POST',
+                url:'/uploadfiletobase',
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "filepath": "{{$fileName}}"
+                },
+                success:function(data){
+                    alert(data);
+                }
+            });
+            $(this).prop("disabled", true);
+        });
+    </script>
 
 @endsection

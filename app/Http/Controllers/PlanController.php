@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\FilesParser;
 use App\Plan;
+use App\Plans;
 use function foo\func;
 use Illuminate\Http\Request;
 use SoapBox\Formatter\Formatter;
@@ -29,17 +30,12 @@ class PlanController extends Controller
 
     public function uploadPlan(Request $request, FilesParser $info){ // Загрузка шахтинского xml файла
         $file = $request->file('uploadfile');
-//        dump($file);
-//        $file->move(\Storage::disk('public')->get('pathPrefix'));
         \Storage::disk('public')->put('\/'.$file->getFilename(),file_get_contents($file->getRealPath()));  // Убираем файл в публичную папку
 
         $fileName = $file->getFilename();
         $fileXML=\Storage::disk('public')->get('\/'.$fileName);
 
-//        if ($file->getMimeType() == 'application/xml'){
-            $parsedFile = $info->parseXMLFile($fileXML);
-//            $filename = mb_convert_encoding($file->getClientOriginalName(),
-//                'Windows-1251' , mb_detect_encoding($file->getClientOriginalName()));
+        $parsedFile = $info->parseXMLFile($fileXML);
 
         $mainPlanInfo = array();
         $mainPlanInfo = array_add($mainPlanInfo, 'Головная', $parsedFile['Головная']);
@@ -55,11 +51,18 @@ class PlanController extends Controller
         $mainPlanInfo = array_add($mainPlanInfo, 'Квалификация',     unserialize($parsedFile['Квалификации'])['Квалификация']['@attributes']['Название']);
         $mainPlanInfo = array_add($mainPlanInfo, 'СрокОбучения',     unserialize($parsedFile['Квалификации'])['Квалификация']['@attributes']['СрокОбучения']);
 
-        dump($parsedFile, $fileName);
-//            file_put_contents('uploads\\'.$filename, $request->file('uploadfile'));
+//       dump($mainPlanInfo, $fileName);
             return view('plan.planToBase', ['planAll' => $mainPlanInfo, 'fileName' => $fileName]);
-//        }
-//        else return view('plan', ['alert' => 'Не тот тип файла. Загрузите правильный файл!']);
+
+    }
+
+
+    public function savePlanToBase(FilesParser $info, Plans $plans){ // Загрузка шахтинского xml файла
+        $fileXML=\Storage::disk('public')->get('\/'.$_REQUEST['filepath']);
+        $parsedFile = $info->parseXMLFile($fileXML);
+        $plans->insert($parsedFile);
+
+        return ('Информация загружена в базу данных!');
 
     }
 }
