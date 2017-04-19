@@ -31,7 +31,7 @@ Route::get('/student/{id}', 'StudentsController@showStudent')->name('student'); 
 // работа с планами
 
 Route::get('/plan', 'PlanController@index')->name('plans');  // Главная страница планов
-Route::post('/uploadfile', 'PlanController@parseXMLFile');  // Загрузка плана в базу
+Route::post('/uploadfile', 'PlanController@uploadPlan');  // Загрузка плана в базу
 
 
 //Route::get('/uploadfile', 'PlanController@index')->name('uploadplan');
