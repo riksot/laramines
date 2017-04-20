@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Courses;
+use App\Disciplines;
 use App\FilesParser;
 use App\Plan;
 use App\Plans;
@@ -35,35 +37,87 @@ class PlanController extends Controller
         $fileName = $file->getFilename();
         $fileXML=\Storage::disk('public')->get('\/'.$fileName);
 
-        $parsedFile = $info->parseXMLFile($fileXML);
-
-        $mainPlanInfo = array();
-        $mainPlanInfo = array_add($mainPlanInfo, 'Головная', $parsedFile['Головная']);
-        $mainPlanInfo = array_add($mainPlanInfo, 'ИмяВуза', $parsedFile['ИмяВуза']);
-        $mainPlanInfo = array_add($mainPlanInfo, 'ИмяВуза2', $parsedFile['ИмяВуза2']);
-        $mainPlanInfo = array_add($mainPlanInfo, 'ГодНачалаПодготовки', $parsedFile['ГодНачалаПодготовки']);
-        $mainPlanInfo = array_add($mainPlanInfo, 'ПоследнийШифр', $parsedFile['ПоследнийШифр']);
-
-        $mainPlanInfo = array_add($mainPlanInfo, 'Направление', unserialize($parsedFile['Специальности'])['Специальность'][0]['@attributes']['Название']);
-        $mainPlanInfo = array_add($mainPlanInfo, 'Профиль',     unserialize($parsedFile['Специальности'])['Специальность'][1]['@attributes']['Название']);
-
-
-        $mainPlanInfo = array_add($mainPlanInfo, 'Квалификация',     unserialize($parsedFile['Квалификации'])['Квалификация']['@attributes']['Название']);
-        $mainPlanInfo = array_add($mainPlanInfo, 'СрокОбучения',     unserialize($parsedFile['Квалификации'])['Квалификация']['@attributes']['СрокОбучения']);
-
-//       dump($mainPlanInfo, $fileName);
-            return view('plan.planToBase', ['planAll' => $mainPlanInfo, 'fileName' => $fileName]);
+        $mainPlanInfo = $info->parseXMLFile($fileXML,1);
+        return view('plan.planToBase', ['planAll' => $mainPlanInfo['Титул'], 'fileName' => $fileName]);
 
     }
 
 
-    public function savePlanToBase(FilesParser $info, Plans $plans){ // Загрузка шахтинского xml файла
+    public function savePlanToBase(FilesParser $info){ // Загрузка шахтинского xml файла в базу через ajax
+
+        function pullCourseInfo($attributesArray){
+            return $attributesArray;
+        }
+
+
         $fileXML=\Storage::disk('public')->get('\/'.$_REQUEST['filepath']);
         $parsedFile = $info->parseXMLFile($fileXML);
-        $plans->insert($parsedFile);
 
-        return ('Информация загружена в базу данных!');
+//        $plans->insert($parsedFile['Титул']); // старое
+        $plansArray = $parsedFile['Титул'];
+        $plans = new Plans($plansArray); // Загружаем титул в базу (таблица plans)
+        $plans->save();
+        $planId = $plans->id;
+//        dd($plans->id);  // Получаем id плана
 
+        foreach ($parsedFile['СтрокиПлана'] as $item){
+
+            //////////////////////// ПЕРЕДЕЛАТЬ В НОРМАЛЬНЫЙ МАССИВ!!!!!!! +++++++++++++++++++++++++++
+            
+
+            $disciplinesArray = [
+                'План_id'                => $planId,
+                'Дис'                    => isset($item['@attributes']['Дис']) ? $item['@attributes']['Дис'] : null,
+                'НовЦикл'                => isset($item['@attributes']['НовЦикл']) ? $item['@attributes']['НовЦикл'] : null,
+                'НовИдДисциплины'        => isset($item['@attributes']['НовИдДисциплины']) ? $item['@attributes']['НовИдДисциплины'] : null,
+                'Цикл'                   => isset($item['@attributes']['Цикл']) ? $item['@attributes']['Цикл'] : null,
+                'ИдетификаторДисциплины' => isset($item['@attributes']['ИдетификаторДисциплины']) ? $item['@attributes']['ИдетификаторДисциплины'] : null,
+                'ИдентификаторВидаПлана' => isset($item['@attributes']['ИдентификаторВидаПлана']) ? $item['@attributes']['ИдентификаторВидаПлана'] : null,
+                'ГОС'                    => isset($item['@attributes']['ГОС']) ? $item['@attributes']['ГОС'] : null,
+                'ЧасовИнтер'             => isset($item['@attributes']['ЧасовИнтер']) ? $item['@attributes']['ЧасовИнтер'] : null,
+                'СР'                     => isset($item['@attributes']['СР']) ? $item['@attributes']['СР'] : null,
+                'СемЭкз'                 => isset($item['@attributes']['СемЭкз']) ? $item['@attributes']['СемЭкз'] : null,
+                'СемЗач'                 => isset($item['@attributes']['СемЗач']) ? $item['@attributes']['СемЗач'] : null,
+                'СемКП'                  => isset($item['@attributes']['СемКП']) ? $item['@attributes']['СемКП'] : null,
+                'СемКР'                  => isset($item['@attributes']['СемКР']) ? $item['@attributes']['СемКР'] : null,
+                'КомпетенцииКоды'        => isset($item['@attributes']['КомпетенцииКоды']) ? $item['@attributes']['КомпетенцииКоды'] : null,
+                'Кафедра'                => isset($item['@attributes']['Кафедра']) ? $item['@attributes']['Кафедра'] : null,
+                'ДисциплинаДляРазделов'  => isset($item['@attributes']['ДисциплинаДляРазделов']) ? $item['@attributes']['ДисциплинаДляРазделов'] : null,
+                'Раздел'                 => isset($item['@attributes']['Раздел']) ? $item['@attributes']['Раздел'] : null,
+                'НеСчитатьКонтроль'      => isset($item['@attributes']['НеСчитатьКонтроль']) ? $item['@attributes']['НеСчитатьКонтроль'] : null,
+                'ПодлежитИзучению'       => isset($item['@attributes']['ПодлежитИзучению']) ? $item['@attributes']['ПодлежитИзучению'] : null,
+                'КредитовНаДисциплину'   => isset($item['@attributes']['КредитовНаДисциплину']) ? $item['@attributes']['КредитовНаДисциплину'] : null,
+                'ЧасовВЗЕТ'              => isset($item['@attributes']['ЧасовВЗЕТ']) ? $item['@attributes']['ЧасовВЗЕТ']:null,
+            ];
+            $disciplines = new Disciplines($disciplinesArray); // Загружаем титул в базу (таблица plans)
+            $disciplines->save();
+            $disciplineId = $disciplines->id;
+
+            if (isset($item['Курс']['@attributes'])){
+                //pullCourseInfo($item['Курс']['@attributes'], $disciplineId);
+
+                $corseArray = [
+                   'Дис_id' => $disciplineId
+                ];
+                $corseArray = array_merge($corseArray, pullCourseInfo($item['Курс']['@attributes']));
+                $courses = new Courses($corseArray); // Загружаем титул в базу (таблица plans)
+                $courses->save();
+            }
+            elseif(is_array($item['Курс'])){
+                foreach ($item['Курс'] as $kurs){
+                    $corseArray = [
+                        'Дис_id' => $disciplineId
+                    ];
+                    $corseArray = array_merge($corseArray, pullCourseInfo($kurs['@attributes']));
+                    $courses = new Courses($corseArray); // Загружаем титул в базу (таблица plans)
+                    $courses->save();
+                }
+            }
+
+        }
+
+
+        return ('Информация успешно загружена в базу данных!');
     }
 }
 

@@ -41,7 +41,7 @@ class FilesParser extends Model
         return ($info);
     }
 
-    public function parseXMLFile($file){ // Парсер шахтинского xml файла
+    public function parseXMLFile($file, $mode = null){ // Парсер шахтинского xml файла mode1 - Простой запрос, mode=null - полный запрос
 
         function makeStringFromArray($attr, $child = null){ // Переделываем массив из xml файла в строку
             if (isset($child)) {
@@ -52,114 +52,145 @@ class FilesParser extends Model
                 return serialize($attr);
         }
 
-//        $xmlFile = simplexml_load_file($file);
         $xmlFile = new \SimpleXMLElement($file);
+        $parsedFile = array();
 
-        $items = array();
+        $items = array();  // Поля титула
+        if ($mode != null) {  // Если упрощенный режим парсинга, т.е. $mode = 1
+            $items = array_add($items, 'ИмяВуза',               (string)$xmlFile->{'План'}->{'Титул'}['ИмяВуза']);
+            $items = array_add($items, 'ИмяВуза2',              (string)$xmlFile->{'План'}->{'Титул'}['ИмяВуза2']);
+            $items = array_add($items, 'Головная',              (string)$xmlFile->{'План'}->{'Титул'}['Головная']);
+            $items = array_add($items, 'ПоследнийШифр',         (string)$xmlFile->{'План'}->{'Титул'}['ПоследнийШифр']);
+            $items = array_add($items, 'ГодНачалаПодготовки',   (string)$xmlFile->{'План'}->{'Титул'}['ГодНачалаПодготовки']);
 
-        // XML - Документ
-        $items = array_add($items, 'Тип',                       (string)$xmlFile['Тип']);
-        $items = array_add($items, 'PrevName',                  (string)$xmlFile['PrevName']);
-        $items = array_add($items, 'PrevWrite',                 (string)$xmlFile['PrevWrite']);
-        $items = array_add($items, 'LastName',                  (string)$xmlFile['LastName']);
-        $items = array_add($items, 'LastWrite',                 (string)$xmlFile['LastWrite']);
+            $tempItem = Formatter::make((array)$xmlFile->{'План'}->{'Титул'}->{'Специальности'}, Formatter::XML)->toArray();
+            $items = array_add($items, 'Направление',           $tempItem['Специальность'][0]['@attributes']['Название']);
+            $items = array_add($items, 'Профиль',               $tempItem['Специальность'][1]['@attributes']['Название']);
 
-        // XML - План
-        $items = array_add($items, 'ПодТип',                    (string)$xmlFile->{'План'}['ПодТип']);
-        $items = array_add($items, 'Шифр',                      (string)$xmlFile->{'План'}['Шифр']);
-        $items = array_add($items, 'ОбразовательнаяПрограмма',  (string)$xmlFile->{'План'}['ОбразовательнаяПрограмма']);
-        $items = array_add($items, 'ФормаОбучения',             (string)$xmlFile->{'План'}['ФормаОбучения']);
-        $items = array_add($items, 'УровеньОбразования',        (string)$xmlFile->{'План'}['УровеньОбразования']);
+            $tempItem = Formatter::make((array)$xmlFile->{'План'}->{'Титул'}->{'Квалификации'}, Formatter::XML)->toArray();
+            $items = array_add($items, 'Квалификация',          $tempItem['Квалификация']['@attributes']['Название']);
+            $items = array_add($items, 'СрокОбучения',          $tempItem['Квалификация']['@attributes']['СрокОбучения']);
+            $parsedFile = array_add($parsedFile, 'Титул', $items);
 
-        // XML - Титул
-        $items = array_add($items, 'ПолноеИмяПлана',            (string)$xmlFile->{'План'}->{'Титул'}['ПолноеИмяПлана']);
-        $items = array_add($items, 'ИмяПлана',                  (string)$xmlFile->{'План'}->{'Титул'}['ИмяПлана']);
-        $items = array_add($items, 'НомерПользователя',         (string)$xmlFile->{'План'}->{'Титул'}['НомерПользователя']);
-        $items = array_add($items, 'ИмяВуза',                   (string)$xmlFile->{'План'}->{'Титул'}['ИмяВуза']);
-        $items = array_add($items, 'ИмяВуза2',                  (string)$xmlFile->{'План'}->{'Титул'}['ИмяВуза2']);
-        $items = array_add($items, 'Головная',                  (string)$xmlFile->{'План'}->{'Титул'}['Головная']);
-        $items = array_add($items, 'КодКафедры',                (string)$xmlFile->{'План'}->{'Титул'}['КодКафедры']);
-        $items = array_add($items, 'Факультет',                 (string)$xmlFile->{'План'}->{'Титул'}['Факультет']);
-        $items = array_add($items, 'ПоследнийШифр',             (string)$xmlFile->{'План'}->{'Титул'}['ПоследнийШифр']);
-        $items = array_add($items, 'ГодНачалаПодготовки',       (string)$xmlFile->{'План'}->{'Титул'}['ГодНачалаПодготовки']);
-        $items = array_add($items, 'ДатаГОСа',                  (string)$xmlFile->{'План'}->{'Титул'}['ДатаГОСа']);
-        $items = array_add($items, 'ДокументГОСа',              (string)$xmlFile->{'План'}->{'Титул'}['ДокументГОСа']);
-        $items = array_add($items, 'ТипГОСа',                   (string)$xmlFile->{'План'}->{'Титул'}['ТипГОСа']);
-        $items = array_add($items, 'Приложение',                (string)$xmlFile->{'План'}->{'Титул'}['Приложение']);
-        $items = array_add($items, 'ДатаПриложения',            (string)$xmlFile->{'План'}->{'Титул'}['ДатаПриложения']);
-        $items = array_add($items, 'ВерсияПриложения',          (string)$xmlFile->{'План'}->{'Титул'}['ВерсияПриложения']);
-        $items = array_add($items, 'СеместровНаКурсе',          (string)$xmlFile->{'План'}->{'Титул'}['СеместровНаКурсе']);
-        $items = array_add($items, 'СессийНаКурсе',             (string)$xmlFile->{'План'}->{'Титул'}['СессийНаКурсе']);
-        $items = array_add($items, 'ЭлементовВНеделе',          (string)$xmlFile->{'План'}->{'Титул'}['ЭлементовВНеделе']);
-        $items = array_add($items, 'ВключатьЭкВСуммуЧасов',     (string)$xmlFile->{'План'}->{'Титул'}['ВключатьЭкВСуммуЧасов']);
-        $items = array_add($items, 'КСР_ИЗ',                    (string)$xmlFile->{'План'}->{'Титул'}['КСР_ИЗ']);
-        $items = array_add($items, 'WhoRatif',                  (string)$xmlFile->{'План'}->{'Титул'}['WhoRatif']);
-        $items = array_add($items, 'FacType',                   (string)$xmlFile->{'План'}->{'Титул'}['FacType']);
-        $items = array_add($items, 'ДвИГА',                     (string)$xmlFile->{'План'}->{'Титул'}['ДвИГА']);
-        $items = array_add($items, 'ГвИГА',                     (string)$xmlFile->{'План'}->{'Титул'}['ГвИГА']);
-        $items = array_add($items, 'DetailGIA',                 (string)$xmlFile->{'План'}->{'Титул'}['DetailGIA']);
-        $items = array_add($items, 'ИГА_ЗЕТвНеделе',            (string)$xmlFile->{'План'}->{'Титул'}['ИГА_ЗЕТвНеделе']);
-        $items = array_add($items, 'ИГА_ЧасовВЗЕТ',             (string)$xmlFile->{'План'}->{'Титул'}['ИГА_ЧасовВЗЕТ']);
-        $items = array_add($items, 'ИГА_Кафедра',               (string)$xmlFile->{'План'}->{'Титул'}['ИГА_Кафедра']);
-        $items = array_add($items, 'Программа',                 (string)$xmlFile->{'План'}->{'Титул'}['Программа']);
-        $items = array_add($items, 'ООПет',                     (string)$xmlFile->{'План'}->{'Титул'}['ООПет']);
-        $items = array_add($items, 'Лекц',                      (string)$xmlFile->{'План'}->{'Титул'}['Лекц']);
-        $items = array_add($items, 'ДВВ',                       (string)$xmlFile->{'План'}->{'Титул'}['ДВВ']);
-        $items = array_add($items, 'МаксНагр',                  (string)$xmlFile->{'План'}->{'Титул'}['МаксНагр']);
-        $items = array_add($items, 'Уровень',                   (string)$xmlFile->{'План'}->{'Титул'}['Уровень']);
-        $items = array_add($items, 'ВидПлана',                  (string)$xmlFile->{'План'}->{'Титул'}['ВидПлана']);
-        $items = array_add($items, 'КодУровня',                 (string)$xmlFile->{'План'}->{'Титул'}['КодУровня']);
-        $items = array_add($items, 'СокрКонтрольФакт',          (string)$xmlFile->{'План'}->{'Титул'}['СокрКонтрольФакт']);
+        }
+        else {  // Полная версия парсинга
 
-        // ======================= Обработка массив - строка в титуле =========================
+            // XML - Документ
+            $items = array_add($items, 'Тип', (string)$xmlFile['Тип']);
+            $items = array_add($items, 'PrevName', (string)$xmlFile['PrevName']);
+            $items = array_add($items, 'PrevWrite', (string)$xmlFile['PrevWrite']);
+            $items = array_add($items, 'LastName', (string)$xmlFile['LastName']);
+            $items = array_add($items, 'LastWrite', (string)$xmlFile['LastWrite']);
 
-        // XML - АтрибутыЦикловНов
-        $items = array_add($items, 'АтрибутыЦикловНов',
-            makeStringFromArray((array)$xmlFile->{'План'}->{'Титул'}->{'АтрибутыЦикловНов'},'Цикл'));
+            // XML - План
+            $items = array_add($items, 'ПодТип', (string)$xmlFile->{'План'}['ПодТип']);
+            $items = array_add($items, 'Шифр', (string)$xmlFile->{'План'}['Шифр']);
+            $items = array_add($items, 'ОбразовательнаяПрограмма', (string)$xmlFile->{'План'}['ОбразовательнаяПрограмма']);
+            $items = array_add($items, 'ФормаОбучения', (string)$xmlFile->{'План'}['ФормаОбучения']);
+            $items = array_add($items, 'УровеньОбразования', (string)$xmlFile->{'План'}['УровеньОбразования']);
 
-        // XML - АтрибутыЦиклов
-        $items = array_add($items, 'АтрибутыЦиклов',
-            makeStringFromArray((array)$xmlFile->{'План'}->{'Титул'}->{'АтрибутыЦиклов'},'Цикл'));
+            // XML - Титул
+            $items = array_add($items, 'ПолноеИмяПлана', (string)$xmlFile->{'План'}->{'Титул'}['ПолноеИмяПлана']);
+            $items = array_add($items, 'ИмяПлана', (string)$xmlFile->{'План'}->{'Титул'}['ИмяПлана']);
+            $items = array_add($items, 'НомерПользователя', (string)$xmlFile->{'План'}->{'Титул'}['НомерПользователя']);
+            $items = array_add($items, 'ИмяВуза', (string)$xmlFile->{'План'}->{'Титул'}['ИмяВуза']);
+            $items = array_add($items, 'ИмяВуза2', (string)$xmlFile->{'План'}->{'Титул'}['ИмяВуза2']);
+            $items = array_add($items, 'Головная', (string)$xmlFile->{'План'}->{'Титул'}['Головная']);
+            $items = array_add($items, 'КодКафедры', (string)$xmlFile->{'План'}->{'Титул'}['КодКафедры']);
+            $items = array_add($items, 'Факультет', (string)$xmlFile->{'План'}->{'Титул'}['Факультет']);
+            $items = array_add($items, 'ПоследнийШифр', (string)$xmlFile->{'План'}->{'Титул'}['ПоследнийШифр']);
+            $items = array_add($items, 'ГодНачалаПодготовки', (string)$xmlFile->{'План'}->{'Титул'}['ГодНачалаПодготовки']);
+            $items = array_add($items, 'ДатаГОСа', (string)$xmlFile->{'План'}->{'Титул'}['ДатаГОСа']);
+            $items = array_add($items, 'ДокументГОСа', (string)$xmlFile->{'План'}->{'Титул'}['ДокументГОСа']);
+            $items = array_add($items, 'ТипГОСа', (string)$xmlFile->{'План'}->{'Титул'}['ТипГОСа']);
+            $items = array_add($items, 'Приложение', (string)$xmlFile->{'План'}->{'Титул'}['Приложение']);
+            $items = array_add($items, 'ДатаПриложения', (string)$xmlFile->{'План'}->{'Титул'}['ДатаПриложения']);
+            $items = array_add($items, 'ВерсияПриложения', (string)$xmlFile->{'План'}->{'Титул'}['ВерсияПриложения']);
+            $items = array_add($items, 'СеместровНаКурсе', (string)$xmlFile->{'План'}->{'Титул'}['СеместровНаКурсе']);
+            $items = array_add($items, 'СессийНаКурсе', (string)$xmlFile->{'План'}->{'Титул'}['СессийНаКурсе']);
+            $items = array_add($items, 'ЭлементовВНеделе', (string)$xmlFile->{'План'}->{'Титул'}['ЭлементовВНеделе']);
+            $items = array_add($items, 'ВключатьЭкВСуммуЧасов', (string)$xmlFile->{'План'}->{'Титул'}['ВключатьЭкВСуммуЧасов']);
+            $items = array_add($items, 'КСР_ИЗ', (string)$xmlFile->{'План'}->{'Титул'}['КСР_ИЗ']);
+            $items = array_add($items, 'WhoRatif', (string)$xmlFile->{'План'}->{'Титул'}['WhoRatif']);
+            $items = array_add($items, 'FacType', (string)$xmlFile->{'План'}->{'Титул'}['FacType']);
+            $items = array_add($items, 'ДвИГА', (string)$xmlFile->{'План'}->{'Титул'}['ДвИГА']);
+            $items = array_add($items, 'ГвИГА', (string)$xmlFile->{'План'}->{'Титул'}['ГвИГА']);
+            $items = array_add($items, 'DetailGIA', (string)$xmlFile->{'План'}->{'Титул'}['DetailGIA']);
+            $items = array_add($items, 'ИГА_ЗЕТвНеделе', (string)$xmlFile->{'План'}->{'Титул'}['ИГА_ЗЕТвНеделе']);
+            $items = array_add($items, 'ИГА_ЧасовВЗЕТ', (string)$xmlFile->{'План'}->{'Титул'}['ИГА_ЧасовВЗЕТ']);
+            $items = array_add($items, 'ИГА_Кафедра', (string)$xmlFile->{'План'}->{'Титул'}['ИГА_Кафедра']);
+            $items = array_add($items, 'Программа', (string)$xmlFile->{'План'}->{'Титул'}['Программа']);
+            $items = array_add($items, 'ООПет', (string)$xmlFile->{'План'}->{'Титул'}['ООПет']);
+            $items = array_add($items, 'Лекц', (string)$xmlFile->{'План'}->{'Титул'}['Лекц']);
+            $items = array_add($items, 'ДВВ', (string)$xmlFile->{'План'}->{'Титул'}['ДВВ']);
+            $items = array_add($items, 'МаксНагр', (string)$xmlFile->{'План'}->{'Титул'}['МаксНагр']);
+            $items = array_add($items, 'Уровень', (string)$xmlFile->{'План'}->{'Титул'}['Уровень']);
+            $items = array_add($items, 'ВидПлана', (string)$xmlFile->{'План'}->{'Титул'}['ВидПлана']);
+            $items = array_add($items, 'КодУровня', (string)$xmlFile->{'План'}->{'Титул'}['КодУровня']);
+            $items = array_add($items, 'СокрКонтрольФакт', (string)$xmlFile->{'План'}->{'Титул'}['СокрКонтрольФакт']);
 
-        // XML - Утверждение
-        $items = array_add($items, 'Утверждение',
-            makeStringFromArray((array)$xmlFile->{'План'}->{'Титул'}->{'Утверждение'}));
+            // ======================= Обработка массив - строка в титуле =========================
 
-        // XML - Специальности
-        $items = array_add($items, 'Специальности',
-            makeStringFromArray((array)$xmlFile->{'План'}->{'Титул'}->{'Специальности'},'Специальность'));
+            // XML - АтрибутыЦикловНов
+            $items = array_add($items, 'АтрибутыЦикловНов',
+                makeStringFromArray((array)$xmlFile->{'План'}->{'Титул'}->{'АтрибутыЦикловНов'}, 'Цикл'));
 
-        // XML - ВоеннаяСпециальность
-        $items = array_add($items, 'ВоеннаяСпециальность',
-            makeStringFromArray((array)$xmlFile->{'План'}->{'Титул'}->{'ВоеннаяСпециальность'}));
+            // XML - АтрибутыЦиклов
+            $items = array_add($items, 'АтрибутыЦиклов',
+                makeStringFromArray((array)$xmlFile->{'План'}->{'Титул'}->{'АтрибутыЦиклов'}, 'Цикл'));
 
-        // XML - ВоеннаяСпециализация
-        $items = array_add($items, 'ВоеннаяСпециализация',
-            makeStringFromArray((array)$xmlFile->{'План'}->{'Титул'}->{'ВоеннаяСпециализация'}));
+            // XML - Утверждение
+            $items = array_add($items, 'Утверждение',
+                makeStringFromArray((array)$xmlFile->{'План'}->{'Титул'}->{'Утверждение'}));
 
-        // XML - ПредназначениеВыпускников
-        $items = array_add($items, 'ПредназначениеВыпускников',
-            makeStringFromArray((array)$xmlFile->{'План'}->{'Титул'}->{'ПредназначениеВыпускников'}));
+            // XML - Специальности
+            $items = array_add($items, 'Специальности',
+                makeStringFromArray((array)$xmlFile->{'План'}->{'Титул'}->{'Специальности'}, 'Специальность'));
 
-        // XML - Квалификации
-        $items = array_add($items, 'Квалификации',
-            makeStringFromArray((array)$xmlFile->{'План'}->{'Титул'}->{'Квалификации'},'Квалификация'));
+            // XML - ВоеннаяСпециальность
+            $items = array_add($items, 'ВоеннаяСпециальность',
+                makeStringFromArray((array)$xmlFile->{'План'}->{'Титул'}->{'ВоеннаяСпециальность'}));
 
-        // XML - ВидыДеятельности
-        $items = array_add($items, 'ВидыДеятельности',
-            makeStringFromArray((array)$xmlFile->{'План'}->{'Титул'}->{'ВидыДеятельности'},'ВидДеятельности'));
+            // XML - ВоеннаяСпециализация
+            $items = array_add($items, 'ВоеннаяСпециализация',
+                makeStringFromArray((array)$xmlFile->{'План'}->{'Титул'}->{'ВоеннаяСпециализация'}));
 
-        // XML - Разработчики
-        $items = array_add($items, 'Разработчики',
-            makeStringFromArray((array)$xmlFile->{'План'}->{'Титул'}->{'Разработчики'},'Разработчик'));
+            // XML - ПредназначениеВыпускников
+            $items = array_add($items, 'ПредназначениеВыпускников',
+                makeStringFromArray((array)$xmlFile->{'План'}->{'Титул'}->{'ПредназначениеВыпускников'}));
 
-        // XML - ГрафикУчПроцесса
-        $items = array_add($items, 'ГрафикУчПроцесса',
-            makeStringFromArray((array)$xmlFile->{'План'}->{'Титул'}->{'ГрафикУчПроцесса'},'Курс'));
+            // XML - Квалификации
+            $items = array_add($items, 'Квалификации',
+                makeStringFromArray((array)$xmlFile->{'План'}->{'Титул'}->{'Квалификации'}, 'Квалификация'));
 
-//        dump($file, $items, $_REQUEST);
+            // XML - ВидыДеятельности
+            $items = array_add($items, 'ВидыДеятельности',
+                makeStringFromArray((array)$xmlFile->{'План'}->{'Титул'}->{'ВидыДеятельности'}, 'ВидДеятельности'));
 
-        return $items;
+            // XML - Разработчики
+            $items = array_add($items, 'Разработчики',
+                makeStringFromArray((array)$xmlFile->{'План'}->{'Титул'}->{'Разработчики'}, 'Разработчик'));
+
+            // XML - ГрафикУчПроцесса
+            $items = array_add($items, 'ГрафикУчПроцесса',
+                makeStringFromArray((array)$xmlFile->{'План'}->{'Титул'}->{'ГрафикУчПроцесса'}, 'Курс'));
+
+            $parsedFile = array_add($parsedFile, 'Титул', $items);
+
+            // ====================== Закончили обработку титула =========================================
+
+
+
+            // ============================== Обработка дисциплин =========================================
+
+            $itemsDisc = $xmlFile->xpath('//План/СтрокиПлана/Строка');
+            $itemsDisc = Formatter::make($itemsDisc, Formatter::XML)->toArray();
+            $parsedFile = array_add($parsedFile, 'СтрокиПлана', $itemsDisc);
+
+
+        }
+
+        return $parsedFile;
     }
 
 }
