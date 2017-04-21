@@ -45,77 +45,46 @@ class PlanController extends Controller
 
     public function savePlanToBase(FilesParser $info){ // Загрузка шахтинского xml файла в базу через ajax
 
-        function pullCourseInfo($attributesArray){
-            return $attributesArray;
+        function saveCourseInfo($disciplineId, $item){  // Загружаем курс в базу (таблица courses)
+            $corseArray = array_merge(['Дис_id' => $disciplineId], $item);
+            $courses = new Courses($corseArray);
+            $courses->save();
+            return $courses->id;
         }
 
 
         $fileXML=\Storage::disk('public')->get('\/'.$_REQUEST['filepath']);
         $parsedFile = $info->parseXMLFile($fileXML);
 
-//        $plans->insert($parsedFile['Титул']); // старое
         $plansArray = $parsedFile['Титул'];
         $plans = new Plans($plansArray); // Загружаем титул в базу (таблица plans)
         $plans->save();
-        $planId = $plans->id;
-//        dd($plans->id);  // Получаем id плана
+        $planId = $plans->id;  // Получаем id плана
 
-        foreach ($parsedFile['СтрокиПлана'] as $item){
-
-            //////////////////////// ПЕРЕДЕЛАТЬ В НОРМАЛЬНЫЙ МАССИВ!!!!!!! +++++++++++++++++++++++++++
-            
-
-            $disciplinesArray = [
-                'План_id'                => $planId,
-                'Дис'                    => isset($item['@attributes']['Дис']) ? $item['@attributes']['Дис'] : null,
-                'НовЦикл'                => isset($item['@attributes']['НовЦикл']) ? $item['@attributes']['НовЦикл'] : null,
-                'НовИдДисциплины'        => isset($item['@attributes']['НовИдДисциплины']) ? $item['@attributes']['НовИдДисциплины'] : null,
-                'Цикл'                   => isset($item['@attributes']['Цикл']) ? $item['@attributes']['Цикл'] : null,
-                'ИдетификаторДисциплины' => isset($item['@attributes']['ИдетификаторДисциплины']) ? $item['@attributes']['ИдетификаторДисциплины'] : null,
-                'ИдентификаторВидаПлана' => isset($item['@attributes']['ИдентификаторВидаПлана']) ? $item['@attributes']['ИдентификаторВидаПлана'] : null,
-                'ГОС'                    => isset($item['@attributes']['ГОС']) ? $item['@attributes']['ГОС'] : null,
-                'ЧасовИнтер'             => isset($item['@attributes']['ЧасовИнтер']) ? $item['@attributes']['ЧасовИнтер'] : null,
-                'СР'                     => isset($item['@attributes']['СР']) ? $item['@attributes']['СР'] : null,
-                'СемЭкз'                 => isset($item['@attributes']['СемЭкз']) ? $item['@attributes']['СемЭкз'] : null,
-                'СемЗач'                 => isset($item['@attributes']['СемЗач']) ? $item['@attributes']['СемЗач'] : null,
-                'СемКП'                  => isset($item['@attributes']['СемКП']) ? $item['@attributes']['СемКП'] : null,
-                'СемКР'                  => isset($item['@attributes']['СемКР']) ? $item['@attributes']['СемКР'] : null,
-                'КомпетенцииКоды'        => isset($item['@attributes']['КомпетенцииКоды']) ? $item['@attributes']['КомпетенцииКоды'] : null,
-                'Кафедра'                => isset($item['@attributes']['Кафедра']) ? $item['@attributes']['Кафедра'] : null,
-                'ДисциплинаДляРазделов'  => isset($item['@attributes']['ДисциплинаДляРазделов']) ? $item['@attributes']['ДисциплинаДляРазделов'] : null,
-                'Раздел'                 => isset($item['@attributes']['Раздел']) ? $item['@attributes']['Раздел'] : null,
-                'НеСчитатьКонтроль'      => isset($item['@attributes']['НеСчитатьКонтроль']) ? $item['@attributes']['НеСчитатьКонтроль'] : null,
-                'ПодлежитИзучению'       => isset($item['@attributes']['ПодлежитИзучению']) ? $item['@attributes']['ПодлежитИзучению'] : null,
-                'КредитовНаДисциплину'   => isset($item['@attributes']['КредитовНаДисциплину']) ? $item['@attributes']['КредитовНаДисциплину'] : null,
-                'ЧасовВЗЕТ'              => isset($item['@attributes']['ЧасовВЗЕТ']) ? $item['@attributes']['ЧасовВЗЕТ']:null,
-            ];
-            $disciplines = new Disciplines($disciplinesArray); // Загружаем титул в базу (таблица plans)
+        foreach ($parsedFile['СтрокиПлана'] as $item){ // Пробегаем по дисциплинам плана
+            $disciplinesArray = array_merge(['План_id' => $planId],$item['@attributes']);
+            $disciplines = new Disciplines($disciplinesArray); // Загружаем дисциплину в базу (таблица disciplines)
             $disciplines->save();
             $disciplineId = $disciplines->id;
 
             if (isset($item['Курс']['@attributes'])){
-                //pullCourseInfo($item['Курс']['@attributes'], $disciplineId);
+                $courseId = saveCourseInfo($disciplineId, $item['Курс']['@attributes']);
+//                $corseArray = array_merge(['Дис_id' => $disciplineId], $item['Курс']['@attributes']);
+//                $courses = new Courses($corseArray); // Загружаем курс в базу (таблица courses)
+//                $courses->save();
+//                $courseId = $courses->id;
 
-                $corseArray = [
-                   'Дис_id' => $disciplineId
-                ];
-                $corseArray = array_merge($corseArray, pullCourseInfo($item['Курс']['@attributes']));
-                $courses = new Courses($corseArray); // Загружаем титул в базу (таблица plans)
-                $courses->save();
             }
             elseif(is_array($item['Курс'])){
                 foreach ($item['Курс'] as $kurs){
-                    $corseArray = [
-                        'Дис_id' => $disciplineId
-                    ];
-                    $corseArray = array_merge($corseArray, pullCourseInfo($kurs['@attributes']));
-                    $courses = new Courses($corseArray); // Загружаем титул в базу (таблица plans)
-                    $courses->save();
+                    $courseId = saveCourseInfo($disciplineId, $kurs['@attributes']);
+//                    $corseArray = array_merge(['Дис_id' => $disciplineId], $kurs['@attributes']);
+//                    $courses = new Courses($corseArray); // Загружаем курс в базу (таблица courses)
+//                    $courses->save();
+//                    $corseId = $courses->id;
                 }
             }
-
         }
-
 
         return ('Информация успешно загружена в базу данных!');
     }
