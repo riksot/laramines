@@ -1,12 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Competences;
 use App\Courses;
 use App\Disciplines;
 use App\FilesParser;
 use App\Plan;
 use App\Plans;
-use function foo\func;
+use App\Sessions;
 use Illuminate\Http\Request;
 use SoapBox\Formatter\Formatter;
 use Symfony\Component\Console\Descriptor\XmlDescriptor;
@@ -43,7 +44,7 @@ class PlanController extends Controller
     }
 
 
-    public function savePlanToBase(FilesParser $info){ // Загрузка шахтинского xml файла в базу через ajax
+    public function savePlanToBase(FilesParser $info){  // Загрузка шахтинского xml файла в базу через ajax
 
         function saveCourseInfo($disciplineId, $item){  // Загружаем курс в базу (таблица courses)
             $corseArray = array_merge(['Дис_id' => $disciplineId], $item);
@@ -52,41 +53,78 @@ class PlanController extends Controller
             return $courses->id;
         }
 
+        function saveSessionInfo($courseId, $item){     // Загружаем сессию в базу (таблица sessions)
+            $sessionArray = array_merge(['Курс_id' => $courseId], $item);
+            $sessions = new Sessions($sessionArray);
+            $sessions->save();
+            return $sessions->id;
+        }
 
         $fileXML=\Storage::disk('public')->get('\/'.$_REQUEST['filepath']);
         $parsedFile = $info->parseXMLFile($fileXML);
+
+        // ================================ Загружаем титул в базу ========================================
 
         $plansArray = $parsedFile['Титул'];
         $plans = new Plans($plansArray); // Загружаем титул в базу (таблица plans)
         $plans->save();
         $planId = $plans->id;  // Получаем id плана
 
-        foreach ($parsedFile['СтрокиПлана'] as $item){ // Пробегаем по дисциплинам плана
-            $disciplinesArray = array_merge(['План_id' => $planId],$item['@attributes']);
+        // ================================ Пробегаем по дисциплинам плана ================================
+
+        foreach ($parsedFile['СтрокиПлана'] as $item){
+
+            $disciplinesArray = ['План_id' => $planId];
+            if(isset($item['КурсовойПроект'])){
+                $disciplinesArray = array_add($disciplinesArray, 'КурсовойПроект' ,serialize($item['КурсовойПроект']));
+            }
+            if(isset($item['КурсоваяРабота'])){
+                $disciplinesArray = array_add($disciplinesArray, 'КурсоваяРабота' ,serialize($item['КурсоваяРабота']));
+            }
+            $disciplinesArray = array_merge($disciplinesArray,$item['@attributes']);
+
             $disciplines = new Disciplines($disciplinesArray); // Загружаем дисциплину в базу (таблица disciplines)
             $disciplines->save();
             $disciplineId = $disciplines->id;
 
-            if (isset($item['Курс']['@attributes'])){
+            if(isset($item['Курс']['@attributes'])){
                 $courseId = saveCourseInfo($disciplineId, $item['Курс']['@attributes']);
-//                $corseArray = array_merge(['Дис_id' => $disciplineId], $item['Курс']['@attributes']);
-//                $courses = new Courses($corseArray); // Загружаем курс в базу (таблица courses)
-//                $courses->save();
-//                $courseId = $courses->id;
-
+                if(isset($item['Курс']['Сессия']['@attributes'])){
+                    $sessionId = saveSessionInfo($courseId, $item['Курс']['Сессия']['@attributes']);
+                }
+                elseif(isset($item['Курс']['Сессия']) && is_array($item['Курс']['Сессия'])){
+                    foreach ($item['Курс']['Сессия'] as $session){
+                        $sessionId = saveSessionInfo($courseId, $session['@attributes']);
+                    }
+                }
             }
-            elseif(is_array($item['Курс'])){
+            elseif(isset($item['Курс']) && is_array($item['Курс'])){
                 foreach ($item['Курс'] as $kurs){
                     $courseId = saveCourseInfo($disciplineId, $kurs['@attributes']);
-//                    $corseArray = array_merge(['Дис_id' => $disciplineId], $kurs['@attributes']);
-//                    $courses = new Courses($corseArray); // Загружаем курс в базу (таблица courses)
-//                    $courses->save();
-//                    $corseId = $courses->id;
+                    if (isset($item['Курс']['Сессия']['@attributes'])){
+                        $sessionId = saveSessionInfo($courseId, $item['Курс']['Сессия']['@attributes']);
+                    }
+                    elseif(isset($item['Курс']['Сессия']) && is_array($item['Курс']['Сессия'])){
+                        foreach ($item['Курс']['Сессия'] as $session){
+                            $sessionId = saveSessionInfo($courseId, $session['@attributes']);
+                        }
+                    }
                 }
             }
         }
 
-        return ('Информация успешно загружена в базу данных!');
+        // ================================ Пробегаем по компетенциям =====================================
+
+        foreach ($parsedFile['Компетенции'] as $item) {
+            $competencesArray = array_merge(['План_id' => $planId], $item['@attributes']);
+            $competences = new Competences($competencesArray);
+            $competences->save();
+        }
+
+
+
+
+            return ('Информация успешно загружена в базу данных!');
     }
 }
 

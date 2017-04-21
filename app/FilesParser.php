@@ -175,10 +175,31 @@ class FilesParser extends Model
             $items = array_add($items, 'ГрафикУчПроцесса',
                 makeStringFromArray((array)$xmlFile->{'План'}->{'Титул'}->{'ГрафикУчПроцесса'}, 'Курс'));
 
+            // ============================== Обработка документа (складываем всё в титул)=================
+
+            // XML - ЗЕТ
+            $items = array_add($items, 'ЗЕТ',
+                makeStringFromArray((array)$xmlFile->{'План'}->{'ЗЕТ'}, true));
+
+            // XML - ДопКомпетенции
+            $items = array_add($items, 'ДопКомпетенции',
+                makeStringFromArray((array)$xmlFile->{'План'}->{'ДопКомпетенции'}, true));
+
+            // XML - АПП
+            $items = array_add($items, 'АПП',
+                makeStringFromArray((array)$xmlFile->{'План'}->{'АПП'}, true));
+
+            // XML - ПараметрыПроверки
+            $items = array_add($items, 'ПараметрыПроверки',
+                makeStringFromArray((array)$xmlFile->{'План'}->{'ПараметрыПроверки'}, true));
+
+            // XML - Примечание
+            $items = array_add($items, 'Примечание',
+                makeStringFromArray((array)$xmlFile->{'План'}->{'Примечание'}));
+
             $parsedFile = array_add($parsedFile, 'Титул', $items);
 
-            // ====================== Закончили обработку титула =========================================
-
+            // ====================== Закончили обработку титула ==========================================
 
 
             // ============================== Обработка дисциплин =========================================
@@ -186,6 +207,13 @@ class FilesParser extends Model
             $itemsDisc = $xmlFile->xpath('//План/СтрокиПлана/Строка');
             $itemsDisc = Formatter::make($itemsDisc, Formatter::XML)->toArray();
             $parsedFile = array_add($parsedFile, 'СтрокиПлана', $itemsDisc);
+
+            // ============================== Обработка компетенций =======================================
+
+            $itemsCompetences = $xmlFile->xpath('//План/Компетенции/Строка');
+            $itemsCompetences = Formatter::make($itemsCompetences, Formatter::XML)->toArray();
+            $parsedFile = array_add($parsedFile, 'Компетенции', $itemsCompetences);
+
 
 
         }
