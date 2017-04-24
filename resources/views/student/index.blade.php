@@ -6,6 +6,7 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h3> {{$student->name}} ({{$student->kurs}} курс, {{$student->groupname}} группа) </h3>
+            <h1>{{$idPlan==null?null:$idPlan}}</h1>
             <button class="btn btn-primary" type="button">Протокол аттестации</button>
             <button class="btn btn-default" type="button">Титул</button>
             <button class="btn btn-default" type="button">График</button>

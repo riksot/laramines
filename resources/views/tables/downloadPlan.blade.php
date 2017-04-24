@@ -1,28 +1,12 @@
 {{--
 |--------------------------------------------------------------------------
-| Загруженный учебный план
- {{dd(array_get($planAll, 'Дисциплины'))}}
-
+| Работа с загруженным учебным планом
+| Принимаем массив
 |--------------------------------------------------------------------------
 --}}
-@extends('layouts.index')
+@extends('plan.index')
 
-@section('content')
-
-    <div class="content-wrapper">
-        <section class="content-header">
-            <h1>
-                Загруженный учебный план
-                <small></small>
-            </h1>
-            <ol class="breadcrumb">
-                <li><a href="/">Главная</a></li>
-                <li class="active">Загруженный учебный план</li>
-            </ol>
-        </section>
-
-        <!-- Main content -->
-        <section class="content">
+@section('plan')
 
             <div class="row">
                 <div class="col-xs-12">
@@ -314,8 +298,6 @@
                 </div>
                 <!-- /.col -->
             </div>
-        </section>
-    </div>
 
 @endsection
 

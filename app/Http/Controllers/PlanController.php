@@ -14,8 +14,66 @@ use Symfony\Component\Console\Descriptor\XmlDescriptor;
 
 class PlanController extends Controller
 {
-    public function index(){
-        return view('plan.uploadPlan');
+    // =================== Отображение плана или его загрузка ==========================================================
+    public function index($idPlan = null){
+        if (isset($idPlan)){
+            $planAll=array();
+            $disciplines = Disciplines::all()->where('План_id',$idPlan) ;
+            foreach ($disciplines as $discipline){
+                $courses = Courses::all()->where('Дис_id', $discipline['id']);
+                foreach ($courses as $course){
+                    $sessions = Sessions::all()->where('Курс_id', $course['id']);
+                    $setupArray = null;
+                    foreach ($sessions as $session){
+
+                        if($session['Ном'] == 1){
+                            $setupArray = [
+                                'Лек'             => $session['Лек'],
+                                'Лаб'             => $session['Лаб'],
+                                'Пр'            => $session['Пр'],
+                            ];
+                            continue;
+                        }
+
+                        $counterCheckPoints = 0;
+                        if (isset($session['Экз'])) $counterCheckPoints = +9;
+                        if (isset($session['Зач'])) $counterCheckPoints = +4;
+                        if (isset($session['ЗачО'])) $counterCheckPoints = +4;
+                        $tempArray = [
+                            'НовИдДисциплины' => $discipline['НовИдДисциплины'],
+                            'Дис'             => $discipline['Дис'],
+                            'Курс'            => $course['Ном'],
+                            'Сессия'          => $session['Ном'],
+                            'Экз'             => $session['Экз'],
+                            'Зач'             => $session['Зач'],
+                            'ЗачО'            => $session['ЗачО'],
+                            'КП'              => $session['КП'],
+                            'КР'              => $session['КР'],
+                            'КонтрРаб'        => $session['КонтрРаб'],
+                            'Лек'             => $session['Лек']+$setupArray['Лек'],
+                            'Лаб'             => $session['Лаб']+$setupArray['Лаб'],
+                            'Пр'              => $session['Пр']+$setupArray['Пр'],
+                        ];
+                        if (isset($setupArray)) $setupArray = null;
+
+                        $tempArray = array_add($tempArray, 'Часов',
+                            $tempArray['Лек'] + $tempArray['Лаб'] + $tempArray['Пр'] + $session['КСР'] + $session['СРС'] + $counterCheckPoints);
+
+                        $tempArray = array_add($tempArray, 'ЗЕТ',($tempArray['Часов'])/36);
+
+                        $planAll[] = $tempArray;
+                    }
+
+
+                }
+
+
+            }
+            //dd($planAll);
+
+            return view('plan.mainPlan', ['planAll' => $planAll]);
+        }
+        else return view('plan.uploadPlan');
     }
 
     public function showUploadFile(Request $request, Plan $planModel){
@@ -31,7 +89,8 @@ class PlanController extends Controller
         else return 'Не тот тип файла. Загрузите правильный файл!';
     }
 
-    public function uploadPlan(Request $request, FilesParser $info){ // Загрузка шахтинского xml файла
+    // ============================= Загрузка шахтинского xml файла ====================================================
+    public function uploadPlan(Request $request, FilesParser $info){
         $file = $request->file('uploadfile');
         \Storage::disk('public')->put('\/'.$file->getFilename(),file_get_contents($file->getRealPath()));  // Убираем файл в публичную папку
 
@@ -44,7 +103,8 @@ class PlanController extends Controller
     }
 
 
-    public function savePlanToBase(FilesParser $info){  // Загрузка шахтинского xml файла в базу через ajax
+    // ============================ Загрузка шахтинского xml файла в базу через ajax ===================================
+    public function savePlanToBase(FilesParser $info){
 
         function saveCourseInfo($disciplineId, $item){  // Загружаем курс в базу (таблица courses)
             $corseArray = array_merge(['Дис_id' => $disciplineId], $item);
@@ -121,10 +181,7 @@ class PlanController extends Controller
             $competences->save();
         }
 
-
-
-
-            return ('Информация успешно загружена в базу данных!');
+            return ('Информация успешно загружена в базу данных!' .' ('. $planId .')');
     }
 }
 

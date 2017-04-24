@@ -32,11 +32,14 @@ class StudentsController extends Controller
 
     }
 
-    public function showStudent($id)
+    public function showStudent($id=null, $idPlan=null)
     {
         //$student = Student::find($id);
-        $student = Student::select(['name','kurs','groupname'])->where('id',$id)->first();
-//        dump($student);
-        return view('student.protocol',['student' => $student]);
+        if (isset($id)){
+            $student = Student::select(['name','kurs','groupname'])->where('id',$id)->first();
+            return view('student.protocol',['student' => $student, 'idPlan' => $idPlan]);
+        }
+        else return back();
+
     }
 }

@@ -26,33 +26,26 @@ Route::get('/students', 'StudentsController@index')->name('students'); // выб
 Route::post('/getListGroupsForStudents', 'StudentsController@getListGroupsForStudents');        // ajax
 Route::post('/getListStudentsForStudents', 'StudentsController@getListStudentsForStudents');    // ajax
 
-Route::get('/student/{id}', 'StudentsController@showStudent')->name('student'); // Один студент
+Route::get('/student/{id?}/{idPlan?}', 'StudentsController@showStudent')->name('student'); // Один студент
 
 // работа с планами
 
-Route::get('/plan', 'PlanController@index')->name('plans');     // Главная страница планов
+Route::get('/plan/{idPlan?}', 'PlanController@index')->name('plans');     // Главная страница планов
 Route::post('/uploadfile', 'PlanController@uploadPlan');              // Предварительный просмотр плана
 Route::post('/uploadfiletobase', 'PlanController@savePlanToBase');    // Загрузка плана в базу
 
-
 //Route::get('/uploadfile', 'PlanController@index')->name('uploadplan');
-
 
 // Выбор учебного плана по факультету - тестовое
 Route::get('/pak', 'PakController@selectFaculty')->name('pak');
 Route::get('/ajax-plans', 'PakController@jqueryResponse');
 Route::get('/paklist', 'PakController@selectPak')->name('paklist');
 
-
-
 // Утилиты
 
 Route::get('/tools',    'ToolsController@index')->name('tools');
 Route::post('/uploadxmlfile', 'ToolsController@showUploadFile');        // Создание КСР
 Route::post('/makestudentcard', 'ToolsController@makeWordDocument');   // Создание карточки
-
-
-
 
 //Route::post('/uploadfile', 'PlanController@showUploadFile');
 

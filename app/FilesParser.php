@@ -185,6 +185,18 @@ class FilesParser extends Model
             $items = array_add($items, 'ДопКомпетенции',
                 makeStringFromArray((array)$xmlFile->{'План'}->{'ДопКомпетенции'}, true));
 
+            // XML - СпецВидыРабот
+            $items = array_add($items, 'СпецВидыРабот',
+                makeStringFromArray((array)$xmlFile->{'План'}->{'СпецВидыРабот'}, true));
+
+            // XML - СпецВидыРаботНов
+            $items = array_add($items, 'СпецВидыРаботНов',
+                makeStringFromArray((array)$xmlFile->{'План'}->{'СпецВидыРаботНов'}, true));
+
+            // XML - Нормы
+            $items = array_add($items, 'Нормы',
+                makeStringFromArray((array)$xmlFile->{'План'}->{'Нормы'}, true));
+
             // XML - АПП
             $items = array_add($items, 'АПП',
                 makeStringFromArray((array)$xmlFile->{'План'}->{'АПП'}, true));
@@ -213,7 +225,6 @@ class FilesParser extends Model
             $itemsCompetences = $xmlFile->xpath('//План/Компетенции/Строка');
             $itemsCompetences = Formatter::make($itemsCompetences, Formatter::XML)->toArray();
             $parsedFile = array_add($parsedFile, 'Компетенции', $itemsCompetences);
-
 
 
         }
