@@ -27,94 +27,93 @@ class ToolsController extends Controller
         return view('tools',['fileName' => $file->getClientOriginalName(), 'resp' => $resp]);
     }
 
+    // ============= Создаем документ для печати в папке \storage\app\public\ =====================
     public function makeWordDocument(Request $request, Document $document, FilesParser $info){
         $file = $request->file('file'); // получили файл
         $courses =  $info->makeDataForDonePlanWordDocument($file)['Курсы']; // из xml в array
 
-//        dd($info->makeDataForDonePlanWordDocument($file));
         $excel = Excel::load('templatesdoc/file.xls');
         $sheet = $excel->sheet('Лист1');
 
-        $sheet->setCellValue('A2', $info->makeDataForDonePlanWordDocument($file)['Направление'].' '.$info->makeDataForDonePlanWordDocument($file)['Профиль']);
+        $sheet->setCellValue('A2', $info->makeDataForDonePlanWordDocument($file)['Направление']."\n".$info->makeDataForDonePlanWordDocument($file)['Профиль']);
 
-        $newFile = array_values(array_sort($courses, function($value)  // сортируем
-            {
-                return $value['Курс'];
-            }));
         $startRow = 7;
         $currentRow = 7;
-        foreach ($newFile as $id => $item){
 
-                if (($id > 1) AND ((string)$sheet->getCell('A'.($currentRow-1)) !== $item['Курс'])){
-                    $sheet->mergeCells('A'.($startRow).':A'.($currentRow-1));  // Объединяем курсы
+        for ($course = 1; $course < count($courses)+1; $course++){
+            foreach ($courses[$course] as $id => $item){
+                $sheet->appendRow($currentRow, array(
+                    $item['Курс'],
+                    $item['Дисциплина'],
+                    $item['Часов'],
+                    $item['ЗЕТ'],
+                ));
+                $sheet->setBorder('A'.$currentRow.':O'.$currentRow++, 'thin');
+                $excel->getActiveSheet()->getRowDimension($currentRow)->setRowHeight(-1);
+            };
+            $sheet->mergeCells('A'.($startRow).':A'.($currentRow-1));  // Объединяем курсы
 
-                    $sheet->getStyle('A'.($startRow))->getAlignment()->applyFromArray(
-                        array('horizontal' => 'center')
-                    );
+            $sheet->getStyle('A'.($startRow))->getAlignment()->applyFromArray(
+                array('horizontal' => 'center')
+            );
 
-                    $sheet->prependRow($currentRow, array(
-                        'Декан факультета',
-                    ));
-                    $sheet->cells('A'.($currentRow).':O'.($currentRow), function($cell) {
-                        $cell->setFont(array(
-                            'size'       => '11',
-                            'bold'       =>  true
-                        ));
-                    });
-
-                    $sheet->mergeCells('A'.($currentRow).':O'.($currentRow)); // Объединяем строку Декан
-
-                    $sheet->getStyle('A'.($currentRow))->getAlignment()->applyFromArray([
-                            'horizontal' => 'center']
-                    );
-
-                    $currentRow++;
-                    $startRow = $currentRow;
-                }
-
-            $sheet->appendRow($currentRow, array(
-                $item['Курс'],
-                $item['Дисциплина'],
-                $item['ПодлежитИзучениюВсего'],
-                $item['ЗЕТ'],
+            $sheet->prependRow($currentRow, array(
+                'Декан факультета                              Л.М.Инаходова',
             ));
-
-            $sheet->setBorder('A'.$currentRow.':O'.$currentRow++, 'thin');
+            $sheet->mergeCells('A'.($currentRow).':O'.($currentRow)); // Объединяем строку Декан
+            $sheet->setSize('A'.($currentRow), 3, 20);
+            $sheet->getStyle('A'.($currentRow))->getAlignment()->applyFromArray([
+                    'horizontal' => 'center']
+            );
+//            $excel->getActiveSheet()->setBreak( 'A'.$currentRow , \PHPExcel_Worksheet::BREAK_ROW ); // Разрыв страницы
+            $currentRow++;
+            $startRow = $currentRow;
         }
 
-        $sheet->mergeCells('A'.($startRow).':A'.($currentRow-1));
-        $sheet->getStyle('A'.($startRow))->getAlignment()->applyFromArray(
-            array('horizontal' => 'center')
-        );
+/*
+foreach ($courses as $id => $course){
+            if (($id > 1) AND ((string)$sheet->getCell('A'.($currentRow-1)) !== $item['Курс'])){
+                $sheet->mergeCells('A'.($startRow).':A'.($currentRow-1));  // Объединяем курсы
 
-        $sheet->prependRow($currentRow, array(
-            'Декан факультета',
-        ));
-        $sheet->getStyle('A'.($currentRow))->getAlignment()->applyFromArray([
-                'horizontal' => 'center']
-        );
-        $sheet->mergeCells('A'.($currentRow).':O'.($currentRow));
+                $sheet->getStyle('A'.($startRow))->getAlignment()->applyFromArray(
+                    array('horizontal' => 'center')
+                );
 
+                $sheet->prependRow($currentRow, array(
+                    'Декан факультета                              Л.М.Инаходова',
+                ));
 
-//        $excel->saveAs('uploads\/'.$document->change_files_coding($file->getClientOriginalName()).'.xls');
+                $sheet->mergeCells('A'.($currentRow).':O'.($currentRow)); // Объединяем строку Декан
+                $sheet->setSize('A'.($currentRow), 3, 20);
+                $sheet->getStyle('A'.($currentRow))->getAlignment()->applyFromArray([
+                        'horizontal' => 'center']
+                );
+                $currentRow++;
+                $startRow = $currentRow;
+            }
+        }
+
+//        $sheet->mergeCells('A'.($startRow).':A'.($currentRow-1));
+//        $sheet->getStyle('A'.($startRow))->getAlignment()->applyFromArray(
+//            array('horizontal' => 'center')
+//        );
+//
+//        $sheet->prependRow($currentRow, array(
+//            'Декан факультета                              Л.М.Инаходова',
+//        ));
+//        $sheet->mergeCells('A'.($currentRow).':O'.($currentRow));
+//        $sheet->setSize('A'.($currentRow), 3, 20);
+//        $sheet->getStyle('A'.($currentRow))->getAlignment()->applyFromArray([
+//                'horizontal' => 'center']
+//        );
+
+*/
         $excel->store('xls');
 
-
-        $newFile=\Storage::disk('public')->get('file.xls');
-        \Storage::move('public/file.xls', 'public/'.$document->change_files_coding($file->getClientOriginalName()).'.xls');
-
-//        $newFile->move('uploads\/'.$document->change_files_coding($file->getClientOriginalName()).'.xls');
-
-//        dd(Input::file('public\file.xls'));
-
-        //$fffile = file('uploads\/file.xls')->store('your_path','your_disk');
-        //move_uploaded_file ( string $filename , string $destination );
-
-//        $excel->export('xls');
-
-//        dd($excel->get());
-
-//        dd($file->getClientOriginalName(), $info->makeDataForDonePlanWordDocument($file));
+        if (\Storage::disk('public')->exists($document->change_files_coding($file->getClientOriginalName()).'.xls')){
+            \Storage::disk('public')->delete($document->change_files_coding($file->getClientOriginalName()).'.xls');
+        }
+            \Storage::move('public/file.xls', 'public/'.$document->change_files_coding($file->getClientOriginalName()).'.xls');
 
 //        $document->divideInfoForKurses($info->makeDataForDonePlanWordDocument($file));
 //        $document   ->makeDonePlanWordDocument($info->makeDataForDonePlanWordDocument($file))

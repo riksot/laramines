@@ -21,21 +21,85 @@ class FilesParser extends Model
         $info = array_add($info, 'Профиль',     (string)$items->xpath('//План/Титул/Специальности/Специальность')[1]['Название']);
         $itemsDisc = $items->xpath('//План/СтрокиПлана/Строка');
         $temp = array();
-        foreach ($itemsDisc as $item){
+        foreach ($itemsDisc as $item){ // Достаем дисциплины
             $i=0;
             foreach ($item->xpath('Курс') as $kurs){
                 $tempItem = array();
                 $tempItem = array_add($tempItem, 'Дисциплина',              (string)$item['Дис']);
                 $tempItem = array_add($tempItem, 'Курс',                    (string)$item->xpath('Курс')[$i]['Ном']);
-                $tempItem = array_add($tempItem, 'ПодлежитИзучениюВсего',   (string)$item['ПодлежитИзучению']);
+
+                // Если нет ЗЕТ (у элективных курсов по физкультуре)
+                if(isset($item->xpath('Курс')[$i]['ЗЕТ']))
+                $tempItem = array_add($tempItem, 'Часов',                   (string)$item->xpath('Курс')[$i]['ЗЕТ']*36);
+                else {
+                    $tempItem = array_add($tempItem, 'Часов',
+                        (string)($item->xpath('Курс')[$i]['Пр']+$item->xpath('Курс')[$i]['СРС']+$item->xpath('Курс')[$i]['ЧасЭкз']));
+                }
+
                 $tempItem = array_add($tempItem, 'ЗЕТ',                     (string)$item->xpath('Курс')[$i]['ЗЕТ']);
-                $tempItem = array_add($tempItem, 'КонтрРаб',                (string)$item->xpath('Курс')[$i]['КонтрРаб']);
-                $tempItem = array_add($tempItem, 'Зач',                     (string)$item->xpath('Курс')[$i]['Зач']);
-                $tempItem = array_add($tempItem, 'ЗачО',                    (string)$item->xpath('Курс')[$i]['ЗачО']);
-                $tempItem = array_add($tempItem, 'КП',                      (string)$item->xpath('Курс')[$i]['КП']);
-                $tempItem = array_add($tempItem, 'Экз',                     (string)$item->xpath('Курс')[$i]['Экз']);
+//                $tempItem = array_add($tempItem, 'КонтрРаб',                (string)$item->xpath('Курс')[$i]['КонтрРаб']);
+//                $tempItem = array_add($tempItem, 'Зач',                     (string)$item->xpath('Курс')[$i]['Зач']);
+//                $tempItem = array_add($tempItem, 'ЗачО',                    (string)$item->xpath('Курс')[$i]['ЗачО']);
+//                $tempItem = array_add($tempItem, 'КП',                      (string)$item->xpath('Курс')[$i]['КП']);
+//                $tempItem = array_add($tempItem, 'Экз',                     (string)$item->xpath('Курс')[$i]['Экз']);
+
+                switch ((string)$kurs['Ном']){
+                    case '1':
+                        $temp[1][] = $tempItem;
+                        break;
+                    case '2':
+                        $temp[2][] = $tempItem;
+                        break;
+                    case '3':
+                        $temp[3][] = $tempItem;
+                        break;
+                    case '4':
+                        $temp[4][] = $tempItem;
+                        break;
+                    case '5':
+                        $temp[5][] = $tempItem;
+                        break;
+                }
                 $i++;
-                $temp[] = $tempItem;
+            }
+        }
+
+        // ============ Сортируем дисциплины в курсах =================
+        for ($i=1; $i < count($temp); $i++){
+        $temp[$i] = array_values(array_sort($temp[$i], function($value)  // сортируем
+            {
+                return $value['Дисциплина'];
+            }));
+        }
+
+        // ================= Достаем практики ===================
+        $itemsPractics = $items->xpath('//План/СпецВидыРаботНов//ПрочаяПрактика');
+        foreach ($itemsPractics as $item){
+            $tempItem = array();
+            $tempItem = array_add($tempItem, 'Дисциплина',             (string)$item['Наименование']);
+            $tempItem = array_add($tempItem, 'Курс',                   (string)$item->xpath('Семестр')[0]['Ном']);
+//            $tempItem = array_add($tempItem, 'Курс',                        (string)floor(($item->xpath('Семестр')[0]['Ном']+1)/2));
+            $tempItem = array_add($tempItem, 'Часов',                  (string)$item->xpath('Семестр')[0]['ПланЧасов']);
+            $tempItem = array_add($tempItem, 'ЗЕТ',                    (string)$item->xpath('Семестр')[0]['ПланЗЕТ']);
+            switch ($tempItem['Курс']){
+                case '1':
+                    $temp[1][] = $tempItem;
+                    break;
+                case '2':
+                    $temp[2][] = $tempItem;
+                    break;
+                case '3':
+                    $temp[3][] = $tempItem;
+                    break;
+                case '4':
+                    $temp[4][] = $tempItem;
+                    break;
+                case '5':
+                    $temp[5][] = $tempItem;
+                    break;
+                case '6':
+                    $temp[6][] = $tempItem;
+                    break;
             }
         }
         $info = array_add($info, 'Курсы', $temp);
