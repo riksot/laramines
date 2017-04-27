@@ -19,7 +19,8 @@ class PlanController extends Controller
         if (isset($idPlan)){
             $planAll=array();
             $disciplines = Disciplines::all()->where('План_id',$idPlan) ;
-            foreach ($disciplines as $discipline){
+            //dd($disciplines);
+/*            foreach ($disciplines as $discipline){
                 $courses = Courses::all()->where('Дис_id', $discipline['id']);
                 foreach ($courses as $course){
                     $sessions = Sessions::all()->where('Курс_id', $course['id']);
@@ -61,6 +62,13 @@ class PlanController extends Controller
 
                         $tempArray = array_add($tempArray, 'ЗЕТ',($tempArray['Часов'])/36);
 
+                        if ($tempArray['Сессия'] == 2) {
+                            $tempArray = array_add($tempArray, 'Семестр',($tempArray['Курс']*2-1));
+                        }
+                        elseif ($tempArray['Сессия'] == 3) {
+                            $tempArray = array_add($tempArray, 'Семестр',($tempArray['Курс']*2));
+                        }
+
                         $planAll[] = $tempArray;
                     }
 
@@ -68,10 +76,10 @@ class PlanController extends Controller
                 }
 
 
-            }
-            //dd($planAll);
+            }*/
+           // dd($planAll);
 
-            return view('plan.mainPlan', ['planAll' => $planAll]);
+            return view('plan.mainPlan', ['planAll' => $disciplines]);
         }
         else return view('plan.uploadPlan');
     }

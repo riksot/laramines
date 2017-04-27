@@ -12,7 +12,8 @@ use SoapBox\Formatter\Formatter;
 
 class FilesParser extends Model
 {
-    public function makeDataForDonePlanWordDocument($file){ // Вытаскиваем данные из xml в массив для создания карточки дисциплин
+    // Вытаскиваем данные из xml в массив для создания карточки дисциплин
+    public function makeDataForDonePlanWordDocument($file){
         $info = array();
         $info = array_add($info, 'НазваниеФайла', $file->getClientOriginalName());
         $items = simplexml_load_file($file);
@@ -41,7 +42,8 @@ class FilesParser extends Model
         return ($info);
     }
 
-    public function parseXMLFile($file, $mode = null){ // Парсер шахтинского xml файла mode1 - Простой запрос, mode=null - полный запрос
+    // Парсер шахтинского xml файла mode1 - Простой запрос, mode=null - полный запрос
+    public function parseXMLFile($file, $mode = null){
 
         function makeStringFromArray($attr, $child = null){ // Переделываем массив из xml файла в строку
             if (isset($child)) {

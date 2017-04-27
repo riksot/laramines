@@ -28,7 +28,6 @@ class Document extends Model
         $info = $this->divideInfoForKurses($info);
         $templateProcessor->cloneRow('kurs', count($info['Курсы']));  // Создаем копии курсов
 
-
         foreach ($info['Курсы'] as $indexKurs => $kurs){
             $templateProcessor->setValue('kurs#'.($indexKurs+1), ($indexKurs+1));  // выставляем номера курсов с первом столбе
             $templateProcessor->cloneRow('disc#'.($indexKurs+1), (int)count($kurs));  // Создаем копии строк
@@ -40,22 +39,6 @@ class Document extends Model
                 else
                     $templateProcessor->setValue('Часы#'.($indexKurs+1).'#'.($indexDisc+1), '');
 
-//                if ($disc['КонтрРаб'] != '')
-//                    $templateProcessor->setValue('КонтрРаб#'.($indexKurs+1).'#'.($indexDisc+1), '·');
-//                else
-//                    $templateProcessor->setValue('КонтрРаб#'.($indexKurs+1).'#'.($indexDisc+1), '');
-//                if ($disc['Зач'] != '')
-//                    $templateProcessor->setValue('Зач#'.($indexKurs+1).'#'.($indexDisc+1), '·');
-//                else
-//                    $templateProcessor->setValue('Зач#'.($indexKurs+1).'#'.($indexDisc+1), '');
-//                if ($disc['КП'] != '')
-//                    $templateProcessor->setValue('КП#'.($indexKurs+1).'#'.($indexDisc+1), '·');
-//                else
-//                    $templateProcessor->setValue('КП#'.($indexKurs+1).'#'.($indexDisc+1), '');
-//                if ($disc['Экз'] != '')
-//                    $templateProcessor->setValue('Экз#'.($indexKurs+1).'#'.($indexDisc+1), '·');
-//                else
-//                    $templateProcessor->setValue('Экз#'.($indexKurs+1).'#'.($indexDisc+1), '');
 
             }
         }

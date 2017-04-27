@@ -87,7 +87,7 @@
                             <h3 class="box-title">Дисциплины</h3>
                         </div>
                         <div class="box-body">
-                            <table class="table-condensed table-bordered table-hover">
+                            <table class="table-condensed table-bordered table-hover " id="table-plans" >
                                 <thead>
                                 <tr style="text-align: center;">
                                     <td rowspan="3">Индекс</td>
@@ -102,16 +102,36 @@
                                     <td width="50px;" rowspan="2"><div >Часов</div></td>
                                 </tr>
                                 <tr style="text-align: center;">
-                                    <td><div class="vertical-orient">Экзамен</div></td>
-                                    <td><div class="vertical-orient">Зачет</div></td>
-                                    <td><div class="vertical-orient">Зачет с оценкой</div></td>
-                                    <td><div class="vertical-orient">Курсовой проект</div></td>
-                                    <td><div class="vertical-orient">Курсовая работа</div></td>
-                                    <td><div class="vertical-orient">Контрольная</div></td>
+                                    <td width="20px;"><div class="vertical-orient">Экзамен</div></td>
+                                    <td width="20px;"><div class="vertical-orient">Зачет</div></td>
+                                    <td width="20px;"><div class="vertical-orient">Зачет с оценкой</div></td>
+                                    <td width="20px;"><div class="vertical-orient">Курсовой проект</div></td>
+                                    <td width="20px;"><div class="vertical-orient">Курсовая работа</div></td>
+                                    <td width="20px;"><div class="vertical-orient">Контрольная</div></td>
                                     <td width="50px;"><div >ЗЕТ</div></td>
                                     <td width="50px;"><div >Часов</div></td>
                                 </tr>
                                 </thead>
+
+{{--
+                                <thead>
+                                <tr>
+                                    <th class="text-center">1</th>
+                                    <th class="text-center">2</th>
+                                    <th class="text-center">3</th>
+                                    <th class="text-center">4</th>
+                                    <th class="text-center">5</th>
+                                    <th class="text-center">6</th>
+                                    <th class="text-center">7</th>
+                                    <th class="text-center">8</th>
+                                    <th class="text-center">9</th>
+                                    <th class="text-center">10</th>
+                                    <th data-orderable="false" class="text-center">11</th>
+                                    <th data-orderable="false" class="text-center">12</th>
+                                    <th data-orderable="false" class="text-center">13</th>
+                                </tr>
+                                </thead>
+--}}
                                 <tbody>
                                 @foreach($planAll as $disc)
                                     <tr class="ng-hide text-center">
@@ -121,38 +141,45 @@
                                         <td class="text-left">
                                             {{$disc['Дис']}}
                                         </td>
-                                        <td>
-                                            @if($disc['Экз'] == 1)<input type="checkbox">@endif
+                                        <td data-toggle="tooltip" data-original-title="Экзамен">
+                                            @if(isset($disc['СемЭкз']))<input type="checkbox"> @endif
                                         </td>
-                                        <td>
-                                            @if($disc['Зач'] == 1)<input type="checkbox"> @endif
+                                        <td data-toggle="tooltip" data-original-title="Зачет">
+                                            @if(isset($disc['СемЗач']))<input type="checkbox"> @endif
                                         </td>
-                                        <td>
-                                            @if($disc['ЗачО'] == 1)<input type="checkbox"> @endif
+                                        <td data-toggle="tooltip" data-original-title="Зачет с оценкой">
+                                            @if(isset($disc['СемЗачО']))<input type="checkbox"> @endif
                                         </td>
-                                        <td>
-                                            @if($disc['КП'] == 1)<input type="checkbox"> @endif
+                                        <td data-toggle="tooltip" data-original-title="Курсовой проект">
+                                            @if(isset($disc['СемКП']))<input type="checkbox"> @endif
                                         </td>
-                                        <td>
-                                            @if($disc['КР'] == 1)<input type="checkbox"> @endif
+                                        <td data-toggle="tooltip" data-original-title="Курсовая работа">
+                                            @if(isset($disc['СемКР']))<input type="checkbox"> @endif
                                         </td>
-                                        <td>
-                                            @if($disc['КонтрРаб'] == 1)<input type="checkbox"> @endif
+                                        <td data-toggle="tooltip" data-original-title="Контрольная">
+                                            @if(isset($disc['КонтрРаб']))<input type="checkbox"> @endif
                                         </td>
-                                        <td>
-                                            {{$disc['ЗЕТ']}}
+                                        <td data-toggle="tooltip" data-original-title="ЗЕТ">
+                                            {{$disc['КредитовНаДисциплину']}}
                                         </td>
-                                        <td>
-                                            <input type="text" style="width: 40px;  text-align: center;" maxlength="5" value="{{$disc['Часов']}}">
+                                        <td data-toggle="tooltip" data-original-title="Часов">
+                                            <input type="text" style="width: 40px;  text-align: center;" maxlength="5" value="{{$disc['ПодлежитИзучению']}}">
                                         </td>
-                                        <td>
-                                            1/1
+                                        <td data-toggle="tooltip" data-original-title="Результат аттестации (зачтено/ незачтено/ оценка)">
+                                            <select class=" " style="width: 50px;" name="" id="" title="" >
+                                                <option></option>
+                                                <option>2</option>
+                                                <option>3</option>
+                                                <option>4</option>
+                                                <option>5</option>
+                                                <option>Зач.</option>
+                                            </select>
                                         </td>
-                                        <td>
-                                            {{$disc['ЗЕТ']}}
+                                        <td data-toggle="tooltip" data-original-title="ЗЕТ подлежит изучению">
+                                            {{$disc['КредитовНаДисциплину']}}
                                         </td>
-                                        <td>
-                                            {{$disc['Часов']}}
+                                        <td data-toggle="tooltip" data-original-title="Часов подлежит изучению">
+                                            {{$disc['ПодлежитИзучению']}}
                                         </td>
                                     </tr>
                                 @endforeach
@@ -161,7 +188,12 @@
                             </table>
                         </div>
                         <div class="box-footer">
-                            <button type="submit" class="btn btn-primary pull-right">Пересчитать</button>
+                            <a class="btn btn-default" href="" target="_blank">
+                                <i class="fa fa-print"></i>
+                                Печать
+                            </a>
+                            <button type="button" class="btn btn-success pull-right"><i class="fa fa-bar-chart-o"></i> Пересчитать</button>
+                            <button type="button" class="btn btn-primary pull-right" style="margin-right: 5px;"><i class="fa fa-download" ></i> Скачать</button>
                         </div>
                     </div>
                 </div>
@@ -171,8 +203,12 @@
 
 
 
+
         </section>
+
     </div>
+
+
 
 @endsection
 

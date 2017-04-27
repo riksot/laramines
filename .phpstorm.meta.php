@@ -3,7 +3,7 @@ namespace PHPSTORM_META {
 
    /**
     * PhpStorm Meta file, to provide autocomplete information for PhpStorm
-    * Generated on 2017-04-19.
+    * Generated on 2017-04-26.
     *
     * @author Barry vd. Heuvel <barryvdh@gmail.com>
     * @see https://github.com/barryvdh/laravel-ide-helper
@@ -39,6 +39,14 @@ namespace PHPSTORM_META {
             'view.finder' instanceof \Illuminate\View\FileViewFinder,
             'view' instanceof \Illuminate\View\Factory,
             'Parser' instanceof \Nathanmac\Utilities\Parser\Parser,
+            'excel.identifier' instanceof \Maatwebsite\Excel\Classes\FormatIdentifier,
+            'excel.parsers.css' instanceof \Maatwebsite\Excel\Parsers\CssParser,
+            'excel.reader' instanceof \Maatwebsite\Excel\Readers\LaravelExcelReader,
+            'excel.readers.html' instanceof \Maatwebsite\Excel\Readers\Html,
+            'excel.parsers.view' instanceof \Maatwebsite\Excel\Parsers\ViewParser,
+            'phpexcel' instanceof \Maatwebsite\Excel\Classes\PHPExcel,
+            'excel.writer' instanceof \Maatwebsite\Excel\Writers\LaravelExcelWriter,
+            'excel' instanceof \Maatwebsite\Excel\Excel,
             'GrahamCampbell\Exceptions\ExceptionIdentifier' instanceof \GrahamCampbell\Exceptions\ExceptionIdentifier,
             'GrahamCampbell\Exceptions\ExceptionInfo' instanceof \GrahamCampbell\Exceptions\ExceptionInfo,
             'GrahamCampbell\Exceptions\Displayers\HtmlDisplayer' instanceof \GrahamCampbell\Exceptions\Displayers\HtmlDisplayer,
@@ -163,6 +171,14 @@ namespace PHPSTORM_META {
             'view.finder' instanceof \Illuminate\View\FileViewFinder,
             'view' instanceof \Illuminate\View\Factory,
             'Parser' instanceof \Nathanmac\Utilities\Parser\Parser,
+            'excel.identifier' instanceof \Maatwebsite\Excel\Classes\FormatIdentifier,
+            'excel.parsers.css' instanceof \Maatwebsite\Excel\Parsers\CssParser,
+            'excel.reader' instanceof \Maatwebsite\Excel\Readers\LaravelExcelReader,
+            'excel.readers.html' instanceof \Maatwebsite\Excel\Readers\Html,
+            'excel.parsers.view' instanceof \Maatwebsite\Excel\Parsers\ViewParser,
+            'phpexcel' instanceof \Maatwebsite\Excel\Classes\PHPExcel,
+            'excel.writer' instanceof \Maatwebsite\Excel\Writers\LaravelExcelWriter,
+            'excel' instanceof \Maatwebsite\Excel\Excel,
             'GrahamCampbell\Exceptions\ExceptionIdentifier' instanceof \GrahamCampbell\Exceptions\ExceptionIdentifier,
             'GrahamCampbell\Exceptions\ExceptionInfo' instanceof \GrahamCampbell\Exceptions\ExceptionInfo,
             'GrahamCampbell\Exceptions\Displayers\HtmlDisplayer' instanceof \GrahamCampbell\Exceptions\Displayers\HtmlDisplayer,
@@ -287,6 +303,14 @@ namespace PHPSTORM_META {
             'view.finder' instanceof \Illuminate\View\FileViewFinder,
             'view' instanceof \Illuminate\View\Factory,
             'Parser' instanceof \Nathanmac\Utilities\Parser\Parser,
+            'excel.identifier' instanceof \Maatwebsite\Excel\Classes\FormatIdentifier,
+            'excel.parsers.css' instanceof \Maatwebsite\Excel\Parsers\CssParser,
+            'excel.reader' instanceof \Maatwebsite\Excel\Readers\LaravelExcelReader,
+            'excel.readers.html' instanceof \Maatwebsite\Excel\Readers\Html,
+            'excel.parsers.view' instanceof \Maatwebsite\Excel\Parsers\ViewParser,
+            'phpexcel' instanceof \Maatwebsite\Excel\Classes\PHPExcel,
+            'excel.writer' instanceof \Maatwebsite\Excel\Writers\LaravelExcelWriter,
+            'excel' instanceof \Maatwebsite\Excel\Excel,
             'GrahamCampbell\Exceptions\ExceptionIdentifier' instanceof \GrahamCampbell\Exceptions\ExceptionIdentifier,
             'GrahamCampbell\Exceptions\ExceptionInfo' instanceof \GrahamCampbell\Exceptions\ExceptionInfo,
             'GrahamCampbell\Exceptions\Displayers\HtmlDisplayer' instanceof \GrahamCampbell\Exceptions\Displayers\HtmlDisplayer,
@@ -411,6 +435,14 @@ namespace PHPSTORM_META {
             'view.finder' instanceof \Illuminate\View\FileViewFinder,
             'view' instanceof \Illuminate\View\Factory,
             'Parser' instanceof \Nathanmac\Utilities\Parser\Parser,
+            'excel.identifier' instanceof \Maatwebsite\Excel\Classes\FormatIdentifier,
+            'excel.parsers.css' instanceof \Maatwebsite\Excel\Parsers\CssParser,
+            'excel.reader' instanceof \Maatwebsite\Excel\Readers\LaravelExcelReader,
+            'excel.readers.html' instanceof \Maatwebsite\Excel\Readers\Html,
+            'excel.parsers.view' instanceof \Maatwebsite\Excel\Parsers\ViewParser,
+            'phpexcel' instanceof \Maatwebsite\Excel\Classes\PHPExcel,
+            'excel.writer' instanceof \Maatwebsite\Excel\Writers\LaravelExcelWriter,
+            'excel' instanceof \Maatwebsite\Excel\Excel,
             'GrahamCampbell\Exceptions\ExceptionIdentifier' instanceof \GrahamCampbell\Exceptions\ExceptionIdentifier,
             'GrahamCampbell\Exceptions\ExceptionInfo' instanceof \GrahamCampbell\Exceptions\ExceptionInfo,
             'GrahamCampbell\Exceptions\Displayers\HtmlDisplayer' instanceof \GrahamCampbell\Exceptions\Displayers\HtmlDisplayer,
