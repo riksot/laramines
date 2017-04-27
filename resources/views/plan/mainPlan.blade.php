@@ -134,18 +134,25 @@
 --}}
                                 <tbody>
                                 @foreach($planAll as $disc)
-                                    <tr class="ng-hide text-center">
+                                    <tr class="ng-hide text-center
+                                        @if(count(explode('.',$disc['НовИдДисциплины'])) > 3)
+                                            @if((explode('.',$disc['НовИдДисциплины'])[2] == 'ДВ') AND(explode('.',$disc['НовИдДисциплины'])[count(explode('.',$disc['НовИдДисциплины']))-1] == '2'))
+                                                text-gray
+                                            @endif
+                                        @endif
+                                            ">
                                         <td>
                                             {{$disc['НовИдДисциплины']}}
                                         </td>
-                                        <td class="text-left">
-                                            {{$disc['Дис']}}
+                                        <td class="text-left" >
+
+                                            {{$disc['Дис'] }}
                                         </td>
                                         <td data-toggle="tooltip" data-original-title="Экзамен">
                                             @if(isset($disc['СемЭкз']))<input type="checkbox"> @endif
                                         </td>
                                         <td data-toggle="tooltip" data-original-title="Зачет">
-                                            @if(isset($disc['СемЗач']))<input type="checkbox"> @endif
+                                            @if(isset($disc['СемЗач']))<input type="checkbox" @if(isset($disc['ИзученоЗач'])) checked @endif > @endif
                                         </td>
                                         <td data-toggle="tooltip" data-original-title="Зачет с оценкой">
                                             @if(isset($disc['СемЗачО']))<input type="checkbox"> @endif
@@ -160,10 +167,10 @@
                                             @if(isset($disc['КонтрРаб']))<input type="checkbox"> @endif
                                         </td>
                                         <td data-toggle="tooltip" data-original-title="ЗЕТ">
-                                            {{$disc['КредитовНаДисциплину']}}
+                                            @if(isset($disc['ПерезачетЧасов'])){{$disc['ПерезачетЧасов']/36}} @endif
                                         </td>
                                         <td data-toggle="tooltip" data-original-title="Часов">
-                                            <input type="text" style="width: 40px;  text-align: center;" maxlength="5" value="{{$disc['ПодлежитИзучению']}}">
+                                            <input type="text" style="width: 40px;  text-align: center;" maxlength="5" value="{{$disc['ПерезачетЧасов']}}">
                                         </td>
                                         <td data-toggle="tooltip" data-original-title="Результат аттестации (зачтено/ незачтено/ оценка)">
                                             <select class=" " style="width: 50px;" name="" id="" title="" >
@@ -179,7 +186,7 @@
                                             {{$disc['КредитовНаДисциплину']}}
                                         </td>
                                         <td data-toggle="tooltip" data-original-title="Часов подлежит изучению">
-                                            {{$disc['ПодлежитИзучению']}}
+                                            {{$disc['ГОС']}}
                                         </td>
                                     </tr>
                                 @endforeach

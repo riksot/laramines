@@ -131,6 +131,7 @@ class PlanController extends Controller
         $fileXML=\Storage::disk('public')->get('\/'.$_REQUEST['filepath']);
         $parsedFile = $info->parseXMLFile($fileXML);
 
+//        dd($parsedFile);
         // ================================ Загружаем титул в базу ========================================
 
         $plansArray = $parsedFile['Титул'];
