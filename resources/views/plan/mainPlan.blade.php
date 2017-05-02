@@ -133,7 +133,10 @@
                                 </thead>
 --}}
                                 <tbody>
-                                @foreach($planAll as $disc)
+
+                                {{--Разбираем дисциплины--}}
+
+                                @foreach($disciplines as $disc)
                                     <tr class="ng-hide text-center
                                         @if(count(explode('.',$disc['НовИдДисциплины'])) > 3)
                                             @if((explode('.',$disc['НовИдДисциплины'])[2] == 'ДВ') AND(explode('.',$disc['НовИдДисциплины'])[count(explode('.',$disc['НовИдДисциплины']))-1] == '2'))
@@ -145,7 +148,6 @@
                                             {{$disc['НовИдДисциплины']}}
                                         </td>
                                         <td class="text-left" >
-
                                             {{$disc['Дис'] }}
                                         </td>
                                         <td data-toggle="tooltip" data-original-title="Экзамен">
@@ -190,6 +192,72 @@
                                         </td>
                                     </tr>
                                 @endforeach
+
+                                {{--Разбираем пракатики--}}
+
+                                @foreach($practics as $practic)
+                                    <tr class="ng-hide text-center">
+                                        <td>
+                                            {{$practic['Индекс']}}
+                                        </td>
+                                        <td class="text-left" >
+                                            {{$practic['Наименование'] }}
+                                        </td>
+                                        <td data-toggle="tooltip" data-original-title="Экзамен">
+{{--
+                                            @if(isset($practic['СемЭкз']))<input type="checkbox"> @endif
+--}}
+                                        </td>
+                                        <td data-toggle="tooltip" data-original-title="Зачет">
+{{--
+                                            @if(isset($practic['СемЗач']))<input type="checkbox" @if(isset($practic['ИзученоЗач'])) checked @endif > @endif
+--}}
+                                        </td>
+                                        <td data-toggle="tooltip" data-original-title="Зачет с оценкой">
+                                            @if(isset($practic['ЗачО']))<input type="checkbox"> @endif
+                                        </td>
+                                        <td data-toggle="tooltip" data-original-title="Курсовой проект">
+{{--
+                                            @if(isset($practic['СемКП']))<input type="checkbox"> @endif
+--}}
+                                        </td>
+                                        <td data-toggle="tooltip" data-original-title="Курсовая работа">
+{{--
+                                            @if(isset($practic['СемКР']))<input type="checkbox"> @endif
+--}}
+                                        </td>
+                                        <td data-toggle="tooltip" data-original-title="Контрольная">
+{{--
+                                            @if(isset($practic['КонтрРаб']))<input type="checkbox"> @endif
+--}}
+                                        </td>
+                                        <td data-toggle="tooltip" data-original-title="ЗЕТ">
+                                            @if(isset($practic['ПерезачетЧасов'])){{$practic['ПерезачетЧасов']/36}} @endif
+                                        </td>
+                                        <td data-toggle="tooltip" data-original-title="Часов">
+                                            <input type="text" style="width: 40px;  text-align: center;" maxlength="5" value="@if(isset($practic['ПерезачетЧасов'])){{$practic['ПерезачетЧасов']}} @endif">
+                                        </td>
+                                        <td data-toggle="tooltip" {{--data-original-title="Результат аттестации (зачтено/ незачтено/ оценка)"--}}>
+{{--
+                                            <select class=" " style="width: 50px;" name="" id="" title="" >
+                                                <option></option>
+                                                <option>2</option>
+                                                <option>3</option>
+                                                <option>4</option>
+                                                <option>5</option>
+                                                <option>Зач.</option>
+                                            </select>
+--}}
+                                        </td>
+                                        <td data-toggle="tooltip" data-original-title="ЗЕТ подлежит изучению">
+                                            {{$practic['ЗЕТэкспертное']}}
+                                        </td>
+                                        <td data-toggle="tooltip" data-original-title="Часов подлежит изучению">
+                                            {{$practic['ЗЕТэкспертное']*$practic['ЧасовВЗЕТ']}}
+                                        </td>
+                                    </tr>
+                                @endforeach
+
 
                                 </tbody>
                             </table>

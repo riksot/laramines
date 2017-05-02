@@ -17,9 +17,71 @@ class PlanController extends Controller
     // =================== Отображение плана или его загрузка ==========================================================
     public function index($idPlan = null){
         if (isset($idPlan)){
-            $planAll=array();
-            $disciplines = Disciplines::all()->where('План_id',$idPlan) ;
-            //dd($disciplines);
+            //$planAll=array();
+
+            // Достаем список дисциплин
+            $disciplines = Disciplines::all()->where('План_id',$idPlan);
+
+            // Достаем список практик
+            $practics = Plans::all()->where('id',$idPlan)->first();
+            $tempArray = array();
+            $practics = unserialize($practics['СпецВидыРаботНов']);
+            //dd($practics);
+//            for($i=0; $i < count($practics)-1; $i++){
+                if(isset($practics['УчебПрактики'])){
+                    if (isset($practics['УчебПрактики']['ПрочаяПрактика']['@attributes'])){
+                        $practics['УчебПрактики']['ПрочаяПрактика']['@attributes']['Индекс'] = 'Б2.У.1';
+                        $practics['УчебПрактики']['ПрочаяПрактика']['@attributes'] =
+                            array_merge(
+                                $practics['УчебПрактики']['ПрочаяПрактика']['@attributes'],
+                                $practics['УчебПрактики']['ПрочаяПрактика']['Семестр']['@attributes']);
+                        $tempArray[] = $practics['УчебПрактики']['ПрочаяПрактика']['@attributes'];
+                    }
+                    else
+                        foreach ($practics['УчебПрактики']['ПрочаяПрактика'] as $id => $practic){
+                            $practic['@attributes']['Индекс'] = 'Б2.У.'.($id+1);
+                            $practic['@attributes'] = array_merge($practic['@attributes'], $practic['Семестр']['@attributes']);
+                            $tempArray[] = $practic['@attributes'];
+                        }
+                }
+                if(isset($practics['НИР'])){
+                    if (isset($practics['НИР']['ПрочаяПрактика']['@attributes'])){
+                        $practics['НИР']['ПрочаяПрактика']['@attributes']['Индекс'] = 'Б2.Н.1';
+                        $practics['НИР']['ПрочаяПрактика']['@attributes'] =
+                            array_merge(
+                                $practics['НИР']['ПрочаяПрактика']['@attributes'],
+                                $practics['НИР']['ПрочаяПрактика']['Семестр']['@attributes']);
+                        $tempArray[] = $practics['НИР']['ПрочаяПрактика']['@attributes'];
+                    }
+                    else
+                        foreach ($practics['НИР']['ПрочаяПрактика'] as $id => $practic){
+                            $practic['@attributes']['Индекс'] = 'Б2.Н.'.($id+1);
+                            $practic['@attributes'] = array_merge($practic['@attributes'], $practic['Семестр']['@attributes']);
+                            $tempArray[] = $practic['@attributes'];
+                        }
+                }
+                if(isset($practics['ПрочиеПрактики'])){
+                    if (isset($practics['ПрочиеПрактики']['ПрочаяПрактика']['@attributes'])){
+                        $practics['ПрочиеПрактики']['ПрочаяПрактика']['@attributes']['Индекс'] = 'Б2.П.1';
+                        $practics['ПрочиеПрактики']['ПрочаяПрактика']['@attributes'] =
+                            array_merge(
+                                $practics['ПрочиеПрактики']['ПрочаяПрактика']['@attributes'],
+                                $practics['ПрочиеПрактики']['ПрочаяПрактика']['Семестр']['@attributes']);
+                        $tempArray[] = $practics['ПрочиеПрактики']['ПрочаяПрактика']['@attributes'];
+                    }
+                    else
+                        foreach ($practics['ПрочиеПрактики']['ПрочаяПрактика'] as $id => $practic){
+                            $practic['@attributes']['Индекс'] = 'Б2.П.'.($id+1);
+                            $practic['@attributes'] = array_merge($practic['@attributes'], $practic['Семестр']['@attributes']);
+                            $tempArray[] = $practic['@attributes'];
+                        }
+                }
+//          }
+           // dd($tempArray);
+            $practics = $tempArray;
+
+
+
 /*            foreach ($disciplines as $discipline){
                 $courses = Courses::all()->where('Дис_id', $discipline['id']);
                 foreach ($courses as $course){
@@ -77,9 +139,8 @@ class PlanController extends Controller
 
 
             }*/
-           // dd($planAll);
 
-            return view('plan.mainPlan', ['planAll' => $disciplines]);
+            return view('plan.mainPlan', ['disciplines' => $disciplines, 'practics' => $practics]);
         }
         else return view('plan.uploadPlan');
     }
