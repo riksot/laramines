@@ -20,7 +20,8 @@ class FilesParser extends Model
         $info = array_add($info, 'Направление', (string)$items->xpath('//План/Титул/Специальности/Специальность')[0]['Название']);
         $info = array_add($info, 'Профиль',     (string)$items->xpath('//План/Титул/Специальности/Специальность')[1]['Название']);
         $itemsDisc = $items->xpath('//План/СтрокиПлана/Строка');
-        $temp = [ '1' => '', '2' => '', '3' => '', '4' => '', '5' => '',];
+        $temp = ['0' => '', '1' => '', '2' => '', '3' => '', ];
+//        dd($itemsDisc);
         foreach ($itemsDisc as $item){ // Достаем дисциплины
 
             // Проверяем наличие вторых дисциплин (по выбору)
@@ -29,48 +30,64 @@ class FilesParser extends Model
                 AND (explode('.',$item['НовИдДисциплины'])[count(explode('.',$item['НовИдДисциплины']))-1] == '2'))
                 continue;
 
-            $i=0;
-            foreach ($item->xpath('Курс') as $kurs){
-
+            if(isset($item['ПерезачетЧасов'])){
                 $tempItem = array();
-                $tempItem = array_add($tempItem, 'НовИдДисциплины',         (string)$item['НовИдДисциплины']);
-                $tempItem = array_add($tempItem, 'Дисциплина',              (string)$item['Дис']);
-                $tempItem = array_add($tempItem, 'Курс',                    (string)$kurs['Ном']);
+                $tempItem['Курс'] =                 '0';
+                $tempItem['НовИдДисциплины'] =      (string)$item['НовИдДисциплины'];
+                $tempItem['Дисциплина']      =      (string)$item['Дис'];
+                $tempItem['Часы_Зима']       =      (string)$item['ПерезачетЧасов'];
+                $tempItem['ЗЕТ_Зима']        =      (string)($item['ПерезачетЧасов']/$item['ЧасовВЗЕТ']);
+                if(isset($item['ИзученоЗач']))      $tempItem['Зач_Зима'] = '*';
+                if(isset($item['ИзученоЗачО']))     $tempItem['Зач_Зима'] = 'оценка';
+                if(isset($item['ИзученоЭкз']))      $tempItem['Экз_Зима'] = '*';
+                if ((string)$item['ПерезачетЧасов'] == (string)$item['ГОС']) $tempItem['Перезачет'] = 'Полный перезачет';
 
-                foreach ($kurs->xpath('Сессия') as $session){
+                $temp[0][] = $tempItem;
+            }
 
-                    if($session['Ном']=='1'){  // Установочная сессия
-                        $tempItem['Часы_Зима'] = $session['Лек'] + $session['Лаб'] + $session['Пр'];
-                    }
-                    if($session['Ном']=='2'){  // Зимняя сессия
-                        if (isset($tempItem['Часы_Зима']))
-                            $tempItem['Часы_Зима'] =+ $tempItem['Часы_Зима']+ $session['Лек'] + $session['Лаб'] + $session['Пр'] + $session['КСР'] + $session['СРС'] + $session['ЧасЭкз'];
-                        else
-                            $tempItem['Часы_Зима'] = $session['Лек'] + $session['Лаб'] + $session['Пр'] + $session['КСР'] + $session['СРС'] + $session['ЧасЭкз'];
-                        if(isset($kurs['ЗЕТ'])) $tempItem['ЗЕТ_Зима'] = $tempItem['Часы_Зима']/36;
-                        if(isset($session['КонтрРаб'])) $tempItem['КонтрРаб_Зима'] = (string)$session['КонтрРаб'];
-                        if(isset($session['Зач'])) $tempItem['Зач_Зима'] = '*';
-                        if(isset($session['ЗачО'])) $tempItem['Зач_Зима'] = 'оценка';
-                        if(isset($session['КП'])  AND isset($session['КР']))  $tempItem['КП_Зима'] = 'КП КР';
-                        if(isset($session['КП'])  AND !isset($session['КР'])) $tempItem['КП_Зима'] = 'КП';
-                        if(!isset($session['КП']) AND isset($session['КР']))  $tempItem['КП_Зима'] = 'КР';
-                        if(isset($session['Экз'])) $tempItem['Экз_Зима'] = '*';
-                    }
-                    if($session['Ном']=='3'){ // летняя сессия
-                        $tempItem['Часы_Лето'] = $session['Лек'] + $session['Лаб'] + $session['Пр'] + $session['КСР'] + $session['СРС'] + $session['ЧасЭкз'];
-                        if(isset($kurs['ЗЕТ'])) $tempItem['ЗЕТ_Лето'] = $tempItem['Часы_Лето']/36;
-                        if(isset($session['КонтрРаб'])) $tempItem['КонтрРаб_Лето'] = (string)$session['КонтрРаб'];
-                        if(isset($session['Зач'])) $tempItem['Зач_Лето'] = '*';
-                        if(isset($session['ЗачО'])) $tempItem['ЗачО_Лето'] = 'оценка';
-                        if(isset($session['КП']) AND isset($session['КР'])) $tempItem['КП_Лето'] = 'КП КР';
-                        if(isset($session['КП']) AND !isset($session['КР'])) $tempItem['КП_Лето'] = 'КП';
-                        if(!isset($session['КП']) AND isset($session['КР'])) $tempItem['КП_Лето'] = 'КР';
-                        if(isset($session['Экз'])) $tempItem['Экз_Лето'] = '*';
-                    }
-                   // dd($kurs, $session,  $tempItem);
-                }
+            $i=0;
+            if(is_array($item->xpath('Курс')))
+                foreach($item->xpath('Курс') as $kurs){
 
-                // Если нет ЗЕТ (у элективных курсов по физкультуре)
+                    $tempItem = array();
+                    $tempItem = array_add($tempItem, 'НовИдДисциплины',         (string)$item['НовИдДисциплины']);
+                    $tempItem = array_add($tempItem, 'Дисциплина',              (string)$item['Дис']);
+                    $tempItem = array_add($tempItem, 'Курс',                    (string)$kurs['Ном']);
+
+                    foreach ($kurs->xpath('Сессия') as $session){
+
+                        if($session['Ном']=='1'){  // Установочная сессия
+                            $tempItem['Часы_Зима'] = $session['Лек'] + $session['Лаб'] + $session['Пр'];
+                        }
+                        if($session['Ном']=='2'){  // Зимняя сессия
+                            if (isset($tempItem['Часы_Зима']))
+                                $tempItem['Часы_Зима'] =+ $tempItem['Часы_Зима']+ $session['Лек'] + $session['Лаб'] + $session['Пр'] + $session['КСР'] + $session['СРС'] + $session['ЧасЭкз'];
+                            else
+                                $tempItem['Часы_Зима'] = $session['Лек'] + $session['Лаб'] + $session['Пр'] + $session['КСР'] + $session['СРС'] + $session['ЧасЭкз'];
+                            if(isset($kurs['ЗЕТ'])) $tempItem['ЗЕТ_Зима'] = $tempItem['Часы_Зима']/36;
+                            if(isset($session['КонтрРаб'])) $tempItem['КонтрРаб_Зима'] = (string)$session['КонтрРаб'];
+                            if(isset($session['Зач'])) $tempItem['Зач_Зима'] = '*';
+                            if(isset($session['ЗачО'])) $tempItem['Зач_Зима'] = 'оценка';
+                            if(isset($session['КП'])  AND isset($session['КР']))  $tempItem['КП_Зима'] = 'КП КР';
+                            if(isset($session['КП'])  AND !isset($session['КР'])) $tempItem['КП_Зима'] = 'КП';
+                            if(!isset($session['КП']) AND isset($session['КР']))  $tempItem['КП_Зима'] = 'КР';
+                            if(isset($session['Экз'])) $tempItem['Экз_Зима'] = '*';
+                        }
+                        if($session['Ном']=='3'){ // летняя сессия
+                            $tempItem['Часы_Лето'] = $session['Лек'] + $session['Лаб'] + $session['Пр'] + $session['КСР'] + $session['СРС'] + $session['ЧасЭкз'];
+                            if(isset($kurs['ЗЕТ'])) $tempItem['ЗЕТ_Лето'] = $tempItem['Часы_Лето']/36;
+                            if(isset($session['КонтрРаб'])) $tempItem['КонтрРаб_Лето'] = (string)$session['КонтрРаб'];
+                            if(isset($session['Зач'])) $tempItem['Зач_Лето'] = '*';
+                            if(isset($session['ЗачО'])) $tempItem['ЗачО_Лето'] = 'оценка';
+                            if(isset($session['КП']) AND isset($session['КР'])) $tempItem['КП_Лето'] = 'КП КР';
+                            if(isset($session['КП']) AND !isset($session['КР'])) $tempItem['КП_Лето'] = 'КП';
+                            if(!isset($session['КП']) AND isset($session['КР'])) $tempItem['КП_Лето'] = 'КР';
+                            if(isset($session['Экз'])) $tempItem['Экз_Лето'] = '*';
+                        }
+                        // dd($kurs, $session,  $tempItem);
+                    }
+
+                    // Если нет ЗЕТ (у элективных курсов по физкультуре)
 //                if(isset($item->xpath('Курс')[$i]['ЗЕТ']))
 //                $tempItem = array_add($tempItem, 'Часов',                   (string)($item->xpath('Курс')[$i]['ЗЕТ']*36));
 //                else {
@@ -86,25 +103,27 @@ class FilesParser extends Model
 //                $tempItem = array_add($tempItem, 'Экз',                     (string)$item->xpath('Курс')[$i]['Экз']);
 
 // ========================== складываем дисциплины по курсам =============================
-                switch ((string)$kurs['Ном']){
-                    case '1':
-                        $temp[1][] = $tempItem;
-                        break;
-                    case '2':
-                        $temp[2][] = $tempItem;
-                        break;
-                    case '3':
-                        $temp[3][] = $tempItem;
-                        break;
-                    case '4':
-                        $temp[4][] = $tempItem;
-                        break;
-                    case '5':
-                        $temp[5][] = $tempItem;
-                        break;
+                    switch ((string)$kurs['Ном']){
+                        case '1':
+                            $temp[1][] = $tempItem;
+                            break;
+                        case '2':
+                            $temp[2][] = $tempItem;
+                            break;
+                        case '3':
+                            $temp[3][] = $tempItem;
+                            break;
+                        case '4':
+                            $temp[4][] = $tempItem;
+                            break;
+                        case '5':
+                            $temp[5][] = $tempItem;
+                            break;
+                    }
+                    $i++;
                 }
-                $i++;
-            }
+
+
         }
 
         // ============ Сортируем дисциплины в курсах по семестрам для таблицы =================
@@ -133,13 +152,28 @@ class FilesParser extends Model
         foreach ($itemsPractics as $item){
             $tempItem = array();
             $tempItem = array_add($tempItem, 'Дисциплина',             (string)$item['Наименование']);
-            $tempItem = array_add($tempItem, 'Курс',                   (string)$item->xpath('Семестр')[0]['Ном']);
-//            $tempItem = array_add($tempItem, 'Курс',                        (string)floor(($item->xpath('Семестр')[0]['Ном']+1)/2));
-            $tempItem = array_add($tempItem, 'Часы_Лето',                  (string)$item->xpath('Семестр')[0]['ПланЧасов']);
-            $tempItem = array_add($tempItem, 'ЗЕТ_Лето',                    (string)$item->xpath('Семестр')[0]['ПланЗЕТ']);
+            if(isset($item->xpath('Семестр')[0]['Ном'])){
+                $tempItem['Курс'] =      (string)$item->xpath('Семестр')[0]['Ном'];
+                $tempItem['Часы_Лето'] = (string)$item->xpath('Семестр')[0]['ПланЧасов'];
+                $tempItem['ЗЕТ_Лето'] =  (string)$item->xpath('Семестр')[0]['ПланЗЕТ'];
+//              $tempItem = array_add($tempItem, 'Курс',                        (string)floor(($item->xpath('Семестр')[0]['Ном']+1)/2));
+            }
+            else{
+                $tempItem['Курс'] =      '0';
+                $tempItem['Часы_Зима'] = (string)$item['ПерезачетЧасов'];
+                $tempItem['ЗЕТ_Зима'] =  (string)($item['ПерезачетЧасов']/$item['ЧасовВЗЕТ']);
+                if (isset($item['ИзученоЗачО'])) $tempItem['Зач_Зима'] = 'оценка';
+                if ((string)$item['ПерезачетЧасов'] == (string)($item['ЧасовВЗЕТ']*$item['ЗЕТэкспертное'])) $tempItem['Перезачет'] = 'Полный перезачет';
+
+            }
+
             if(isset($item->xpath('Семестр')[0]['ЗачО']))
                 $tempItem = array_add($tempItem, 'Зач_Лето','оценка');
+
             switch ($tempItem['Курс']){
+                case '0':
+                    $temp[0][] = $tempItem;
+                    break;
                 case '1':
                     $temp[1][] = $tempItem;
                     break;
@@ -161,7 +195,7 @@ class FilesParser extends Model
             }
         }
         $info = array_add($info, 'Курсы', $temp);
-        //dd($info);
+      //  dd($info);
         return ($info);
     }
 

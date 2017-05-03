@@ -81,7 +81,7 @@ class ToolsController extends Controller
 //            )
         );
 
-        for ($course = 1; $course < count($courses)+1; $course++){
+        foreach ($courses as $course => $courseItem){
             foreach ($courses[$course] as $id => $item){
                 $sheet->appendRow($currentRow, array(
                     $item['Курс'],
@@ -98,10 +98,18 @@ class ToolsController extends Controller
                     isset($item['Зач_Лето'])?$item['Зач_Лето']:null,
                     isset($item['КП_Лето'])?$item['КП_Лето']:null,
                     isset($item['Экз_Лето'])?$item['Экз_Лето']:null,
+                    isset($item['Перезачет'])?$item['Перезачет']:null,
                 ));
                 $sheet->setBorder('A'.$currentRow.':O'.$currentRow, 'thin');
 
                 $excel->getActiveSheet()->getRowDimension($currentRow)->setRowHeight(-1); // автовыравнивание по высоте
+
+                $sheet->getStyle('O'.($currentRow))->applyFromArray([
+                    'font'=>array(
+                        'size' => 5,
+                    ),
+                ]);
+
 
 //                dd($excel->getActiveSheet()->getRowDimension($currentRow));
                 // меняем стили у оценок и кп/кр
@@ -126,8 +134,6 @@ class ToolsController extends Controller
 //                    $excel->getActiveSheet()->getRowDimension($currentRow)->setRowHeight(20);
                 }
 
-
-
 //                    dd($sheet->getCellByColumnAndRow(5, $currentRow)->getValue(), $currentRow);
 
                 // Проверяем, выбранные дисциплины, если индекс 2, то выделяем курсивом
@@ -146,6 +152,7 @@ class ToolsController extends Controller
                     'rotation' => '90',
                 ),
             ]);
+
             //dd($sheet->getCellByColumnAndRow(0, $startRow)->getValue());
             switch ($sheet->getCellByColumnAndRow(0, $startRow)->getValue()){
                 case '0':
@@ -171,11 +178,6 @@ class ToolsController extends Controller
                     break;
             }
 
-
-//                ->getAlignment()->applyFromArray(
-//                array('horizontal' => 'center')
-//            );
-
             $sheet->prependRow($currentRow, array(
                 'Декан факультета                              Л.М.Инаходова',
             ));
@@ -187,6 +189,7 @@ class ToolsController extends Controller
 //            $excel->getActiveSheet()->setBreak( 'A'.$currentRow , \PHPExcel_Worksheet::BREAK_ROW ); // Разрыв страницы
             $currentRow++;
             $startRow = $currentRow;
+
         }
 
 /*
