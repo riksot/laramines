@@ -44,7 +44,14 @@
     <!-- /.box-body -->
     <div class="box-footer">
 
-        <button type="submit" class="btn btn-primary">Групповой план</button>
+        @if(isset($planId))
+            <a class="btn btn-primary" href="/plan/{{$planId}}" target="">Групповой план</a>
+        @else
+            <a class="btn btn-primary" href="/plan/" target="">Привязать план</a>
+        @endif
+{{--
+        <button type="submit" class="btn btn-primary">Групповой план </button>
+--}}
         <button type="submit" class="btn btn-primary pull-right">Печать списка</button>
         {{--
                                     <button type="submit" class="btn btn-primary pull-right">Сохранить</button>

@@ -25,8 +25,10 @@ class StudentsController extends Controller
 
         $studentList = $students->getListStudentsFromGroup(\request('idKurs'), \request('idGroup'))[0]; // список студентов
         $groupId = $students->getListStudentsFromGroup(\request('idKurs'), \request('idGroup'))[1];
+        $planId = $students->getListStudentsFromGroup(\request('idKurs'), \request('idGroup'))[2];
 
-        return view('tables.groupStudentsList',['studentsList' => $studentList, 'groupId' => $groupId]);
+      //  dd($studentList, $groupId, $planId);
+        return view('tables.groupStudentsList',['studentsList' => $studentList, 'groupId' => $groupId, 'planId' => $planId]);
 
 //        return $students->getListStudentsFromGroup(\request('idKurs'), \request('idGroup'));
 

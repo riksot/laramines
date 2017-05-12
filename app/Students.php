@@ -12,12 +12,11 @@ class Students extends Model
 //        $groupid = \DB::select('select name from groups WHERE id = ?',[$idGroup]);
 
 //        $group = \DB::table('students')->where('kurs', $idKurs)->where('groupname', $groupid);
-
         $group = \DB::select('select id,name from students WHERE kurs = ? AND groupname = ?',[$idKurs, $groupid]);
         $direction = \DB::table('groups')->where('id', $idGroup)->value('napr');
+        $plan = \DB::table('groups')->where('id', $idGroup)->value('plan'.$idKurs);
 //        $group = \DB::select('select id,name from mines-test.students where kurs = ' + $idKurs);
-
-        return ([$group, $direction]);
+        return ([$group, $direction, $plan]);
 //        return \Response::json($group);
 
     }
